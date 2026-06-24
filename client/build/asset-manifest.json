@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0d8d9728.css",
+    "main.js": "/static/js/main.cae68adf.js",
+    "static/media/vivo-logo.svg": "/static/media/vivo-logo.1cb73789fef8626e7231e788a134a90a.svg",
+    "index.html": "/index.html",
+    "main.0d8d9728.css.map": "/static/css/main.0d8d9728.css.map",
+    "main.cae68adf.js.map": "/static/js/main.cae68adf.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0d8d9728.css",
+    "static/js/main.cae68adf.js"
+  ]
+}
