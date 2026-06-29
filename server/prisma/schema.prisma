@@ -1,0 +1,111 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AoiFunctionCheckpoint {
+  id                               Int      @id @default(autoincrement())
+  line                             String?  @db.VarChar(50)
+  group_name                       String?  @db.VarChar(100)
+  date                             DateTime @db.Date
+  shift                            String   @db.VarChar(50)
+  responsible_person               String?  @db.VarChar(100)
+  time                             String?  @db.VarChar(50)
+  
+  // 30+ boolean fields
+  laser_barcode_before_bot         Boolean?
+  laser_barcode_before_top         Boolean?
+  laser_barcode_after_bot          Boolean?
+  laser_barcode_after_top          Boolean?
+  laser_pcb_text_before            Boolean?
+  laser_pcb_text_after             Boolean?
+  spi_barcode_before_bot           Boolean?
+  spi_barcode_before_top           Boolean?
+  spi_barcode_after_bot            Boolean?
+  spi_barcode_after_top            Boolean?
+  spi_mes_before_bot               Boolean?
+  spi_mes_before_top               Boolean?
+  spi_mes_after_bot                Boolean?
+  spi_mes_after_top                Boolean?
+  pre_aoi_barcode_before_bot       Boolean?
+  pre_aoi_barcode_before_top       Boolean?
+  pre_aoi_barcode_after_bot        Boolean?
+  pre_aoi_barcode_after_top        Boolean?
+  post_aoi_barcode_before_bot      Boolean?
+  post_aoi_barcode_before_top      Boolean?
+  post_aoi_barcode_after_bot       Boolean?
+  post_aoi_barcode_after_top       Boolean?
+  password_function_pre_aoi_before Boolean?
+  password_function_pre_aoi_after  Boolean?
+  spi_fov_before                   Boolean?
+  spi_fov_after                    Boolean?
+  pre_aoi_fov_before               Boolean?
+  pre_aoi_fov_after                Boolean?
+  post_aoi_fov_before              Boolean?
+  post_aoi_fov_after               Boolean?
+  pre_aoi_spc_before               Boolean?
+  pre_aoi_spc_after                Boolean?
+
+  created_at                       DateTime @default(now()) @db.Timestamp(6)
+  updated_at                       DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([date])
+  @@index([shift])
+  @@index([line])
+  @@map("aoi_function_checkpoint")
+}
+
+model AoiTechnicianChecklist {
+  id                                    Int      @id @default(autoincrement())
+  line                                  String?  @db.VarChar(50)
+  group_name                            String?  @db.VarChar(100)
+  date                                  DateTime @db.Date
+  shift                                 String   @db.VarChar(50)
+  pre_aoi_program_full_name             String?  @db.VarChar(255)
+  stencil_serial_no_b_side              String?  @db.VarChar(100)
+  stencil_serial_no_a_side              String?  @db.VarChar(100)
+  barcode_read_a_layer                  String?  @db.VarChar(50)
+  barcode_read_a_spi                    String?  @db.VarChar(50)
+  barcode_read_b_layer                  String?  @db.VarChar(50)
+  barcode_read_b_spi                    String?  @db.VarChar(50)
+  workorder_info_pre_aoi                String?  @db.VarChar(255)
+  workorder_info_post_aoi               String?  @db.VarChar(255)
+  aoi_scan_tools_workorder_traceability String?  @db.VarChar(255)
+  confirmation                          String?  @db.VarChar(50)
+
+  created_at                            DateTime @default(now()) @db.Timestamp(6)
+  updated_at                            DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([date])
+  @@index([line])
+  @@map("aoi_technician_checklist")
+}
+
+model AppUser {
+  id            Int          @id @default(autoincrement())
+  username      String       @unique @db.VarChar(100)
+  password_hash String       @db.VarChar(255)
+  full_name     String       @db.VarChar(150)
+  role          String       @default("operator") @db.VarChar(50)
+  created_at    DateTime     @default(now()) @db.Timestamp(6)
+  updated_at    DateTime     @default(now()) @updatedAt @db.Timestamp(6)
+  sessions      AppSession[]
+
+  @@map("app_users")
+}
+
+model AppSession {
+  session_id  String    @id @db.Uuid
+  user_id     Int
+  public_ip   String?   @db.VarChar(100)
+  login_time  DateTime  @default(now()) @db.Timestamp(6)
+  logout_time DateTime? @db.Timestamp(6)
+  status      String    @default("active") @db.VarChar(50)
+  user        AppUser   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("app_sessions")
+}

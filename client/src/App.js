@@ -4,14 +4,17 @@ import TechnicianChecklist from './components/TechnicianChecklist';
 import Reports from './components/Reports';
 import LoginPage from './components/LoginPage';
 import UserManagement from './components/UserManagement';
+import Home from './components/Home';
 import apiService, { authStorage } from './services/api';
 import vivoLogo from './assets/vivo-logo.svg';
 import './App.css';
+import ProfileModal from './components/ProfileModal';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('checkpoint');
+  const [activeTab, setActiveTab] = useState('home');
   const [user, setUser] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   useEffect(() => {
     const expireSession = () => setUser(null);
@@ -29,7 +32,10 @@ function App() {
 
     apiService.getCurrentUser()
       .then(response => {
-        if (active) setUser(response.data.user);
+        if (active) {
+          setUser(response.data.user);
+          setActiveTab('home');
+        }
       })
       .catch(() => {
         authStorage.clearToken();
@@ -48,12 +54,19 @@ function App() {
     const response = await apiService.login(credentials);
     authStorage.setToken(response.data.token);
     setUser(response.data.user);
+    setActiveTab('home');
   };
 
-  const handleLogout = () => {
-    authStorage.clearToken();
-    setUser(null);
-    setActiveTab('checkpoint');
+  const handleLogout = async () => {
+    try {
+      await apiService.logout();
+    } catch (error) {
+      console.error('Failed to logout on server:', error);
+    } finally {
+      authStorage.clearToken();
+      setUser(null);
+      setActiveTab('home');
+    }
   };
 
   if (checkingSession) {
@@ -74,6 +87,12 @@ function App() {
             <span className="logo-text">AOI CheckPoint</span>
           </div>
           <div className="navbar-tabs">
+            <button
+              className={`tab ${activeTab === 'home' ? 'active' : ''}`}
+              onClick={() => setActiveTab('home')}
+            >
+              Home
+            </button>
             <button
               className={`tab ${activeTab === 'checkpoint' ? 'active' : ''}`}
               onClick={() => setActiveTab('checkpoint')}
@@ -102,13 +121,21 @@ function App() {
             )}
           </div>
           <div className="user-menu">
-            <span>{user.full_name}</span>
+            <button 
+              type="button" 
+              className="profile-btn" 
+              onClick={() => setShowProfileModal(true)}
+              title="View profile & change password"
+            >
+              👤 {user.full_name}
+            </button>
             <button type="button" onClick={handleLogout}>Logout</button>
           </div>
         </div>
       </nav>
-
+            
       <main className="main-content">
+        {activeTab === 'home' && <Home currentUser={user} />}
         {activeTab === 'checkpoint' && <FunctionCheckpoint />}
         {activeTab === 'checklist' && <TechnicianChecklist />}
         {activeTab === 'reports' && <Reports />}
@@ -118,6 +145,10 @@ function App() {
       <footer className="footer">
         <p>Designed &amp; Maintained by Abhinandan Kumar (95003989)</p>
       </footer>
+
+      {showProfileModal && (
+        <ProfileModal user={user} onClose={() => setShowProfileModal(false)} />
+      )}
     </div>
   );
 }

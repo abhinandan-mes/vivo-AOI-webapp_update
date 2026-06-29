@@ -34,8 +34,16 @@ API.interceptors.response.use(
 export const apiService = {
   // Auth APIs
   login: (credentials) => API.post('/auth/login', credentials),
+  logout: () => API.post('/auth/logout'),
   createUser: (payload) => API.post('/auth/create-user', payload),
   getCurrentUser: () => API.get('/auth/me'),
+  getAllUsers: () => API.get('/auth/users'),
+  updateUser: (id, payload) => API.put(`/auth/users/${id}`, payload),
+  deleteUser: (id) => API.delete(`/auth/users/${id}`),
+  getMySessions: () => API.get('/auth/sessions/me'),
+  getAllSessionsSummary: () => API.get('/auth/sessions/all'),
+  revokeSession: (sessionId) => API.post(`/auth/sessions/${sessionId}/revoke`),
+  changePassword: (payload) => API.post('/auth/change-password', payload),
 
   // Function Checkpoint APIs
   createCheckpoint: (data) => API.post('/checkpoint', data),

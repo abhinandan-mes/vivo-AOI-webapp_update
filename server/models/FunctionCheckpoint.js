@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+const prisma = require('../config/db');
 
 const checkpointFields = [
   'laser_barcode_before_bot', 'laser_barcode_before_top', 'laser_barcode_after_bot', 'laser_barcode_after_top',
@@ -16,29 +16,43 @@ const checkpointFields = [
 
 const functionCheckpointModel = {
   create: async (data) => {
-    const columns = ['line', 'group_name', 'date', 'shift', 'responsible_person', 'time', ...checkpointFields];
-    const placeholders = columns.map((_, index) => `$${index + 1}`).join(', ');
-    const values = columns.map(column => data[column]);
-    const result = await pool.query(
-      `INSERT INTO aoi_function_checkpoint (${columns.join(', ')}) VALUES (${placeholders}) RETURNING *`,
-      values
-    );
-    return result.rows[0];
+    const insertData = {
+      line: data.line || null,
+      group_name: data.group_name || null,
+      date: new Date(data.date),
+      shift: data.shift,
+      responsible_person: data.responsible_person || null,
+      time: data.time || null,
+    };
+
+    checkpointFields.forEach(field => {
+      if (data[field] !== undefined) {
+        insertData[field] = data[field];
+      }
+    });
+
+    return await prisma.aoiFunctionCheckpoint.create({
+      data: insertData
+    });
   },
 
   getAll: async () => {
-    const result = await pool.query('SELECT * FROM aoi_function_checkpoint ORDER BY date DESC LIMIT 100');
-    return result.rows;
+    return await prisma.aoiFunctionCheckpoint.findMany({
+      orderBy: { date: 'desc' },
+      take: 100
+    });
   },
 
   getById: async (id) => {
-    const result = await pool.query('SELECT * FROM aoi_function_checkpoint WHERE id = $1', [id]);
-    return result.rows[0];
+    return await prisma.aoiFunctionCheckpoint.findUnique({
+      where: { id: parseInt(id) }
+    });
   },
 
   getByDate: async (date) => {
-    const result = await pool.query('SELECT * FROM aoi_function_checkpoint WHERE date = $1', [date]);
-    return result.rows;
+    return await prisma.aoiFunctionCheckpoint.findMany({
+      where: { date: new Date(date) }
+    });
   }
 };
 
