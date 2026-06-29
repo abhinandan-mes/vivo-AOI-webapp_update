@@ -5,9 +5,25 @@ const API = axios.create({
   timeout: 10000
 });
 
+export const authStorage = {
+  getToken: () => localStorage.getItem('aoi_auth_token'),
+  setToken: (token) => localStorage.setItem('aoi_auth_token', token),
+  clearToken: () => localStorage.removeItem('aoi_auth_token')
+};
+
+API.interceptors.request.use(config => {
+  const token = authStorage.getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 API.interceptors.response.use(
   response => response,
   error => {
+    if (error.response?.status === 401) {
+      authStorage.clearToken();
+      window.dispatchEvent(new Event('aoi-auth-expired'));
+    }
     const serverMessage = error.response?.data?.error;
     if (serverMessage) error.message = serverMessage;
     else if (!error.response) error.message = 'Cannot reach the server. Check that the backend is running.';
@@ -16,6 +32,11 @@ API.interceptors.response.use(
 );
 
 export const apiService = {
+  // Auth APIs
+  login: (credentials) => API.post('/auth/login', credentials),
+  createUser: (payload) => API.post('/auth/create-user', payload),
+  getCurrentUser: () => API.get('/auth/me'),
+
   // Function Checkpoint APIs
   createCheckpoint: (data) => API.post('/checkpoint', data),
   getAllCheckpoints: () => API.get('/checkpoint'),

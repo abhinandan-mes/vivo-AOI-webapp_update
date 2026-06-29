@@ -2,11 +2,12 @@ const pool = require('../config/db');
 
 const checkpointFields = [
   'laser_barcode_before_bot', 'laser_barcode_before_top', 'laser_barcode_after_bot', 'laser_barcode_after_top',
+  'laser_pcb_text_before', 'laser_pcb_text_after',
   'spi_barcode_before_bot', 'spi_barcode_before_top', 'spi_barcode_after_bot', 'spi_barcode_after_top',
   'spi_mes_before_bot', 'spi_mes_before_top', 'spi_mes_after_bot', 'spi_mes_after_top',
   'pre_aoi_barcode_before_bot', 'pre_aoi_barcode_before_top', 'pre_aoi_barcode_after_bot', 'pre_aoi_barcode_after_top',
   'post_aoi_barcode_before_bot', 'post_aoi_barcode_before_top', 'post_aoi_barcode_after_bot', 'post_aoi_barcode_after_top',
-  'password_function_pre_aoi_before_bot', 'password_function_pre_aoi_before_top', 'password_function_pre_aoi_after_bot', 'password_function_pre_aoi_after_top',
+  'password_function_pre_aoi_before', 'password_function_pre_aoi_after',
   'spi_fov_before', 'spi_fov_after',
   'pre_aoi_fov_before', 'pre_aoi_fov_after',
   'post_aoi_fov_before', 'post_aoi_fov_after',

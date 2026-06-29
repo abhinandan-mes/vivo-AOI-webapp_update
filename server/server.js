@@ -4,8 +4,10 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const initializeDatabase = require('./config/schema');
+const authRoutes = require('./routes/auth');
 const functionCheckpointRoutes = require('./routes/functionCheckpoint');
 const technicianChecklistRoutes = require('./routes/technicianChecklist');
+const { authenticateToken } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -15,8 +17,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api', functionCheckpointRoutes);
-app.use('/api', technicianChecklistRoutes);
+app.use('/api', authRoutes);
+app.use('/api', authenticateToken, functionCheckpointRoutes);
+app.use('/api', authenticateToken, technicianChecklistRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
