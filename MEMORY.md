@@ -240,6 +240,20 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 - **Status**: Fixed
 - **Details**: The duplicate route registrations for `GET /auth/users` and `PUT /auth/users/:id` at the bottom of `server/routes/auth.js` have been removed. The authentication endpoints are now clean, optimized, and execute correctly.
 
+### Resolved: QA Agent Plan Implementation (June 2026)
+*   **FIX-1 – Footer Password Removed**: Replaced `"Designed & Maintained by Abhinandan Kumar (95003989)"` in the footer (the number was the super admin password) with `"AOI CheckPoint © 2026 Vivo"`.
+*   **FIX-2 – Logout Clears Token + Hard Redirect**: `handleLogout` and session-expiry handler in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js) now call `authStorage.clearToken()` and use `window.location.href` (hard redirect) instead of `navigate()` to guarantee full React state teardown.
+*   **FIX-3 – Success/Error Toast + Redirect**: Both form submission handlers in [TechnicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/TechnicianChecklist.js) and [FunctionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/FunctionCheckpoint.js) show a green success toast and redirect to `/reports` after 1.5s. Errors show a red message and do **not** reset the form.
+*   **FIX-5 – Disable Submit on Empty Required Fields**: Daily Function Check submit button is now `disabled={loading || !isFormValid}` where `isFormValid = line && group_name && shift && date`.
+*   **FIX-6 – Full Name Asterisk**: Added `*` to the Full Name label in [UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js) create form.
+*   **A11Y-1/2 – Form Label Accessibility**: All `<label>` elements in both form pages now have `htmlFor` attributes matching corresponding input `id` values. Checkbox inputs in Daily Function Check have `aria-label` attributes.
+*   **UX-1/UX-2 – Password Show/Hide Toggle**: Eye-icon toggle buttons added to: login form ([LoginPage.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/LoginPage.js)), user management create form ([UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js)), and all three password fields in profile modal ([ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js)).
+*   **UX-3 – Session Status Text**: Fixed `logged_out` → `Logged Out` display string in both session tables in [Home.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/Home.js).
+*   **UX-7 – Forgot Password Placeholder**: Added `"Forgot password? Contact your administrator."` text below sign-in button in [LoginPage.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/LoginPage.js) (EN + ZH translations in [translations.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/translations.js)).
+*   **UX-9 – UUID Truncation**: Session IDs in both session tables now display as first 8 characters + `…`, with full UUID on hover via `title` attribute.
+*   **UX-11 – Confirm Password Field**: Added Confirm Password input to User Management create form with client-side match validation before submitting.
+*   **UX-12 – Guard Last Super Admin Deletion**: Both frontend ([UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js)) and backend ([server/routes/auth.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/auth.js)) now block deleting the only remaining `super_admin` account.
+
 ----
 
 ## 🚀 Getting Started & Configuration
