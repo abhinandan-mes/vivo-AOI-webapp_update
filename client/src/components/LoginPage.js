@@ -38,7 +38,7 @@ export default function LoginPage({ onLogin }) {
           <strong>AOI CheckPoint</strong>
         </div>
         <div className="login-copy">
-          <h1>AOI Inspection Console</h1>
+          <h1>AOI Digital Checksheet</h1>
           <p>Sign in to manage daily function checkpoints, technician checklists, and inspection reports.</p>
         </div>
         <form className="login-form" onSubmit={handleSubmit}>

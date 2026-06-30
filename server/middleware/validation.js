@@ -40,7 +40,7 @@ const validateCreateUser = (req, res, next) => {
 
   const roleErr = validateString(role, 50, true);
   if (roleErr) errors.role = roleErr;
-  else if (!['super_admin', 'admin', 'inspector', 'technician'].includes(role.trim())) {
+  else if (!['super_admin', 'admin', 'inspector', 'technician', 'operator'].includes(role.trim())) {
     errors.role = 'is invalid';
   }
 
@@ -75,7 +75,7 @@ const validateUpdateUser = (req, res, next) => {
   if (role !== undefined) {
     const err = validateString(role, 50, true);
     if (err) errors.role = err;
-    else if (!['super_admin', 'admin', 'inspector', 'technician'].includes(role.trim())) {
+    else if (!['super_admin', 'admin', 'inspector', 'technician', 'operator'].includes(role.trim())) {
       errors.role = 'is invalid';
     }
   }
@@ -88,7 +88,7 @@ const validateUpdateUser = (req, res, next) => {
 };
 
 const validateCheckpoint = (req, res, next) => {
-  const { line, group_name, date, shift, responsible_person, time } = req.body;
+  const { line, group_name, date, shift, responsible_person, time, submitted_by } = req.body;
   const errors = {};
 
   const lineErr = validateString(line, 50, true);
@@ -112,6 +112,9 @@ const validateCheckpoint = (req, res, next) => {
   const timeErr = validateString(time, 50);
   if (timeErr) errors.time = timeErr;
 
+  const subByErr = validateString(submitted_by, 150);
+  if (subByErr) errors.submitted_by = subByErr;
+
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({ success: false, error: 'Validation failed', validationErrors: errors });
   }
@@ -130,12 +133,15 @@ const validateChecklist = (req, res, next) => {
     stencil_serial_no_a_side,
     barcode_read_a_layer,
     barcode_read_a_spi,
+    barcode_read_a_pre_aoi,
     barcode_read_b_layer,
     barcode_read_b_spi,
+    barcode_read_b_pre_aoi,
     workorder_info_pre_aoi,
     workorder_info_post_aoi,
     aoi_scan_tools_workorder_traceability,
-    confirmation
+    confirmation,
+    submitted_by
   } = req.body;
   const errors = {};
 
@@ -169,11 +175,17 @@ const validateChecklist = (req, res, next) => {
   const readASErr = validateString(barcode_read_a_spi, 50);
   if (readASErr) errors.barcode_read_a_spi = readASErr;
 
+  const readAPreErr = validateString(barcode_read_a_pre_aoi, 50);
+  if (readAPreErr) errors.barcode_read_a_pre_aoi = readAPreErr;
+
   const readBLErr = validateString(barcode_read_b_layer, 50);
   if (readBLErr) errors.barcode_read_b_layer = readBLErr;
 
   const readBSErr = validateString(barcode_read_b_spi, 50);
   if (readBSErr) errors.barcode_read_b_spi = readBSErr;
+
+  const readBPreErr = validateString(barcode_read_b_pre_aoi, 50);
+  if (readBPreErr) errors.barcode_read_b_pre_aoi = readBPreErr;
 
   const woPreErr = validateString(workorder_info_pre_aoi, 255);
   if (woPreErr) errors.workorder_info_pre_aoi = woPreErr;
@@ -184,8 +196,11 @@ const validateChecklist = (req, res, next) => {
   const traceErr = validateString(aoi_scan_tools_workorder_traceability, 255);
   if (traceErr) errors.aoi_scan_tools_workorder_traceability = traceErr;
 
-  const confirmErr = validateString(confirmation, 50);
-  if (confirmErr) errors.confirmation = confirmErr;
+  const confErr = validateString(confirmation, 50, true);
+  if (confErr) errors.confirmation = confErr;
+
+  const subErr = validateString(submitted_by, 150);
+  if (subErr) errors.submitted_by = subErr;
 
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({ success: false, error: 'Validation failed', validationErrors: errors });

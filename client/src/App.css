@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -22,10 +22,13 @@ body {
   background: #fff;
 }
 
+/* Glassmorphism Navigation Bar */
 .navbar {
-  background: #fff;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 10px 30px rgba(65, 95, 255, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 4px 30px rgba(65, 95, 255, 0.02);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -38,61 +41,127 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
   height: 76px;
 }
 
+/* Logo Block */
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
   font-size: 1.35rem;
   font-weight: 700;
   color: #0f172a;
 }
 
-.vivo-logo { width: 96px; height: 34px; object-fit: contain; display: block; }
-.logo-divider { width: 1px; height: 28px; background: rgba(65, 95, 255, 0.24); }
+.vivo-logo {
+  width: 96px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(65, 95, 255, 0.2);
+}
 
 .logo-text {
   color: #415fff;
   font-size: 1.05rem;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
+/* Navigation Tabs */
 .navbar-tabs {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
+.tab {
+  padding: 0.6rem 1.15rem;
+  background: transparent;
+  color: #475569;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.tab:hover {
+  color: #0f172a;
+  background: rgba(65, 95, 255, 0.05);
+}
+
+.tab.active {
+  color: #415fff;
+  font-weight: 600;
+  background: rgba(65, 95, 255, 0.08);
+  border-color: rgba(65, 95, 255, 0.04);
+}
+
+/* User Menu & Visual Hierarchy Buttons */
 .user-menu {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #475569;
-  font-size: 0.85rem;
-  font-weight: 700;
   white-space: nowrap;
 }
 
-.user-menu button {
+.profile-btn {
   min-height: 38px;
-  padding: 0.55rem 0.85rem;
-  border: 1px solid #cbd5e1;
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: 999px;
+  background: rgba(65, 95, 255, 0.06);
+  color: #415fff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.profile-btn:hover {
+  background: rgba(65, 95, 255, 0.12);
+  color: #2b45cc;
+  transform: translateY(-1px);
+}
+
+.profile-btn:active {
+  transform: translateY(0);
+}
+
+.logout-btn {
+  min-height: 38px;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 999px;
   background: #ffffff;
-  color: #334155;
-  font: inherit;
-  font-weight: 800;
+  color: #64748b;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.user-menu button:hover {
-  border-color: rgba(65, 95, 255, 0.32);
-  color: #415fff;
-  background: rgba(65, 95, 255, 0.08);
+.logout-btn:hover {
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.04);
 }
 
+/* Loading state */
 .auth-loading {
   min-height: 100vh;
   display: grid;
@@ -100,29 +169,6 @@ body {
   background: #f8fafc;
   color: #415fff;
   font-weight: 800;
-}
-
-.tab {
-  padding: 0.85rem 1.4rem;
-  background: transparent;
-  color: #475569;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tab:hover {
-  color: #111827;
-  background: rgba(65, 95, 255, 0.08);
-}
-
-.tab.active {
-  color: #415fff;
-  border-color: rgba(65, 95, 255, 0.18);
-  background: rgba(65, 95, 255, 0.1);
 }
 
 .main-content {
@@ -141,36 +187,67 @@ body {
   border-top: 1px solid rgba(15, 23, 42, 0.06);
 }
 
+/* Grid-based Responsive Navbar on Mobile Screen widths */
 @media (max-width: 768px) {
   .navbar-container {
-    flex-direction: column;
-    padding: 1rem;
+    display: grid;
+    grid-template-areas: 
+      "logo menu"
+      "tabs tabs";
+    grid-template-columns: 1fr auto;
     height: auto;
-    gap: 1rem;
+    padding: 0.75rem 1rem;
+    gap: 0.85rem 0.5rem;
   }
 
   .navbar-logo {
-    font-size: 1.25rem;
+    grid-area: logo;
+    justify-content: flex-start;
+    font-size: 1.15rem;
   }
 
-  .vivo-logo { width: 82px; height: 29px; }
-  .logo-text { font-size: 0.95rem; }
+  .vivo-logo {
+    width: 82px;
+    height: 29px;
+  }
 
-  .navbar-tabs {
-    width: 100%;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+  .logo-text {
+    font-size: 0.95rem;
   }
 
   .user-menu {
+    grid-area: menu;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .profile-btn,
+  .logout-btn {
+    min-height: 34px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .navbar-tabs {
+    grid-area: tabs;
     width: 100%;
-    justify-content: center;
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar for IE/Edge */
+  }
+
+  .navbar-tabs::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari/Webkit */
   }
 
   .tab {
-    flex: 1;
-    padding: 0.7rem 0.9rem;
-    font-size: 0.88rem;
+    white-space: nowrap;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    flex-shrink: 0; /* Prevent tabs from shrinking */
   }
 
   .main-content {

@@ -5,7 +5,7 @@ import './FunctionCheckpoint.css';
 const lineOptions = Array.from({ length: 25 }, (_, index) => String(401 + index));
 const groupOptions = ['A', 'B', 'C'];
 
-export default function FunctionCheckpoint() {
+export default function FunctionCheckpoint({ currentUser }) {
   const [formData, setFormData] = useState({
     line: '',
     group_name: '',
@@ -77,9 +77,14 @@ export default function FunctionCheckpoint() {
     const shouldSubmit = window.confirm('Submit this Daily Function Checkpoint? Select Cancel to review your entries.');
     if (!shouldSubmit) return;
 
+    const payload = {
+      ...formData,
+      submitted_by: currentUser ? `${currentUser.full_name} (${currentUser.username})` : ''
+    };
+
     setLoading(true);
     try {
-      await apiService.createCheckpoint(formData);
+      await apiService.createCheckpoint(payload);
       setMessage('✓ Daily Function Checkpoint Submitted Successfully');
       setTimeout(() => setMessage(''), 3000);
       setFormData({

@@ -65,7 +65,7 @@ router.post('/auth/create-user', authenticateToken, requireRoles(['super_admin',
     const normalizedRole = role.trim();
 
     const allowedRoles = req.user.role === 'super_admin'
-      ? ['super_admin', 'admin', 'inspector', 'technician']
+      ? ['super_admin', 'admin', 'inspector', 'technician', 'operator']
       : ['inspector', 'technician'];
 
     if (!allowedRoles.includes(normalizedRole)) {
@@ -199,7 +199,7 @@ router.put('/auth/users/:id', authenticateToken, validateUpdateUser, async (req,
         return res.status(403).json({ success: false, error: 'You cannot change your own role' });
       }
       const allowedRoles = req.user.role === 'super_admin'
-        ? ['super_admin', 'admin', 'inspector', 'technician']
+        ? ['super_admin', 'admin', 'inspector', 'technician', 'operator']
         : ['inspector', 'technician'];
       if (!allowedRoles.includes(role)) {
         return res.status(403).json({ success: false, error: 'You are not allowed to assign that role' });

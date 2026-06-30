@@ -23,6 +23,7 @@ const functionCheckpointModel = {
       shift: data.shift,
       responsible_person: data.responsible_person || null,
       time: data.time || null,
+      submitted_by: data.submitted_by || null,
     };
 
     checkpointFields.forEach(field => {

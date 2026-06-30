@@ -9,9 +9,9 @@ This rule file provides critical project context, architectural details, and gui
 This repository contains the **AOI CheckPoint (Daily Inspection System)** web application, which digitizes checklists and daily checks for Automated Optical Inspection (AOI) machines.
 
 ### Tech Stack
-- **Frontend**: React 18 (Create React App), Vanilla CSS3, Axios.
+- **Frontend**: React 18 (Create React App), React Router DOM, Vanilla CSS3, Axios.
 - **Backend**: Node.js, Express.js.
-- **Database**: PostgreSQL (pg client pool).
+- **Database**: PostgreSQL (Prisma ORM).
 - **Authentication**: JWT-based security with middleware on the backend.
 
 ### Project Architecture & Key Files

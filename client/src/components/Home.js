@@ -241,8 +241,10 @@ export default function Home({ currentUser }) {
                                         return (
                                           <tr key={session.session_id} className={isMyCurrent ? 'highlight-session' : ''}>
                                             <td className="ip-cell">
-                                              {session.public_ip}
-                                              {isMyCurrent && <span className="current-badge">Your Current Session</span>}
+                                              <div className="ip-wrapper">
+                                                {session.public_ip}
+                                                {isMyCurrent && <span className="current-badge">Your Current Session</span>}
+                                              </div>
                                             </td>
                                             <td>{formatDate(session.login_time)}</td>
                                             <td className="session-id-cell">{session.session_id}</td>

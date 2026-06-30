@@ -15,15 +15,19 @@ const requiredFields = [
   'stencil_serial_no_a_side',
   'barcode_read_a_layer',
   'barcode_read_a_spi',
+  'barcode_read_a_pre_aoi',
   'barcode_read_b_layer',
   'barcode_read_b_spi',
+  'barcode_read_b_pre_aoi',
   'workorder_info_pre_aoi',
   'workorder_info_post_aoi',
   'aoi_scan_tools_workorder_traceability',
-  'confirmation'
+  'confirmation',
+  'submitted_by'
 ];
 
-export default function TechnicianChecklist() {
+export default function TechnicianChecklist({ currentUser }) {
+  const defaultConfirmedBy = currentUser ? `${currentUser.full_name} (${currentUser.username})` : '';
   const [formData, setFormData] = useState({
     line: '',
     group_name: '',
@@ -34,13 +38,25 @@ export default function TechnicianChecklist() {
     stencil_serial_no_a_side: '',
     barcode_read_a_layer: '',
     barcode_read_a_spi: '',
+    barcode_read_a_pre_aoi: '',
     barcode_read_b_layer: '',
     barcode_read_b_spi: '',
+    barcode_read_b_pre_aoi: '',
     workorder_info_pre_aoi: '',
     workorder_info_post_aoi: '',
     aoi_scan_tools_workorder_traceability: '',
-    confirmation: 'Yes'
+    confirmation: 'Yes',
+    submitted_by: defaultConfirmedBy
   });
+
+  React.useEffect(() => {
+    if (currentUser) {
+      setFormData(prev => ({
+        ...prev,
+        submitted_by: `${currentUser.full_name} (${currentUser.username})`
+      }));
+    }
+  }, [currentUser]);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -56,6 +72,10 @@ export default function TechnicianChecklist() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.confirmation !== 'Yes') {
+      setMessage('✗ You must confirm that all information is correct to submit.');
+      return;
+    }
     const shouldSubmit = window.confirm('Submit this Technician Checklist? Select Cancel to review your entries.');
     if (!shouldSubmit) return;
 
@@ -74,12 +94,15 @@ export default function TechnicianChecklist() {
         stencil_serial_no_a_side: '',
         barcode_read_a_layer: '',
         barcode_read_a_spi: '',
+        barcode_read_a_pre_aoi: '',
         barcode_read_b_layer: '',
         barcode_read_b_spi: '',
+        barcode_read_b_pre_aoi: '',
         workorder_info_pre_aoi: '',
         workorder_info_post_aoi: '',
         aoi_scan_tools_workorder_traceability: '',
-        confirmation: 'Yes'
+        confirmation: 'Yes',
+        submitted_by: currentUser ? `${currentUser.full_name} (${currentUser.username})` : ''
       });
     } catch (error) {
       setMessage('✗ Error submitting checklist: ' + error.message);
@@ -194,7 +217,7 @@ export default function TechnicianChecklist() {
           <div className="barcode-section">
             <div className="barcode-column">
               <h3>B Side</h3>
-              <div className="form-grid-2">
+              <div className="form-grid-3">
                 <div className="form-group">
                   <label>Read at Laser *</label>
                   <select
@@ -219,11 +242,23 @@ export default function TechnicianChecklist() {
                     {yesNoOptions.map(option => <option key={option}>{option}</option>)}
                   </select>
                 </div>
+                <div className="form-group">
+                  <label>Read at Pre-AOI *</label>
+                  <select
+                    name="barcode_read_a_pre_aoi"
+                    value={formData.barcode_read_a_pre_aoi}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="" disabled>Select</option>
+                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                  </select>
+                </div>
               </div>
             </div>
             <div className="barcode-column">
               <h3>A Side</h3>
-              <div className="form-grid-2">
+              <div className="form-grid-3">
                 <div className="form-group">
                   <label>Read at Laser *</label>
                   <select
@@ -241,6 +276,18 @@ export default function TechnicianChecklist() {
                   <select
                     name="barcode_read_b_spi"
                     value={formData.barcode_read_b_spi}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="" disabled>Select</option>
+                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Read at Pre-AOI *</label>
+                  <select
+                    name="barcode_read_b_pre_aoi"
+                    value={formData.barcode_read_b_pre_aoi}
                     onChange={handleInputChange}
                     required
                   >
@@ -298,17 +345,30 @@ export default function TechnicianChecklist() {
 
         <div className="form-section">
           <h2>Confirmation</h2>
-          <div className="form-group">
-            <label>All Information Correct? *</label>
-            <select name="confirmation" value={formData.confirmation} onChange={handleInputChange} required>
-              <option>Yes</option>
-              <option>No</option>
-            </select>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label>All Information Correct? *</label>
+              <select name="confirmation" value={formData.confirmation} onChange={handleInputChange} required>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Submitted By</label>
+              <input
+                type="text"
+                name="submitted_by"
+                value={formData.submitted_by}
+                readOnly
+                className="read-only-input"
+                style={{ background: '#f1f5f9', color: '#64748b', cursor: 'not-allowed', border: '1px solid #cbd5e1' }}
+              />
+            </div>
           </div>
         </div>
 
         <div className="form-actions">
-          <button type="submit" disabled={loading || !isFormComplete} className="btn-submit">
+          <button type="submit" disabled={loading || !isFormComplete || formData.confirmation !== 'Yes'} className="btn-submit">
             {loading ? 'Submitting...' : 'Submit Checklist'}
           </button>
           {message && <div className={`message ${message.startsWith('✓') ? 'success' : 'error'}`}>{message}</div>}

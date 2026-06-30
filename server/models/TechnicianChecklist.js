@@ -13,12 +13,15 @@ const technicianChecklistModel = {
         stencil_serial_no_a_side: data.stencil_serial_no_a_side || null,
         barcode_read_a_layer: data.barcode_read_a_layer || null,
         barcode_read_a_spi: data.barcode_read_a_spi || null,
+        barcode_read_a_pre_aoi: data.barcode_read_a_pre_aoi || null,
         barcode_read_b_layer: data.barcode_read_b_layer || null,
         barcode_read_b_spi: data.barcode_read_b_spi || null,
+        barcode_read_b_pre_aoi: data.barcode_read_b_pre_aoi || null,
         workorder_info_pre_aoi: data.workorder_info_pre_aoi || null,
         workorder_info_post_aoi: data.workorder_info_post_aoi || null,
         aoi_scan_tools_workorder_traceability: data.aoi_scan_tools_workorder_traceability || null,
-        confirmation: data.confirmation || null
+        confirmation: data.confirmation || null,
+        submitted_by: data.submitted_by || null
       }
     });
   },

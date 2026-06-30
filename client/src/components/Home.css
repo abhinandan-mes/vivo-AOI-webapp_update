@@ -242,6 +242,10 @@
   font-family: monospace;
   color: #475569;
   font-weight: 600;
+  vertical-align: middle;
+}
+
+.ip-wrapper {
   display: flex;
   align-items: center;
   gap: 0.5rem;

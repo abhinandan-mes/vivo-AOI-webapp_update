@@ -86,6 +86,7 @@ export default function UserManagement({ currentUser }) {
     });
     setMessage('');
     setError('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (userId) => {
@@ -261,27 +262,29 @@ export default function UserManagement({ currentUser }) {
                     )}
                   </td>
                   <td className="actions-cell">
-                    {canEditUser(user) && (
-                      <button 
-                        className="action-btn edit-btn"
-                        onClick={() => handleEdit(user)}
-                        disabled={loading}
-                      >
-                        Edit
-                      </button>
-                    )}
-                    {canDeleteUser(user) && (
-                      <button 
-                        className="action-btn delete-btn"
-                        onClick={() => handleDelete(user.id)}
-                        disabled={loading}
-                      >
-                        Delete
-                      </button>
-                    )}
-                    {!canEditUser(user) && !canDeleteUser(user) && (
-                      <span className="no-permission">—</span>
-                    )}
+                    <div className="actions-wrapper">
+                      {canEditUser(user) && (
+                        <button 
+                          className="action-btn edit-btn"
+                          onClick={() => handleEdit(user)}
+                          disabled={loading}
+                        >
+                          Edit
+                        </button>
+                      )}
+                      {canDeleteUser(user) && (
+                        <button 
+                          className="action-btn delete-btn"
+                          onClick={() => handleDelete(user.id)}
+                          disabled={loading}
+                        >
+                          Delete
+                        </button>
+                      )}
+                      {!canEditUser(user) && !canDeleteUser(user) && (
+                        <span className="no-permission">—</span>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

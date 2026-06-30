@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom';
 import FunctionCheckpoint from './components/FunctionCheckpoint';
 import TechnicianChecklist from './components/TechnicianChecklist';
 import Reports from './components/Reports';
@@ -11,10 +12,10 @@ import './App.css';
 import ProfileModal from './components/ProfileModal';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('home');
   const [user, setUser] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const expireSession = () => setUser(null);
@@ -34,7 +35,6 @@ function App() {
       .then(response => {
         if (active) {
           setUser(response.data.user);
-          setActiveTab('home');
         }
       })
       .catch(() => {
@@ -54,7 +54,7 @@ function App() {
     const response = await apiService.login(credentials);
     authStorage.setToken(response.data.token);
     setUser(response.data.user);
-    setActiveTab('home');
+    navigate('/');
   };
 
   const handleLogout = async () => {
@@ -65,7 +65,7 @@ function App() {
     } finally {
       authStorage.clearToken();
       setUser(null);
-      setActiveTab('home');
+      navigate('/');
     }
   };
 
@@ -87,37 +87,38 @@ function App() {
             <span className="logo-text">AOI CheckPoint</span>
           </div>
           <div className="navbar-tabs">
-            <button
-              className={`tab ${activeTab === 'home' ? 'active' : ''}`}
-              onClick={() => setActiveTab('home')}
+            <NavLink
+              to="/"
+              className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+              end
             >
               Home
-            </button>
-            <button
-              className={`tab ${activeTab === 'checkpoint' ? 'active' : ''}`}
-              onClick={() => setActiveTab('checkpoint')}
-            >
-              Daily Function Check
-            </button>
-            <button
-              className={`tab ${activeTab === 'checklist' ? 'active' : ''}`}
-              onClick={() => setActiveTab('checklist')}
+            </NavLink>
+            <NavLink
+              to="/checklist"
+              className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
             >
               Technician Checklist
-            </button>
-            <button
-              className={`tab ${activeTab === 'reports' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reports')}
+            </NavLink>
+            <NavLink
+              to="/checkpoint"
+              className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+            >
+              Daily Function Check
+            </NavLink>
+            <NavLink
+              to="/reports"
+              className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
             >
               Reports
-            </button>
+            </NavLink>
             {(user.role === 'super_admin' || user.role === 'admin') && (
-              <button
-                className={`tab ${activeTab === 'users' ? 'active' : ''}`}
-                onClick={() => setActiveTab('users')}
+              <NavLink
+                to="/users"
+                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
               >
                 User Management
-              </button>
+              </NavLink>
             )}
           </div>
           <div className="user-menu">
@@ -129,17 +130,22 @@ function App() {
             >
               👤 {user.full_name}
             </button>
-            <button type="button" onClick={handleLogout}>Logout</button>
+            <button type="button" className="logout-btn" onClick={handleLogout}>Logout</button>
           </div>
         </div>
       </nav>
             
       <main className="main-content">
-        {activeTab === 'home' && <Home currentUser={user} />}
-        {activeTab === 'checkpoint' && <FunctionCheckpoint />}
-        {activeTab === 'checklist' && <TechnicianChecklist />}
-        {activeTab === 'reports' && <Reports />}
-        {(user.role === 'super_admin' || user.role === 'admin') && activeTab === 'users' && <UserManagement currentUser={user} />}
+        <Routes>
+          <Route path="/" element={<Home currentUser={user} />} />
+          <Route path="/checkpoint" element={<FunctionCheckpoint currentUser={user} />} />
+          <Route path="/checklist" element={<TechnicianChecklist currentUser={user} />} />
+          <Route path="/reports" element={<Reports />} />
+          {(user.role === 'super_admin' || user.role === 'admin') ? (
+            <Route path="/users" element={<UserManagement currentUser={user} />} />
+          ) : null}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
 
       <footer className="footer">
