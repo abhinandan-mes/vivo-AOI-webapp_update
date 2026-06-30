@@ -258,6 +258,13 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Brand Name**: Footer now reads **`AOI Digital Checksheet © 2026 Vivo`** (previously "AOI CheckPoint © 2026 Vivo") in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js).
 *   **Designer Credit**: Added a second footer line — *"Designed, Developed & Maintained by Abhinandan Kumar"* — styled via the `.footer-credit` class in [App.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.css) (font-size `0.75rem`, muted slate-grey `#94a3b8`).
 
+### Resolved: Login Page UX, Internationalization & Auth Handlers (June 2026)
+*   **Language Switcher Re-alignment**: Relocated the language switcher to the top of the form panel to ensure visibility against a white background. Restructured `LanguageContext.js` with `useCallback` and `useMemo` to ensure translation reactivity on language change.
+*   **Rebranding Logo & Metadata**: Replaced all remaining occurrences of 'AOI CheckPoint' with 'AOI Digital Checksheet' (including Chinese localization: 'AOI 数字化检查表') in headers, loading components, and the login brand row.
+*   **Contextual Redirect Logout**: Split logout into `handleLogout` (manual logout to a clean `/login`) and `handleIdleLogout` (idle timeout/expiry redirect preserving the current URL checkpoint).
+*   **API-Status-Driven Error Messages**: Replaced raw server errors on the login page with status-specific translated messages (Credentials error, Rate Limit, Network, and Server error). Bypassed interceptor auto-redirection on failed login attempts.
+*   **Dev Mode Rate Limit Skip**: Configured the express login rate limiter to skip restriction in development modes (`process.env.NODE_ENV !== 'production'`).
+
 ----
 
 ## 🚀 Getting Started & Configuration
