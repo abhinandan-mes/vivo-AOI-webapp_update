@@ -41,7 +41,7 @@ export const translations = {
     login_password_placeholder: "Enter password",
     login_btn: "Sign In",
     login_btn_loading: "Signing in...",
-    login_error_default: "Unable to sign in",
+    login_error_default: "Wrong username or password.",
     login_forgot_pwd: "Forgot password? Contact your administrator.",
 
     // Profile Modal
@@ -270,7 +270,7 @@ export const translations = {
     login_password_placeholder: "请输入密码",
     login_btn: "登录",
     login_btn_loading: "正在登录...",
-    login_error_default: "登录失败，请重试",
+    login_error_default: "用户名或密码错误。",
     login_forgot_pwd: "忘记密码？请联系系统管理员。",
 
     // Profile Modal

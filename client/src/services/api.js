@@ -20,10 +20,15 @@ API.interceptors.request.use(config => {
 API.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
+    const isLoginRequest = error.config?.url?.includes('/auth/login');
+
+    // A 401 on the login endpoint means wrong credentials — not an expired session.
+    // Only fire the global session-expiry event for all other authenticated routes.
+    if (error.response?.status === 401 && !isLoginRequest) {
       authStorage.clearToken();
       window.dispatchEvent(new Event('aoi-auth-expired'));
     }
+
     const serverMessage = error.response?.data?.error;
     if (serverMessage) error.message = serverMessage;
     else if (!error.response) error.message = 'Cannot reach the server. Check that the backend is running.';
