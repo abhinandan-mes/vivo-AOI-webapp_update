@@ -261,7 +261,8 @@ function App() {
       </main>
 
       <footer className="footer">
-        <p>AOI CheckPoint &copy; 2026 Vivo</p>
+        <p>AOI Digital Checksheet &copy; 2026 Vivo</p>
+        <p className="footer-credit">Designed, Developed &amp; Maintained by Abhinandan Kumar</p>
       </footer>
 
       {showProfileModal && (

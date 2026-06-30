@@ -254,6 +254,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **UX-11 – Confirm Password Field**: Added Confirm Password input to User Management create form with client-side match validation before submitting.
 *   **UX-12 – Guard Last Super Admin Deletion**: Both frontend ([UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js)) and backend ([server/routes/auth.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/auth.js)) now block deleting the only remaining `super_admin` account.
 
+### Resolved: Footer Branding Update (June 2026)
+*   **Brand Name**: Footer now reads **`AOI Digital Checksheet © 2026 Vivo`** (previously "AOI CheckPoint © 2026 Vivo") in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js).
+*   **Designer Credit**: Added a second footer line — *"Designed, Developed & Maintained by Abhinandan Kumar"* — styled via the `.footer-credit` class in [App.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.css) (font-size `0.75rem`, muted slate-grey `#94a3b8`).
+
 ----
 
 ## 🚀 Getting Started & Configuration
