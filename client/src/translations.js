@@ -28,7 +28,7 @@ export const translations = {
     nav_reports: "Reports",
     nav_users: "User Management",
     nav_logout: "Logout",
-    nav_loading: "Loading AOI CheckPoint...",
+    nav_loading: "Loading AOI Digital Checksheet...",
 
     // Login Page
     login_title: "AOI Digital Checksheet",

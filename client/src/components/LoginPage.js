@@ -55,7 +55,7 @@ export default function LoginPage({ onLogin }) {
         <div className="login-brand">
           <img src={vivoLogo} alt="vivo" />
           <span aria-hidden="true"></span>
-          <strong>AOI CheckPoint</strong>
+          <strong>AOI Digital Checksheet</strong>
         </div>
         <div className="login-copy">
           <h1>{t('login_title')}</h1>

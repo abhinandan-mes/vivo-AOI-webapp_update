@@ -181,7 +181,7 @@ function App() {
           <div className="navbar-logo">
             <img className="vivo-logo" src={vivoLogo} alt="vivo" />
             <span className="logo-divider" aria-hidden="true"></span>
-            <span className="logo-text">AOI CheckPoint</span>
+            <span className="logo-text">AOI Digital Checksheet</span>
           </div>
           <div className="navbar-tabs">
             <NavLink
