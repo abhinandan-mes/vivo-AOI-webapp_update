@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useCallback, useMemo } from 'react';
 import { translations } from '../translations';
 
 const LanguageContext = createContext();
@@ -8,22 +8,22 @@ export function LanguageProvider({ children }) {
     return localStorage.getItem('aoi_language') || 'en';
   });
 
-  const changeLanguage = (lang) => {
+  const changeLanguage = useCallback((lang) => {
     localStorage.setItem('aoi_language', lang);
     setLanguage(lang);
-  };
+  }, []);
 
-  const replaceVars = (str, vars) => {
+  const replaceVars = useCallback((str, vars) => {
     if (typeof str !== 'string') return str;
     return str.replace(/\{(\w+)\}/g, (match, p1) => {
       return vars[p1] !== undefined ? vars[p1] : match;
     });
-  };
+  }, []);
 
-  const t = (key, variables = {}) => {
+  const t = useCallback((key, variables = {}) => {
     const keys = key.split('.');
     let translation = translations[language];
-    
+
     for (const k of keys) {
       if (translation && translation[k] !== undefined) {
         translation = translation[k];
@@ -44,10 +44,12 @@ export function LanguageProvider({ children }) {
     }
 
     return replaceVars(translation, variables);
-  };
+  }, [language, replaceVars]); // re-creates when language changes
+
+  const value = useMemo(() => ({ language, changeLanguage, t }), [language, changeLanguage, t]);
 
   return (
-    <LanguageContext.Provider value={{ language, changeLanguage, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
