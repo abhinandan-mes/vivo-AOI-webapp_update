@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiService from '../services/api';
 import './TechnicianChecklist.css';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const lineOptions = Array.from({ length: 25 }, (_, index) => String(401 + index));
 const groupOptions = ['A', 'B', 'C'];
@@ -27,6 +29,8 @@ const requiredFields = [
 ];
 
 export default function TechnicianChecklist({ currentUser }) {
+  const { t, language } = useLanguage();
+  const navigate = useNavigate();
   const defaultConfirmedBy = currentUser ? `${currentUser.full_name} (${currentUser.username})` : '';
   const [formData, setFormData] = useState({
     line: '',
@@ -73,17 +77,20 @@ export default function TechnicianChecklist({ currentUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.confirmation !== 'Yes') {
-      setMessage('✗ You must confirm that all information is correct to submit.');
+      setMessage(t('cl_msg_confirm_lock'));
       return;
     }
-    const shouldSubmit = window.confirm('Submit this Technician Checklist? Select Cancel to review your entries.');
+    const shouldSubmit = window.confirm(t('cl_confirm_submit'));
     if (!shouldSubmit) return;
 
     setLoading(true);
     try {
       await apiService.createChecklist(formData);
-      setMessage('✓ Daily Checklist Submitted Successfully');
-      setTimeout(() => setMessage(''), 3000);
+      setMessage(t('cl_msg_success'));
+      setTimeout(() => {
+        setMessage('');
+        navigate('/reports');
+      }, 1500);
       setFormData({
         line: '',
         group_name: '',
@@ -105,7 +112,7 @@ export default function TechnicianChecklist({ currentUser }) {
         submitted_by: currentUser ? `${currentUser.full_name} (${currentUser.username})` : ''
       });
     } catch (error) {
-      setMessage('✗ Error submitting checklist: ' + error.message);
+      setMessage('✗ ' + t('error') + ': ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -114,41 +121,44 @@ export default function TechnicianChecklist({ currentUser }) {
   return (
     <div className="checklist-container">
       <div className="checklist-header">
-        <h1>AOI Technician Daily Checklist</h1>
-        <p>Complete your daily AOI technician inspection checklist</p>
+        <h1>{t('cl_title')}</h1>
+        <p>{t('cl_desc')}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="checklist-form">
         <div className="form-section">
-          <h2>Shift Information</h2>
+          <h2>{language === 'zh' ? '班次信息' : 'Shift Information'}</h2>
           <div className="form-grid-4">
             <div className="form-group">
-              <label>Line * </label>
+              <label htmlFor="line-select">{t('cp_line_req')}</label>
               <select
+                id="line-select"
                 name="line"
                 value={formData.line}
                 onChange={handleInputChange}
                 required
               >
-                <option value="">Select line</option>
+                <option value="">{t('cp_line_placeholder')}</option>
                 {lineOptions.map(line => <option key={line} value={line}>{line}</option>)}
               </select>
             </div>
             <div className="form-group">
-              <label>Group *</label>
+              <label htmlFor="group-select">{t('cp_group_req')}</label>
               <select
+                id="group-select"
                 name="group_name"
                 value={formData.group_name}
                 onChange={handleInputChange}
                 required
               >
-                <option value="">Select group</option>
+                <option value="">{t('cp_group_placeholder')}</option>
                 {groupOptions.map(group => <option key={group} value={group}>{group}</option>)}
               </select>
             </div>
             <div className="form-group">
-              <label>Date *</label>
+              <label htmlFor="date-input">{t('cp_date_req')}</label>
               <input
+                id="date-input"
                 type="date"
                 name="date"
                 value={formData.date}
@@ -157,27 +167,34 @@ export default function TechnicianChecklist({ currentUser }) {
               />
             </div>
             <div className="form-group">
-              <label>Shift *</label>
-              <select name="shift" value={formData.shift} onChange={handleInputChange} required>
-                <option value="" disabled>Select shift</option>
-                <option>Day</option>
-                <option>Night</option>
+              <label htmlFor="shift-select">{t('cp_shift_req')}</label>
+              <select 
+                id="shift-select" 
+                name="shift" 
+                value={formData.shift} 
+                onChange={handleInputChange} 
+                required
+              >
+                <option value="" disabled>{t('cp_shift_placeholder')}</option>
+                <option value="Day">{t('day')}</option>
+                <option value="Night">{t('night')}</option>
               </select>
             </div>
           </div>
         </div>
 
         <div className="form-section">
-          <h2>Program & Setup Information</h2>
+          <h2>{language === 'zh' ? '程序与设置信息' : 'Program & Setup Information'}</h2>
           <div className="form-grid-2">
             <div className="form-group">
-              <label>Pre-AOI Program Full Name *</label>
+              <label htmlFor="program-input">{t('cl_pre_aoi_prog')} *</label>
               <input
+                id="program-input"
                 type="text"
                 name="pre_aoi_program_full_name"
                 value={formData.pre_aoi_program_full_name}
                 onChange={handleInputChange}
-                placeholder="Enter program name"
+                placeholder={t('cl_pre_aoi_prog_placeholder')}
                 required
               />
             </div>
@@ -185,11 +202,12 @@ export default function TechnicianChecklist({ currentUser }) {
         </div>
 
         <div className="form-section">
-          <h2>SPI Stencil Information</h2>
+          <h2>{language === 'zh' ? 'SPI 钢网信息' : 'SPI Stencil Information'}</h2>
           <div className="form-grid-2">
             <div className="form-group">
-              <label>Stencil Serial No. - B Side *</label>
+              <label htmlFor="stencil-b-input">{t('cl_stencil_b')} *</label>
               <input
+                id="stencil-b-input"
                 type="text"
                 name="stencil_serial_no_b_side"
                 value={formData.stencil_serial_no_b_side}
@@ -199,8 +217,9 @@ export default function TechnicianChecklist({ currentUser }) {
               />
             </div>
             <div className="form-group">
-              <label>Stencil Serial No. - A Side *</label>
+              <label htmlFor="stencil-a-input">{t('cl_stencil_a')} *</label>
               <input
+                id="stencil-a-input"
                 type="text"
                 name="stencil_serial_no_a_side"
                 value={formData.stencil_serial_no_a_side}
@@ -213,86 +232,104 @@ export default function TechnicianChecklist({ currentUser }) {
         </div>
 
         <div className="form-section">
-          <h2>Barcode Read Information</h2>
+          <h2>{language === 'zh' ? '条码读取状态' : 'Barcode Read Information'}</h2>
           <div className="barcode-section">
             <div className="barcode-column">
-              <h3>B Side</h3>
+              <h3>{language === 'zh' ? 'B面 (B Side)' : 'B Side'}</h3>
               <div className="form-grid-3">
                 <div className="form-group">
-                  <label>Read at Laser *</label>
+                  <label htmlFor="barcode-read-a-layer">{t('cl_read_layer')}</label>
                   <select
+                    id="barcode-read-a-layer"
                     name="barcode_read_a_layer"
                     value={formData.barcode_read_a_layer}
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="" disabled>Select</option>
-                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                    <option value="" disabled>{t('cl_read_placeholder')}</option>
+                    {yesNoOptions.map(option => (
+                      <option key={option} value={option}>{option === 'Yes' ? t('yes') : t('no')}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Read at SPI *</label>
+                  <label htmlFor="barcode-read-a-spi">{t('cl_read_spi')}</label>
                   <select
+                    id="barcode-read-a-spi"
                     name="barcode_read_a_spi"
                     value={formData.barcode_read_a_spi}
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="" disabled>Select</option>
-                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                    <option value="" disabled>{t('cl_read_placeholder')}</option>
+                    {yesNoOptions.map(option => (
+                      <option key={option} value={option}>{option === 'Yes' ? t('yes') : t('no')}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Read at Pre-AOI *</label>
+                  <label htmlFor="barcode-read-a-pre-aoi">{t('cl_read_pre_aoi')}</label>
                   <select
+                    id="barcode-read-a-pre-aoi"
                     name="barcode_read_a_pre_aoi"
                     value={formData.barcode_read_a_pre_aoi}
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="" disabled>Select</option>
-                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                    <option value="" disabled>{t('cl_read_placeholder')}</option>
+                    {yesNoOptions.map(option => (
+                      <option key={option} value={option}>{option === 'Yes' ? t('yes') : t('no')}</option>
+                    ))}
                   </select>
                 </div>
               </div>
             </div>
             <div className="barcode-column">
-              <h3>A Side</h3>
+              <h3>{language === 'zh' ? 'A面 (A Side)' : 'A Side'}</h3>
               <div className="form-grid-3">
                 <div className="form-group">
-                  <label>Read at Laser *</label>
+                  <label htmlFor="barcode-read-b-layer">{t('cl_read_layer')}</label>
                   <select
+                    id="barcode-read-b-layer"
                     name="barcode_read_b_layer"
                     value={formData.barcode_read_b_layer}
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="" disabled>Select</option>
-                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                    <option value="" disabled>{t('cl_read_placeholder')}</option>
+                    {yesNoOptions.map(option => (
+                      <option key={option} value={option}>{option === 'Yes' ? t('yes') : t('no')}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Read at SPI *</label>
+                  <label htmlFor="barcode-read-b-spi">{t('cl_read_spi')}</label>
                   <select
+                    id="barcode-read-b-spi"
                     name="barcode_read_b_spi"
                     value={formData.barcode_read_b_spi}
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="" disabled>Select</option>
-                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                    <option value="" disabled>{t('cl_read_placeholder')}</option>
+                    {yesNoOptions.map(option => (
+                      <option key={option} value={option}>{option === 'Yes' ? t('yes') : t('no')}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Read at Pre-AOI *</label>
+                  <label htmlFor="barcode-read-b-pre-aoi">{t('cl_read_pre_aoi')}</label>
                   <select
+                    id="barcode-read-b-pre-aoi"
                     name="barcode_read_b_pre_aoi"
                     value={formData.barcode_read_b_pre_aoi}
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="" disabled>Select</option>
-                    {yesNoOptions.map(option => <option key={option}>{option}</option>)}
+                    <option value="" disabled>{t('cl_read_placeholder')}</option>
+                    {yesNoOptions.map(option => (
+                      <option key={option} value={option}>{option === 'Yes' ? t('yes') : t('no')}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -301,27 +338,29 @@ export default function TechnicianChecklist({ currentUser }) {
         </div>
 
         <div className="form-section">
-          <h2>Workorder Information</h2>
+          <h2>{t('cl_wo_info')}</h2>
           <div className="form-grid-2">
             <div className="form-group">
-              <label>Pre-AOI *</label>
+              <label htmlFor="wo-pre-input">{t('cl_wo_pre')}</label>
               <input
+                id="wo-pre-input"
                 type="text"
                 name="workorder_info_pre_aoi"
                 value={formData.workorder_info_pre_aoi}
                 onChange={handleInputChange}
-                placeholder="Enter pre-AOI workorder info"
+                placeholder={t('cl_wo_pre_placeholder')}
                 required
               />
             </div>
             <div className="form-group">
-              <label>Post-AOI *</label>
+              <label htmlFor="wo-post-input">{t('cl_wo_post')}</label>
               <input
+                id="wo-post-input"
                 type="text"
                 name="workorder_info_post_aoi"
                 value={formData.workorder_info_post_aoi}
                 onChange={handleInputChange}
-                placeholder="Enter post-AOI workorder info"
+                placeholder={t('cl_wo_post_placeholder')}
                 required
               />
             </div>
@@ -329,14 +368,15 @@ export default function TechnicianChecklist({ currentUser }) {
         </div>
 
         <div className="form-section">
-          <h2>AOI Scan Tools</h2>
+          <h2>{t('cl_scan_tools')}</h2>
           <div className="form-group">
-            <label>Workorder Traceability *</label>
+            <label htmlFor="traceability-textarea">{t('cl_traceability')}</label>
             <textarea
+              id="traceability-textarea"
               name="aoi_scan_tools_workorder_traceability"
               value={formData.aoi_scan_tools_workorder_traceability}
               onChange={handleInputChange}
-              placeholder="Enter AOI scan tools and workorder traceability information"
+              placeholder={t('cl_traceability_placeholder')}
               rows="4"
               required
             ></textarea>
@@ -344,18 +384,25 @@ export default function TechnicianChecklist({ currentUser }) {
         </div>
 
         <div className="form-section">
-          <h2>Confirmation</h2>
+          <h2>{t('cl_confirmation')}</h2>
           <div className="form-grid-2">
             <div className="form-group">
-              <label>All Information Correct? *</label>
-              <select name="confirmation" value={formData.confirmation} onChange={handleInputChange} required>
-                <option>Yes</option>
-                <option>No</option>
+              <label htmlFor="confirmation-select">{t('cl_confirm_correct')}</label>
+              <select 
+                id="confirmation-select"
+                name="confirmation" 
+                value={formData.confirmation} 
+                onChange={handleInputChange} 
+                required
+              >
+                <option value="Yes">{t('yes')}</option>
+                <option value="No">{t('no')}</option>
               </select>
             </div>
             <div className="form-group">
-              <label>Submitted By</label>
+              <label htmlFor="submitted-by-input">{t('cl_submitted_by')}</label>
               <input
+                id="submitted-by-input"
                 type="text"
                 name="submitted_by"
                 value={formData.submitted_by}
@@ -369,7 +416,7 @@ export default function TechnicianChecklist({ currentUser }) {
 
         <div className="form-actions">
           <button type="submit" disabled={loading || !isFormComplete || formData.confirmation !== 'Yes'} className="btn-submit">
-            {loading ? 'Submitting...' : 'Submit Checklist'}
+            {loading ? t('cl_btn_submitting') : t('cl_btn_submit')}
           </button>
           {message && <div className={`message ${message.startsWith('✓') ? 'success' : 'error'}`}>{message}</div>}
         </div>

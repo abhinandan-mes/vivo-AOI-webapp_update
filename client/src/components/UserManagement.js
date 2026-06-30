@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import apiService from '../services/api';
 import './UserManagement.css';
-
-const baseRoleOptions = [
-  { value: 'inspector', label: 'Inspector' },
-  { value: 'technician', label: 'Technician' }
-];
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function UserManagement({ currentUser }) {
+  const { t, language } = useLanguage();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [showFormPassword, setShowFormPassword] = useState(false);
 
   // Form state for create/edit
   const [editingUser, setEditingUser] = useState(null);
   const [form, setForm] = useState({
     username: '',
     password: '',
+    confirmPassword: '',
     fullName: '',
     role: 'inspector'
   });
@@ -26,13 +25,18 @@ export default function UserManagement({ currentUser }) {
   const isAdmin = currentUser?.role === 'admin';
   const currentUserId = currentUser?.id;
 
-  const roleOptions = isSuperAdmin
+  const baseRoleOptions = useMemo(() => [
+    { value: 'inspector', label: t('um_role_inspector') },
+    { value: 'technician', label: t('um_role_technician') }
+  ], [t]);
+
+  const roleOptions = useMemo(() => isSuperAdmin
     ? [
-        { value: 'super_admin', label: 'Super Admin' },
-        { value: 'admin', label: 'Admin' },
+        { value: 'super_admin', label: t('um_role_super_admin') },
+        { value: 'admin', label: t('um_role_admin') },
         ...baseRoleOptions
       ]
-    : baseRoleOptions;
+    : baseRoleOptions, [isSuperAdmin, baseRoleOptions, t]);
 
   // Fetch all users on mount
   useEffect(() => {
@@ -73,7 +77,8 @@ export default function UserManagement({ currentUser }) {
 
   const resetForm = () => {
     setEditingUser(null);
-    setForm({ username: '', password: '', fullName: '', role: isSuperAdmin ? 'super_admin' : 'inspector' });
+    setShowFormPassword(false);
+    setForm({ username: '', password: '', confirmPassword: '', fullName: '', role: isSuperAdmin ? 'super_admin' : 'inspector' });
   };
 
   const handleEdit = (user) => {
@@ -90,7 +95,19 @@ export default function UserManagement({ currentUser }) {
   };
 
   const handleDelete = async (userId) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    // Guard: prevent deleting the only remaining super_admin
+    const superAdmins = users.filter(u => u.role === 'super_admin');
+    const targetUser = users.find(u => u.id === userId);
+    if (targetUser?.role === 'super_admin' && superAdmins.length <= 1) {
+      setError(
+        t('lang') === 'zh'
+          ? '无法删除唯一的超级管理员账号。'
+          : 'Cannot delete the only Super Admin account.'
+      );
+      return;
+    }
+
+    if (!window.confirm(t('um_confirm_delete'))) return;
     
     setLoading(true);
     setError('');
@@ -98,10 +115,10 @@ export default function UserManagement({ currentUser }) {
 
     try {
       await apiService.deleteUser(userId);
-      setMessage('User deleted successfully.');
+      setMessage(t('um_msg_delete_success'));
       fetchUsers();
     } catch (err) {
-      setError(err.message || 'Unable to delete user');
+      setError(err.message || t('error'));
     } finally {
       setLoading(false);
     }
@@ -109,9 +126,16 @@ export default function UserManagement({ currentUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
     setError('');
     setMessage('');
+
+    // Validate password confirmation on create
+    if (!editingUser && form.password !== form.confirmPassword) {
+      setError(language === 'zh' ? '两次输入的密码不一致。' : 'Passwords do not match.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       if (editingUser) {
@@ -120,23 +144,18 @@ export default function UserManagement({ currentUser }) {
           fullName: form.fullName,
           role: form.role
         };
-        // Only include username if changed
-        if (form.username !== editingUser.username) {
-          payload.username = form.username;
-        }
-        // Only include password if provided
-        if (form.password) {
-          payload.password = form.password;
-        }
+        if (form.username !== editingUser.username) payload.username = form.username;
+        if (form.password) payload.password = form.password;
 
         await apiService.updateUser(editingUser.id, payload);
         if (editingUser.id === currentUserId) {
-          setMessage(`User ${form.username} updated successfully. Reloading page to apply changes...`);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
+          setMessage(language === 'zh' 
+            ? `用户 ${form.username} 更新成功。正在重新加载页面以应用更改...`
+            : `User ${form.username} updated successfully. Reloading page to apply changes...`
+          );
+          setTimeout(() => window.location.reload(), 1500);
         } else {
-          setMessage(`User ${form.username} updated successfully.`);
+          setMessage(t('um_msg_update_success'));
         }
       } else {
         // Create new user
@@ -146,12 +165,12 @@ export default function UserManagement({ currentUser }) {
           fullName: form.fullName,
           role: form.role
         });
-        setMessage(`User ${form.username} created successfully.`);
+        setMessage(t('um_msg_create_success'));
       }
       resetForm();
       fetchUsers();
     } catch (err) {
-      setError(err.message || editingUser ? 'Unable to update user' : 'Unable to create user');
+      setError(err.message || t('error'));
     } finally {
       setLoading(false);
     }
@@ -159,41 +178,70 @@ export default function UserManagement({ currentUser }) {
 
   return (
     <section className="user-management-card">
-      <h2>User Management</h2>
-      <p>Create, edit, and manage operator accounts and assign roles.</p>
+      <h2>{t('um_title')}</h2>
+      <p>{t('um_desc')}</p>
 
       {/* Create/Edit Form */}
       <form className="user-management-form" onSubmit={handleSubmit}>
-        <h3>{editingUser ? 'Edit User' : 'Create New User'}</h3>
+        <h3>{editingUser ? t('um_form_edit') : t('um_form_create')}</h3>
         
-        <label>
-          Full Name
-          <input name="fullName" value={form.fullName} onChange={handleChange} required />
+        <label htmlFor="um-fullname">
+          {t('profile_fullname')} *
+          <input id="um-fullname" name="fullName" value={form.fullName} onChange={handleChange} required />
         </label>
-        <label>
-          Username
+        <label htmlFor="um-username">
+          {t('um_username')} *
           <input 
+            id="um-username"
             name="username" 
             value={form.username} 
             onChange={handleChange} 
             required 
-            disabled={editingUser} // Username typically shouldn't be changed, but we allow it
+            disabled={!!editingUser}
           />
         </label>
-        <label>
-          Password
-          <input 
-            name="password" 
-            type="password" 
-            value={form.password} 
-            onChange={handleChange} 
-            required={!editingUser} // Required for new users, optional for edits
-            placeholder={editingUser ? 'Leave blank to keep current password' : ''}
-          />
-        </label>
-        <label>
-          Role
+        <div className="form-group-accessible">
+          <label htmlFor="um-password">
+            {t('um_password')}{!editingUser ? ' *' : ''}
+          </label>
+          <div className="password-input-container">
+            <input 
+              id="um-password"
+              name="password" 
+              type={showFormPassword ? 'text' : 'password'}
+              value={form.password} 
+              onChange={handleChange} 
+              required={!editingUser}
+              placeholder={editingUser ? t('um_password_edit_tip') : ''}
+            />
+            <button
+              type="button"
+              className="password-toggle-btn"
+              onClick={() => setShowFormPassword(!showFormPassword)}
+              aria-label={showFormPassword ? 'Hide password' : 'Show password'}
+            >
+              {showFormPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
+        </div>
+        {!editingUser && (
+          <label htmlFor="um-confirm-password">
+            {language === 'zh' ? '确认密码 *' : 'Confirm Password *'}
+            <input
+              id="um-confirm-password"
+              name="confirmPassword"
+              type={showFormPassword ? 'text' : 'password'}
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+              placeholder={language === 'zh' ? '再次输入密码' : 'Re-enter password'}
+            />
+          </label>
+        )}
+        <label htmlFor="um-role">
+          {t('profile_role')}
           <select 
+            id="um-role"
             name="role" 
             value={form.role} 
             onChange={handleChange}
@@ -206,11 +254,11 @@ export default function UserManagement({ currentUser }) {
         </label>
         <div className="form-actions">
           <button type="submit" disabled={loading}>
-            {loading ? 'Saving...' : (editingUser ? 'Update User' : 'Create User')}
+            {loading ? (language === 'zh' ? '正在保存...' : 'Saving...') : (editingUser ? t('um_btn_save') : t('um_btn_create'))}
           </button>
           {editingUser && (
             <button type="button" onClick={resetForm} className="cancel-btn">
-              Cancel
+              {t('cancel')}
             </button>
           )}
         </div>
@@ -221,18 +269,18 @@ export default function UserManagement({ currentUser }) {
 
       {/* Users List */}
       <div className="users-list-section">
-        <h3>Existing Users</h3>
+        <h3>{t('um_table_title')}</h3>
         {users.length === 0 ? (
-          <p className="no-users">No users found.</p>
+          <p className="no-users">{language === 'zh' ? '未找到用户记录。' : 'No users found.'}</p>
         ) : (
           <table className="users-table">
             <thead>
               <tr>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Role</th>
-                <th>Last Login</th>
-                <th>Actions</th>
+                <th>{t('um_th_username')}</th>
+                <th>{t('um_th_fullname')}</th>
+                <th>{t('um_th_role')}</th>
+                <th>{language === 'zh' ? '登录状态 / 最后登录' : 'Last Login'}</th>
+                <th>{t('actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -242,7 +290,7 @@ export default function UserManagement({ currentUser }) {
                   <td>{user.full_name}</td>
                   <td>
                     <span className={`role-badge role-${user.role}`}>
-                      {user.role.replace('_', ' ')}
+                      {t('um_role_' + user.role)}
                     </span>
                   </td>
                   <td>
@@ -251,14 +299,17 @@ export default function UserManagement({ currentUser }) {
                         <div className="session-status-row">
                           <span className={`session-status-dot status-${user.session_status}`} />
                           <span className="session-status-text">
-                            {user.session_status === 'active' ? 'Active' : 'Offline'}
+                            {user.session_status === 'active' 
+                              ? (language === 'zh' ? '在线' : 'Active') 
+                              : (language === 'zh' ? '离线' : 'Offline')
+                            }
                           </span>
                         </div>
-                        <div className="session-time">{new Date(user.last_login).toLocaleString()}</div>
+                        <div className="session-time">{new Date(user.last_login).toLocaleString(language === 'zh' ? 'zh-CN' : undefined)}</div>
                         {user.last_ip && <div className="session-ip">IP: {user.last_ip}</div>}
                       </div>
                     ) : (
-                      <span className="session-never">Never logged in</span>
+                      <span className="session-never">{language === 'zh' ? '从未登录' : 'Never logged in'}</span>
                     )}
                   </td>
                   <td className="actions-cell">
@@ -269,7 +320,7 @@ export default function UserManagement({ currentUser }) {
                           onClick={() => handleEdit(user)}
                           disabled={loading}
                         >
-                          Edit
+                          {t('edit')}
                         </button>
                       )}
                       {canDeleteUser(user) && (
@@ -278,7 +329,7 @@ export default function UserManagement({ currentUser }) {
                           onClick={() => handleDelete(user.id)}
                           disabled={loading}
                         >
-                          Delete
+                          {t('delete')}
                         </button>
                       )}
                       {!canEditUser(user) && !canDeleteUser(user) && (

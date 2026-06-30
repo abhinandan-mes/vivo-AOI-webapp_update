@@ -224,6 +224,18 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 * **Submitted By Column Position**: Repositioned the "Submitted By" column inside the Technician Checklist report to render immediately after the "Submitted At" column.
 * **Two-Row Grouped Headers**: Grouped the Technician Checklist table columns under their respective form card modules using a structured two-row grouped `thead` layout. Columns are visually organized under headers like `Pre-AOI Program`, `Stencil Serial No`, `Barcode Read Information`, `Workorder Info`, `AOI Scan Tools`, and `Confirmation`.
 
+### Resolved: Comprehensive Mobile Responsiveness (June 2026)
+* **Grid and Columns Optimization**: Form grid layouts (`.form-grid-2`, `.form-grid-3`, `.form-grid-4`, `.form-grid-6`) stack gracefully to single columns on devices under `768px` and `480px`.
+* **Login Card Overlaps Prevention**: Modified margins, logo spacing, and selector alignment in [LoginPage.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/LoginPage.css) to eliminate overlaps on viewports down to iPhone SE widths (320px - 375px).
+*   **Scrollable User Management Directory**: Added a responsive wrapper and horizontal scroll bar mapping in [UserManagement.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.css) to prevent operator tables from breaking container frames.
+
+### Resolved: UI/UX & Profile Security Optimization (June 2026)
+*   **Logout Button Relocation**: Relocated the logout button from the main header navigation menu into the user profile settings modal ([App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js) / [ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js)).
+*   **Password Form Control Activation**: The current, new, and confirmation password inputs inside [ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js) are disabled by default. Clicking the `🔑 Change Password` activation toggle button enables the inputs and dynamically displays the "Update Password" submission control in the footer.
+*   **Responsive Small Screen Header (<= 520px)**: Hides the text branding divider and logo title in [App.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.css) and displays the user profile tab button as a sleek circular avatar containing `👤` to prevent navbar overlaps on low-width viewports.
+*   **Inactivity Auto-Logout Tracking**: Implemented a 15-minute global idle and visibility monitor in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js). Idle timeouts prompt a warning modal with an animated 30-second countdown progress bar. User interactions reset the session timer, while expiry triggers a session logout call to the backend.
+*   **Query-Based Redirection Routing**: Utilizes React Router parameters to handle login redirection instead of inline component swapping. Unauthenticated routes redirect to `/login?redirect=...`, and successful login transitions back to the stored pathname, making the web application fully URL-driven.
+
 ### Resolved: Duplicate & Broken Routes in `server/routes/auth.js`
 - **Status**: Fixed
 - **Details**: The duplicate route registrations for `GET /auth/users` and `PUT /auth/users/:id` at the bottom of `server/routes/auth.js` have been removed. The authentication endpoints are now clean, optimized, and execute correctly.

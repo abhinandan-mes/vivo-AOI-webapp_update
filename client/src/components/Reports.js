@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiService from '../services/api';
 import './Reports.css';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const checkpointGroups = [
   { label: 'Laser Barcode Detection', prefix: 'laser_barcode', positions: [
@@ -70,25 +71,6 @@ const checkpointGroups = [
   }
 ];
 
-const checkpointColumns = checkpointGroups.flatMap(group => group.positions.map(position => ({
-  key: `${group.prefix}_${position.key}`,
-  label: `${group.label} - ${position.label}`
-})));
-
-const checklistColumns = [
-  ['Date', 'date'], ['Line', 'line'], ['Group', 'group_name'], ['Shift', 'shift'],
-  ['Submitted At', 'created_at'], ['Submitted By', 'submitted_by'],
-  ['Program', 'pre_aoi_program_full_name'], ['Stencil B Side', 'stencil_serial_no_b_side'], ['Stencil A Side', 'stencil_serial_no_a_side'],
-  ['B Side Laser', 'barcode_read_a_layer'], ['B Side SPI', 'barcode_read_a_spi'], ['B Side Pre-AOI', 'barcode_read_a_pre_aoi'],
-  ['A Side Laser', 'barcode_read_b_layer'], ['A Side SPI', 'barcode_read_b_spi'], ['A Side Pre-AOI', 'barcode_read_b_pre_aoi'],
-  ['Pre-AOI Workorder', 'workorder_info_pre_aoi'], ['Post-AOI Workorder', 'workorder_info_post_aoi'],
-  ['Traceability', 'aoi_scan_tools_workorder_traceability'], ['Confirmed', 'confirmation']
-];
-
-const shiftOptions = ['Day', 'Night'];
-const groupOptions = ['A', 'B', 'C'];
-const lineOptions = Array.from({ length: 25 }, (_, index) => String(401 + index));
-
 const text = value => value === null || value === undefined || value === '' ? '—' : value;
 const dateKey = value => {
   if (!value) return '';
@@ -96,20 +78,7 @@ const dateKey = value => {
   const pad = number => String(number).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 };
-const formatDate = value => value ? new Date(value).toLocaleDateString() : '—';
-const formatDateTime = value => value ? new Date(value).toLocaleString() : '—';
-const reportTitle = reportType => reportType === 'checkpoint' ? 'Daily Function Checks' : 'Technician Checklists';
-const reportFileName = reportType => reportType === 'checkpoint' ? 'daily-function-checks' : 'technician-checklists';
-const getExportColumns = reportType => reportType === 'checkpoint'
-  ? [['Date', 'date'], ['Line', 'line'], ['Group', 'group_name'], ['Shift', 'shift'], ['Responsible Person', 'responsible_person'], ['Time', 'time'], ['Submitted By', 'submitted_by'], ['Submitted At', 'created_at'], ...checkpointColumns.map(column => [column.label, column.key])]
-  : checklistColumns;
-const isCheckpointColumn = key => checkpointColumns.some(column => column.key === key);
-const exportValue = (row, key, reportType) => {
-  if (key === 'date') return dateKey(row[key]);
-  if (key === 'created_at') return row[key] ? new Date(row[key]).toLocaleString() : '';
-  if (reportType === 'checkpoint' && isCheckpointColumn(key)) return row[key] ? 'Yes' : 'No';
-  return row[key] ?? '';
-};
+
 const escapeHtml = value => String(value ?? '')
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
@@ -118,12 +87,93 @@ const escapeHtml = value => String(value ?? '')
   .replace(/'/g, '&#039;');
 
 export default function Reports() {
+  const { t, language } = useLanguage();
   const [reportType, setReportType] = useState('checklist');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState({ from: '', to: '', line: '', shift: '', group: '' });
   const [showExport, setShowExport] = useState(false);
+
+  const checkpointColumns = useMemo(() => {
+    return checkpointGroups.flatMap(group => group.positions.map(position => ({
+      key: `${group.prefix}_${position.key}`,
+      label: `${t('label_' + group.prefix)} - ${t('cp_th_' + position.key)}`
+    })));
+  }, [t]);
+
+  const checklistColumns = useMemo(() => [
+    [t('date'), 'date'],
+    [t('line'), 'line'],
+    [t('group'), 'group_name'],
+    [t('shift'), 'shift'],
+    [t('rep_th_submitted_at'), 'created_at'],
+    [t('rep_th_submitted_by'), 'submitted_by'],
+    [t('rep_th_program'), 'pre_aoi_program_full_name'],
+    [t('rep_th_stencil_b'), 'stencil_serial_no_b_side'],
+    [t('rep_th_stencil_a'), 'stencil_serial_no_a_side'],
+    [t('rep_th_b_laser'), 'barcode_read_a_layer'],
+    [t('rep_th_b_spi'), 'barcode_read_a_spi'],
+    [t('rep_th_b_pre_aoi'), 'barcode_read_a_pre_aoi'],
+    [t('rep_th_a_laser'), 'barcode_read_b_layer'],
+    [t('rep_th_a_spi'), 'barcode_read_b_spi'],
+    [t('rep_th_a_pre_aoi'), 'barcode_read_b_pre_aoi'],
+    [t('rep_th_pre_wo'), 'workorder_info_pre_aoi'],
+    [t('rep_th_post_wo'), 'workorder_info_post_aoi'],
+    [t('rep_th_traceability'), 'aoi_scan_tools_workorder_traceability'],
+    [t('rep_th_confirmed'), 'confirmation']
+  ], [t]);
+
+  const shiftOptions = ['Day', 'Night'];
+  const groupOptions = ['A', 'B', 'C'];
+  const lineOptions = Array.from({ length: 25 }, (_, index) => String(401 + index));
+
+  const formatDate = value => {
+    if (!value) return '—';
+    return new Date(value).toLocaleDateString(language === 'zh' ? 'zh-CN' : undefined);
+  };
+
+  const formatDateTime = value => {
+    if (!value) return '—';
+    return new Date(value).toLocaleString(language === 'zh' ? 'zh-CN' : undefined);
+  };
+
+  const reportTitle = reportType => reportType === 'checkpoint' ? t('rep_toggle_checkpoint') : t('rep_toggle_checklist');
+  const reportFileName = reportType => reportType === 'checkpoint' ? 'daily-function-checks' : 'technician-checklists';
+  
+  const getExportColumns = reportType => reportType === 'checkpoint'
+    ? [
+        [t('date'), 'date'],
+        [t('line'), 'line'],
+        [t('group'), 'group_name'],
+        [t('shift'), 'shift'],
+        [t('rep_th_resp_person'), 'responsible_person'],
+        [t('rep_th_time'), 'time'],
+        [t('rep_th_submitted_by'), 'submitted_by'],
+        [t('rep_th_submitted_at'), 'created_at'],
+        ...checkpointColumns.map(column => [column.label, column.key])
+      ]
+    : checklistColumns;
+
+  const isCheckpointColumn = key => checkpointColumns.some(column => column.key === key);
+
+  const exportValue = (row, key, reportType) => {
+    if (key === 'date') return dateKey(row[key]);
+    if (key === 'created_at') return row[key] ? new Date(row[key]).toLocaleString(language === 'zh' ? 'zh-CN' : undefined) : '';
+    if (reportType === 'checkpoint' && isCheckpointColumn(key)) return row[key] ? t('yes') : t('no');
+    
+    // Localize options values
+    if (key === 'shift') {
+      return row[key] === 'Day' ? t('day') : (row[key] === 'Night' ? t('night') : row[key]);
+    }
+    if (key === 'confirmation') {
+      return row[key] === 'Yes' ? t('yes') : (row[key] === 'No' ? t('no') : row[key]);
+    }
+    if (key.startsWith('barcode_read_')) {
+      return row[key] === 'Yes' ? t('yes') : (row[key] === 'No' ? t('no') : row[key]);
+    }
+    return row[key] ?? '';
+  };
 
   useEffect(() => {
     let active = true;
@@ -187,7 +237,7 @@ export default function Reports() {
     if (!printWindow) return;
 
     const title = reportTitle(reportType);
-    const generatedDate = new Date().toLocaleString();
+    const generatedDate = new Date().toLocaleString(language === 'zh' ? 'zh-CN' : undefined);
     const tableRows = filteredRows.map(row => `
       <tr>${columns.map(([, key]) => `<td>${escapeHtml(exportValue(row, key, reportType) || '—')}</td>`).join('')}</tr>
     `).join('');
@@ -209,7 +259,7 @@ export default function Reports() {
         </head>
         <body>
           <h1>${escapeHtml(title)}</h1>
-          <p>Generated ${escapeHtml(generatedDate)} · ${filteredRows.length} record${filteredRows.length === 1 ? '' : 's'}</p>
+          <p>${language === 'zh' ? '生成于' : 'Generated'} ${escapeHtml(generatedDate)} · ${filteredRows.length} ${language === 'zh' ? '条记录' : `record${filteredRows.length === 1 ? '' : 's'}`}</p>
           <table>
             <thead><tr>${columns.map(([label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr></thead>
             <tbody>${tableRows}</tbody>
@@ -225,7 +275,11 @@ export default function Reports() {
   const triggerExport = (format) => {
     setShowExport(false);
     const label = format === 'csv' ? 'CSV' : format === 'pdf' ? 'PDF' : '';
-    const shouldExport = label && window.confirm(`Export ${filteredRows.length} ${reportTitle(reportType)} record${filteredRows.length === 1 ? '' : 's'} as ${label}?`);
+    const confirmMsg = language === 'zh'
+      ? `是否将 ${filteredRows.length} 条记录导出为 ${label}？`
+      : `Export ${filteredRows.length} ${reportTitle(reportType)} record${filteredRows.length === 1 ? '' : 's'} as ${label}?`;
+    
+    const shouldExport = label && window.confirm(confirmMsg);
     if (!shouldExport) return;
     if (format === 'csv') downloadCsv();
     if (format === 'pdf') exportPdf();
@@ -237,8 +291,8 @@ export default function Reports() {
     <section className="reports-container">
       <div className="reports-heading">
         <div>
-          <h1>Reports</h1>
-          <p>Detailed records stored in the backend.</p>
+          <h1>{t('rep_title')}</h1>
+          <p>{language === 'zh' ? '存储在系统后台的详细点检检验记录。' : 'Detailed records stored in the backend.'}</p>
         </div>
         <div className="export-header-action">
           <div className="export-dropdown-wrapper" onMouseLeave={() => setShowExport(false)}>
@@ -251,7 +305,7 @@ export default function Reports() {
               <svg className="download-icon" viewBox="0 0 24 24" width="16" height="16" style={{ marginRight: '8px' }}>
                 <path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
               </svg>
-              Export Data
+              {t('rep_btn_export')}
             </button>
             {showExport && (
               <div className="export-dropdown-menu">
@@ -259,13 +313,13 @@ export default function Reports() {
                   <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
                     <path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
                   </svg>
-                  Export as CSV (Excel)
+                  {t('rep_opt_csv')}
                 </button>
                 <button type="button" className="export-menu-item" onClick={() => triggerExport('pdf')}>
                   <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
                     <path fill="currentColor" d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V8H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V8H15c.83 0 1.5.67 1.5 1.5v2zm4.5-3H19v1h1.5V11H19v2h-1.5V8H21v1.5zM9 9.5h1v-1H9v1zm5.5 2h1v-2h-1v2zM2 6v14c0 1.1.9 2 2 2h14v-1.5H4V6H2z"/>
                   </svg>
-                  Export as PDF Document
+                  {t('rep_opt_pdf')}
                 </button>
               </div>
             )}
@@ -279,26 +333,26 @@ export default function Reports() {
           className={`toggle-btn ${reportType === 'checklist' ? 'active' : ''}`}
           onClick={() => setReportType('checklist')}
         >
-          Technician Checklists
+          {t('rep_toggle_checklist')}
         </button>
         <button
           type="button"
           className={`toggle-btn ${reportType === 'checkpoint' ? 'active' : ''}`}
           onClick={() => setReportType('checkpoint')}
         >
-          Daily Function Checks
+          {t('rep_toggle_checkpoint')}
         </button>
       </div>
 
       <div className="report-filters">
-        <label>From<input type="date" name="from" value={filters.from} max={filters.to || undefined} onChange={updateFilter} /></label>
-        <label>To<input type="date" name="to" value={filters.to} min={filters.from || undefined} onChange={updateFilter} /></label>
-        <label>Line<select name="line" value={filters.line} onChange={updateFilter}><option value="">All lines</option>{lineOptions.map(line => <option key={line}>{line}</option>)}</select></label>
-        <label>Shift<select name="shift" value={filters.shift} onChange={updateFilter}><option value="">All shifts</option>{shiftOptions.map(shift => <option key={shift}>{shift}</option>)}</select></label>
-        <label>Group<select name="group" value={filters.group} onChange={updateFilter}><option value="">All groups</option>{groupOptions.map(group => <option key={group}>{group}</option>)}</select></label>
+        <label>{t('rep_filter_from')}<input type="date" name="from" value={filters.from} max={filters.to || undefined} onChange={updateFilter} /></label>
+        <label>{t('rep_filter_to')}<input type="date" name="to" value={filters.to} min={filters.from || undefined} onChange={updateFilter} /></label>
+        <label>{t('rep_filter_line')}<select name="line" value={filters.line} onChange={updateFilter}><option value="">{language === 'zh' ? '全部线别' : 'All lines'}</option>{lineOptions.map(line => <option key={line} value={line}>{line}</option>)}</select></label>
+        <label>{t('rep_filter_shift')}<select name="shift" value={filters.shift} onChange={updateFilter}><option value="">{language === 'zh' ? '全部班次' : 'All shifts'}</option>{shiftOptions.map(shift => <option key={shift} value={shift}>{shift === 'Day' ? t('day') : t('night')}</option>)}</select></label>
+        <label>{t('rep_filter_group')}<select name="group" value={filters.group} onChange={updateFilter}><option value="">{language === 'zh' ? '全部班组' : 'All groups'}</option>{groupOptions.map(group => <option key={group} value={group}>{group}</option>)}</select></label>
         {hasActiveFilters && (
           <button className="clear-filters" type="button" onClick={() => setFilters({ from: '', to: '', line: '', shift: '', group: '' })}>
-            ✕ Clear
+            ✕ {t('clear')}
           </button>
         )}
       </div>
@@ -306,49 +360,73 @@ export default function Reports() {
       {!loading && !error && (
         <div className="report-meta-bar">
           <span className="result-count-badge">
-            Showing <strong>{filteredRows.length}</strong> of {rows.length} entries
+            {language === 'zh' 
+              ? <span>显示第 <strong>{filteredRows.length}</strong> 条，共 {rows.length} 条记录</span>
+              : <span>Showing <strong>{filteredRows.length}</strong> of {rows.length} entries</span>
+            }
           </span>
         </div>
       )}
-      {loading && <div className="report-state">Loading report…</div>}
-      {error && <div className="report-state error">Could not load report: {error}</div>}
-      {!loading && !error && rows.length === 0 && <div className="report-state">No records have been submitted yet.</div>}
-      {!loading && !error && rows.length > 0 && filteredRows.length === 0 && <div className="report-state">No records match these filters.</div>}
+      {loading && <div className="report-state">{t('rep_loading')}</div>}
+      {error && <div className="report-state error">{t('error')}: {error}</div>}
+      {!loading && !error && rows.length === 0 && <div className="report-state">{language === 'zh' ? '暂无已提交的检查记录。' : 'No records have been submitted yet.'}</div>}
+      {!loading && !error && rows.length > 0 && filteredRows.length === 0 && <div className="report-state">{t('rep_empty')}</div>}
       {!loading && !error && filteredRows.length > 0 && (
         <div className="report-table-wrap">
-          {reportType === 'checkpoint' ? <CheckpointReport rows={filteredRows} /> : <ChecklistReport rows={filteredRows} />}
+          {reportType === 'checkpoint' 
+            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} /> 
+            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} />
+          }
         </div>
       )}
     </section>
   );
 }
 
-function CheckpointReport({ rows }) {
+function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime }) {
   return <table className="report-table detailed-checkpoint-report">
     <thead>
       <tr>
-        <th rowSpan="2" className="sticky-date">Date</th><th rowSpan="2" className="sticky-line">Line</th><th rowSpan="2" className="sticky-group">Group</th>
-        <th rowSpan="2">Shift</th><th rowSpan="2">Responsible</th><th rowSpan="2">Time</th><th rowSpan="2">Submitted By</th><th rowSpan="2">Submitted At</th>
-        {checkpointGroups.map(group => <th key={group.prefix} colSpan={group.positions.length} className="function-heading">{group.label}</th>)}
+        <th rowSpan="2" className="sticky-date">{t('date')}</th>
+        <th rowSpan="2" className="sticky-line">{t('line')}</th>
+        <th rowSpan="2" className="sticky-group">{t('group')}</th>
+        <th rowSpan="2">{t('shift')}</th>
+        <th rowSpan="2">{t('cp_resp_person')}</th>
+        <th rowSpan="2">{t('cp_time')}</th>
+        <th rowSpan="2">{t('rep_th_submitted_by')}</th>
+        <th rowSpan="2">{t('rep_th_submitted_at')}</th>
+        {checkpointGroups.map(group => <th key={group.prefix} colSpan={group.positions.length} className="function-heading">{t('label_' + group.prefix)}</th>)}
       </tr>
-      <tr>{checkpointGroups.flatMap(group => group.positions.map(position => <th key={`${group.prefix}_${position.key}`} title={position.label}>{position.short}</th>))}</tr>
+      <tr>{checkpointGroups.flatMap(group => group.positions.map(position => <th key={`${group.prefix}_${position.key}`} title={t('label_' + group.prefix) + ' - ' + t('cp_th_' + position.key)}>{t('cp_th_' + position.key)}</th>))}</tr>
     </thead>
     <tbody>{rows.map(row => <tr key={row.id}>
-      <td className="sticky-date">{formatDate(row.date)}</td><td className="sticky-line">{text(row.line)}</td><td className="sticky-group">{text(row.group_name)}</td>
-      <td>{text(row.shift)}</td><td>{text(row.responsible_person)}</td><td>{text(row.time)}</td><td>{text(row.submitted_by)}</td><td>{formatDateTime(row.created_at)}</td>
-      {checkpointColumns.map(column => <td key={column.key} className="check-status-cell"><span className={`status-mark ${row[column.key] ? 'checked' : 'not-checked'}`} title={row[column.key] ? 'Checked' : 'Not checked'}>{row[column.key] ? '✓ Yes' : '— No'}</span></td>)}
+      <td className="sticky-date">{formatDate(row.date)}</td>
+      <td className="sticky-line">{text(row.line)}</td>
+      <td className="sticky-group">{text(row.group_name)}</td>
+      <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : text(row.shift))}</td>
+      <td>{text(row.responsible_person)}</td>
+      <td>{text(row.time)}</td>
+      <td>{text(row.submitted_by)}</td>
+      <td>{formatDateTime(row.created_at)}</td>
+      {checkpointColumns.map(column => <td key={column.key} className="check-status-cell"><span className={`status-mark ${row[column.key] ? 'checked' : 'not-checked'}`} title={row[column.key] ? t('yes') : t('no')}>{row[column.key] ? `✓ ${t('yes')}` : `— ${t('no')}`}</span></td>)}
     </tr>) }</tbody>
   </table>;
 }
 
-function ChecklistReport({ rows }) {
+function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime }) {
   const renderCell = (key, value) => {
     const cleanVal = text(value);
-    if (cleanVal === 'OK' || cleanVal === 'Yes') {
-      return <span className="status-mark checked">✓ {cleanVal}</span>;
+    
+    // Localize shift display
+    if (key === 'shift') {
+      return value === 'Day' ? t('day') : (value === 'Night' ? t('night') : cleanVal);
     }
-    if (cleanVal === 'NG' || cleanVal === 'No') {
-      return <span className="status-mark not-checked">✗ {cleanVal}</span>;
+    // Localize confirmation/check values
+    if (cleanVal === 'Yes') {
+      return <span className="status-mark checked">✓ {t('yes')}</span>;
+    }
+    if (cleanVal === 'No') {
+      return <span className="status-mark not-checked">✗ {t('no')}</span>;
     }
     return cleanVal;
   };
@@ -357,17 +435,17 @@ function ChecklistReport({ rows }) {
     <table className="report-table detailed-checklist-report">
       <thead>
         <tr>
-          <th rowSpan="2" className="sticky-date">Date</th>
-          <th rowSpan="2" className="sticky-line">Line</th>
-          <th rowSpan="2" className="sticky-group">Group</th>
-          <th rowSpan="2">Shift</th>
-          <th rowSpan="2">Submitted At</th>
-          <th rowSpan="2">Submitted By</th>
-          <th className="function-heading">Pre-AOI Program</th>
-          <th colSpan="2" className="function-heading">Stencil Serial No</th>
-          <th colSpan="6" className="function-heading">Barcode Read Information</th>
-          <th colSpan="3" className="function-heading">AOI Scan Tools</th>
-          <th className="function-heading">Confirmation</th>
+          <th rowSpan="2" className="sticky-date">{t('date')}</th>
+          <th rowSpan="2" className="sticky-line">{t('line')}</th>
+          <th rowSpan="2" className="sticky-group">{t('group')}</th>
+          <th rowSpan="2">{t('shift')}</th>
+          <th rowSpan="2">{t('rep_th_submitted_at')}</th>
+          <th rowSpan="2">{t('rep_th_submitted_by')}</th>
+          <th className="function-heading">{language === 'zh' ? 'Pre-AOI 程序' : 'Pre-AOI Program'}</th>
+          <th colSpan="2" className="function-heading">{language === 'zh' ? '钢网编号' : 'Stencil Serial No'}</th>
+          <th colSpan="6" className="function-heading">{language === 'zh' ? '条码读取状态' : 'Barcode Read Information'}</th>
+          <th colSpan="3" className="function-heading">{language === 'zh' ? 'AOI 扫描工具' : 'AOI Scan Tools'}</th>
+          <th className="function-heading">{t('cl_confirmation')}</th>
         </tr>
         <tr>
           {checklistColumns.slice(6).map(([label]) => (

@@ -1,22 +1,22 @@
 .home-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 /* Welcome Banner */
 .welcome-banner {
   background: linear-gradient(135deg, #415fff 0%, #1e3bb3 100%);
   color: #ffffff;
-  border-radius: 16px;
-  padding: 2.25rem 2.5rem;
+  border-radius: 12px;
+  padding: 1.25rem 1.75rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 10px 30px rgba(65, 95, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(65, 95, 255, 0.15);
   position: relative;
   overflow: hidden;
 }
@@ -34,14 +34,14 @@
 }
 
 .welcome-info h1 {
-  font-size: 1.85rem;
+  font-size: 1.45rem;
   font-weight: 800;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   letter-spacing: -0.02em;
 }
 
 .welcome-info p {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
@@ -51,9 +51,9 @@
 .current-date-badge {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
-  padding: 0.6rem 1.2rem;
+  padding: 0.4rem 1rem;
   border-radius: 99px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -62,83 +62,83 @@
 /* Stats Cards Grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
 }
 
 .stat-card {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
   border: 1px solid rgba(15, 23, 42, 0.03);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
 }
 
 .stat-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
 }
 
 .users-icon {
-  background: rgba(65, 95, 255, 0.1);
+  background: rgba(65, 95, 255, 0.08);
   color: #415fff;
 }
 
 .sessions-icon {
-  background: rgba(65, 95, 255, 0.1);
+  background: rgba(65, 95, 255, 0.08);
   color: #415fff;
 }
 
 .active-icon {
-  background: rgba(34, 197, 94, 0.1);
+  background: rgba(34, 197, 94, 0.08);
   color: #22c55e;
 }
 
 .ip-icon {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(245, 158, 11, 0.08);
   color: #f59e0b;
 }
 
 .stat-content h3 {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #64748b;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.15rem;
 }
 
 .stat-number {
-  font-size: 1.75rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #0f172a;
 }
 
 .stat-number.font-small {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-family: monospace;
 }
 
 /* Dashboard Cards */
 .dashboard-card {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
   border: 1px solid rgba(15, 23, 42, 0.03);
 }
 

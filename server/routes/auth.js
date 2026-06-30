@@ -251,6 +251,14 @@ router.delete('/auth/users/:id', authenticateToken, async (req, res) => {
     });
     if (!targetUser) return res.status(404).json({ success: false, error: 'User not found' });
 
+    // Guard: cannot delete the last remaining super_admin
+    if (targetUser.role === 'super_admin') {
+      const superAdminCount = await prisma.appUser.count({ where: { role: 'super_admin' } });
+      if (superAdminCount <= 1) {
+        return res.status(400).json({ success: false, error: 'Cannot delete the only Super Admin account.' });
+      }
+    }
+
     const canDelete = (req.user.role === 'super_admin') || 
                       (req.user.role === 'admin' && ['inspector', 'technician'].includes(targetUser.role));
 

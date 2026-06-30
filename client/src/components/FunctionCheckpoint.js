@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiService from '../services/api';
 import './FunctionCheckpoint.css';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const lineOptions = Array.from({ length: 25 }, (_, index) => String(401 + index));
 const groupOptions = ['A', 'B', 'C'];
 
 export default function FunctionCheckpoint({ currentUser }) {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     line: '',
     group_name: '',
@@ -74,7 +78,7 @@ export default function FunctionCheckpoint({ currentUser }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const shouldSubmit = window.confirm('Submit this Daily Function Checkpoint? Select Cancel to review your entries.');
+    const shouldSubmit = window.confirm(t('cp_confirm_submit'));
     if (!shouldSubmit) return;
 
     const payload = {
@@ -82,11 +86,17 @@ export default function FunctionCheckpoint({ currentUser }) {
       submitted_by: currentUser ? `${currentUser.full_name} (${currentUser.username})` : ''
     };
 
+    const isFormValid = formData.line && formData.group_name && formData.shift && formData.date;
+    if (!isFormValid) return;
+
     setLoading(true);
     try {
       await apiService.createCheckpoint(payload);
-      setMessage('✓ Daily Function Checkpoint Submitted Successfully');
-      setTimeout(() => setMessage(''), 3000);
+      setMessage(t('cp_msg_success'));
+      setTimeout(() => {
+        setMessage('');
+        navigate('/reports');
+      }, 1500);
       setFormData({
         ...formData,
         line: '',
@@ -97,40 +107,55 @@ export default function FunctionCheckpoint({ currentUser }) {
         time: ''
       });
     } catch (error) {
-      setMessage('✗ Error creating checkpoint: ' + error.message);
+      setMessage('✗ ' + t('error') + ': ' + error.message);
     } finally {
       setLoading(false);
     }
   };
 
+  const isFormValid = formData.line && formData.group_name && formData.shift && formData.date;
+
   return (
     <div className="checkpoint-container">
       <div className="checkpoint-header">
-        <h1>AOI Daily Function Checkpoint</h1>
-        <p>Enable/Disable equipment function checks</p>
+        <h1>{t('cp_title')}</h1>
+        <p>{t('cp_desc')}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="checkpoint-form">
         <div className="form-section">
-          <h2>Basic Information</h2>
+          <h2>{t('cp_basic_info')}</h2>
           <div className="form-grid-6">
             <div className="form-group">
-              <label>Line *</label>
-              <select name="line" value={formData.line} onChange={handleInputChange} required>
-                <option value="">Select line</option>
+              <label htmlFor="line-select">{t('cp_line_req')}</label>
+              <select 
+                id="line-select" 
+                name="line" 
+                value={formData.line} 
+                onChange={handleInputChange} 
+                required
+              >
+                <option value="">{t('cp_line_placeholder')}</option>
                 {lineOptions.map(line => <option key={line} value={line}>{line}</option>)}
               </select>
             </div>
             <div className="form-group">
-              <label>Group *</label>
-              <select name="group_name" value={formData.group_name} onChange={handleInputChange} required>
-                <option value="">Select group</option>
+              <label htmlFor="group-select">{t('cp_group_req')}</label>
+              <select 
+                id="group-select" 
+                name="group_name" 
+                value={formData.group_name} 
+                onChange={handleInputChange} 
+                required
+              >
+                <option value="">{t('cp_group_placeholder')}</option>
                 {groupOptions.map(group => <option key={group} value={group}>{group}</option>)}
               </select>
             </div>
             <div className="form-group">
-              <label>Date *</label>
+              <label htmlFor="date-input">{t('cp_date_req')}</label>
               <input
+                id="date-input"
                 type="date"
                 name="date"
                 value={formData.date}
@@ -139,26 +164,34 @@ export default function FunctionCheckpoint({ currentUser }) {
               />
             </div>
             <div className="form-group">
-              <label>Shift *</label>
-              <select name="shift" value={formData.shift} onChange={handleInputChange} required>
-                <option value="" disabled>Select shift</option>
-                <option>Day</option>
-                <option>Night</option>
+              <label htmlFor="shift-select">{t('cp_shift_req')}</label>
+              <select 
+                id="shift-select" 
+                name="shift" 
+                value={formData.shift} 
+                onChange={handleInputChange} 
+                required
+              >
+                <option value="" disabled>{t('cp_shift_placeholder')}</option>
+                <option value="Day">{t('day')}</option>
+                <option value="Night">{t('night')}</option>
               </select>
             </div>
             <div className="form-group">
-              <label>Responsible Person</label>
+              <label htmlFor="resp-person-input">{t('cp_resp_person')}</label>
               <input
+                id="resp-person-input"
                 type="text"
                 name="responsible_person"
                 value={formData.responsible_person}
                 onChange={handleInputChange}
-                placeholder="Enter name"
+                placeholder={t('cp_resp_person_placeholder')}
               />
             </div>
             <div className="form-group">
-              <label>Time</label>
+              <label htmlFor="time-input">{t('cp_time')}</label>
               <input
+                id="time-input"
                 type="time"
                 name="time"
                 value={formData.time}
@@ -170,28 +203,68 @@ export default function FunctionCheckpoint({ currentUser }) {
 
         <div className="check-table-wrap">
           <table className="check-table">
-            <thead><tr><th>Function</th><th>Before · Bottom</th><th>Before · Top</th><th>After · Bottom</th><th>After · Top</th></tr></thead>
+            <thead>
+              <tr>
+                <th>{t('cp_th_function')}</th>
+                <th>{t('cp_th_before_bot')}</th>
+                <th>{t('cp_th_before_top')}</th>
+                <th>{t('cp_th_after_bot')}</th>
+                <th>{t('cp_th_after_top')}</th>
+              </tr>
+            </thead>
             <tbody>
               {checkpointGroups.filter(group => group.positions.length === 4).map(group => (
                 <tr key={group.prefix}>
-                  <th scope="row">{group.label}</th>
+                  <th scope="row">{t('label_' + group.prefix)}</th>
                   {group.positions.map(position => {
                     const field = `${group.prefix}_${position}`;
-                    return <td key={position}><label className="mini-check"><input type="checkbox" name={field} checked={formData[field]} onChange={handleInputChange} /><span aria-hidden="true"></span></label></td>;
+                    return (
+                      <td key={position}>
+                        <label className="mini-check">
+                          <input 
+                            type="checkbox" 
+                            name={field} 
+                            checked={formData[field]} 
+                            onChange={handleInputChange} 
+                            aria-label={`${t('label_' + group.prefix)} - ${t('cp_th_' + position)}`}
+                          />
+                          <span aria-hidden="true"></span>
+                        </label>
+                      </td>
+                    );
                   })}
                 </tr>
               ))}
             </tbody>
           </table>
           <table className="check-table check-table-simple">
-            <thead><tr><th>Function</th><th>Before</th><th>After</th></tr></thead>
+            <thead>
+              <tr>
+                <th>{t('cp_th_function')}</th>
+                <th>{t('cp_th_before')}</th>
+                <th>{t('cp_th_after')}</th>
+              </tr>
+            </thead>
             <tbody>
               {checkpointGroups.filter(group => group.positions.length === 2).map(group => (
                 <tr key={group.prefix}>
-                  <th scope="row">{group.label}</th>
+                  <th scope="row">{t('label_' + group.prefix)}</th>
                   {group.positions.map(position => {
                     const field = `${group.prefix}_${position}`;
-                    return <td key={position}><label className="mini-check"><input type="checkbox" name={field} checked={formData[field]} onChange={handleInputChange} /><span aria-hidden="true"></span></label></td>;
+                    return (
+                      <td key={position}>
+                        <label className="mini-check">
+                          <input 
+                            type="checkbox" 
+                            name={field} 
+                            checked={formData[field]} 
+                            onChange={handleInputChange} 
+                            aria-label={`${t('label_' + group.prefix)} - ${t('cp_th_' + position)}`}
+                          />
+                          <span aria-hidden="true"></span>
+                        </label>
+                      </td>
+                    );
                   })}
                 </tr>
               ))}
@@ -200,8 +273,8 @@ export default function FunctionCheckpoint({ currentUser }) {
         </div>
 
         <div className="form-actions">
-          <button type="submit" disabled={loading} className="btn-submit">
-            {loading ? 'Submitting...' : 'Submit Checkpoint'}
+          <button type="submit" disabled={loading || !isFormValid} className="btn-submit">
+            {loading ? t('cp_btn_submitting') : t('cp_btn_submit')}
           </button>
           {message && <div className={`message ${message.startsWith('✓') ? 'success' : 'error'}`}>{message}</div>}
         </div>

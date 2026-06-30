@@ -293,3 +293,27 @@
   font-style: italic;
   font-size: 0.85rem;
 }
+
+@media (max-width: 768px) {
+  .user-management-card {
+    padding: 1rem;
+  }
+  .user-management-form {
+    padding: 1rem;
+  }
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .form-actions button {
+    width: 100%;
+  }
+  .users-list-section {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+  }
+  .users-table {
+    min-width: 600px;
+  }
+}

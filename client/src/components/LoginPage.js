@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import vivoLogo from '../assets/vivo-logo.svg';
 import './LoginPage.css';
 
 export default function LoginPage({ onLogin }) {
+  const { language, changeLanguage, t } = useLanguage();
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -23,7 +27,7 @@ export default function LoginPage({ onLogin }) {
         password: credentials.password
       });
     } catch (err) {
-      setError(err.message || 'Unable to sign in');
+      setError(err.message || t('login_error_default'));
     } finally {
       setLoading(false);
     }
@@ -32,44 +36,77 @@ export default function LoginPage({ onLogin }) {
   return (
     <main className="login-page">
       <section className="login-shell">
+        <div className="login-lang-selector">
+          <button 
+            type="button" 
+            className={`login-lang-btn ${language === 'en' ? 'active' : ''}`}
+            onClick={() => changeLanguage('en')}
+          >
+            EN
+          </button>
+          <button 
+            type="button" 
+            className={`login-lang-btn ${language === 'zh' ? 'active' : ''}`}
+            onClick={() => changeLanguage('zh')}
+          >
+            中文
+          </button>
+        </div>
         <div className="login-brand">
           <img src={vivoLogo} alt="vivo" />
           <span aria-hidden="true"></span>
           <strong>AOI CheckPoint</strong>
         </div>
         <div className="login-copy">
-          <h1>AOI Digital Checksheet</h1>
-          <p>Sign in to manage daily function checkpoints, technician checklists, and inspection reports.</p>
+          <h1>{t('login_title')}</h1>
+          <p>{t('login_desc')}</p>
         </div>
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="login-form-heading">
-            <h2>Secure Login</h2>
-            <p>Authorized access only</p>
+            <h2>{t('login_secure_heading')}</h2>
+            <p>{t('login_authorized_only')}</p>
           </div>
-          <label>Username
+          <div className="form-group-accessible">
+            <label htmlFor="username-input">{t('login_username')}</label>
             <input
+              id="username-input"
               name="username"
               value={credentials.username}
               onChange={handleChange}
               autoComplete="username"
-              placeholder="Enter username"
+              placeholder={t('login_username_placeholder')}
               required
             />
-          </label>
-          <label>Password
-            <input
-              name="password"
-              type="password"
-              value={credentials.password}
-              onChange={handleChange}
-              autoComplete="current-password"
-              placeholder="Enter password"
-              required
-            />
-          </label>
+          </div>
+          <div className="form-group-accessible">
+            <label htmlFor="password-input">{t('login_password')}</label>
+            <div className="password-input-container">
+              <input
+                id="password-input"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={credentials.password}
+                onChange={handleChange}
+                autoComplete="current-password"
+                placeholder={t('login_password_placeholder')}
+                required
+              />
+              <button 
+                type="button" 
+                className="password-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
+          </div>
           <button type="submit" disabled={loading || !credentials.username || !credentials.password}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('login_btn_loading') : t('login_btn')}
           </button>
+          <div className="login-forgot-pwd">
+            {t('login_forgot_pwd')}
+          </div>
           {error && <div className="login-error">{error}</div>}
         </form>
       </section>
