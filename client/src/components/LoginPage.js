@@ -26,7 +26,8 @@ export default function LoginPage({ onLogin }) {
         password: credentials.password
       });
     } catch (err) {
-      setError(err.message || t('login_error_default'));
+      // Always show the localised error — the server message is English-only
+      setError(t('login_error_default'));
     } finally {
       setLoading(false);
     }
@@ -54,7 +55,7 @@ export default function LoginPage({ onLogin }) {
         <div className="login-brand">
           <img src={vivoLogo} alt="vivo" />
           <span aria-hidden="true" />
-          <strong>AOI Digital Checksheet</strong>
+          <strong>{language === 'zh' ? 'AOI 数字化检查表' : 'AOI Digital Checksheet'}</strong>
         </div>
 
         {/* ── Left Panel: Hero Copy ── */}
