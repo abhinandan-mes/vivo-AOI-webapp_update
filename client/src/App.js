@@ -20,6 +20,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // JWT expiry fired by Axios interceptor — treat as inactivity (preserve redirect)
     const expireSession = () => {
       authStorage.clearToken();
       setUser(null);
@@ -71,7 +72,21 @@ function App() {
     }
   };
 
+  // Manual logout — user chose to leave, do NOT preserve redirect
   const handleLogout = async () => {
+    try {
+      await apiService.logout();
+    } catch (error) {
+      console.error('Failed to logout on server:', error);
+    } finally {
+      authStorage.clearToken();
+      setUser(null);
+      window.location.href = '/login';
+    }
+  };
+
+  // Inactivity / involuntary logout — preserve current URL so user resumes after login
+  const handleIdleLogout = async () => {
     const currentRedirect = window.location.pathname + window.location.search;
     try {
       await apiService.logout();
@@ -105,7 +120,7 @@ function App() {
         setIdleCountdown(timeLeft);
         if (timeLeft <= 0) {
           clearInterval(countdownIntervalId);
-          handleLogout();
+          handleIdleLogout();
         }
       }, 1000);
     };
@@ -298,7 +313,7 @@ function App() {
               <button 
                 type="button" 
                 className="btn-logout-now" 
-                onClick={handleLogout}
+                onClick={handleIdleLogout}
               >
                 🚪 {t('idle_btn_logout')}
               </button>
