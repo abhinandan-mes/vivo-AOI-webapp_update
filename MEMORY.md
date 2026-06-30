@@ -265,6 +265,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **API-Status-Driven Error Messages**: Replaced raw server errors on the login page with status-specific translated messages (Credentials error, Rate Limit, Network, and Server error). Bypassed interceptor auto-redirection on failed login attempts.
 *   **Dev Mode Rate Limit Skip**: Configured the express login rate limiter to skip restriction in development modes (`process.env.NODE_ENV !== 'production'`).
 
+### Resolved: Role-Based Form Submissions Restriction (June 2026)
+*   **Inspector Read-Only Access**: Added a check in [TechnicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/TechnicianChecklist.js) and [FunctionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/FunctionCheckpoint.js) to detect if `currentUser.role === 'inspector'`. When true, a status warning banner is rendered, and all form controls/submit buttons are disabled via an HTML5 `<fieldset disabled={isInspector}>` wrapper.
+*   **Backend Role Verification**: Updated [server/routes/technicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/technicianChecklist.js) and [server/routes/functionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/functionCheckpoint.js) `POST` endpoints to require `'technician'`, `'admin'`, or `'super_admin'` roles, throwing a 403 Forbidden to any `inspector` attempting to submit form payloads.
+
 ----
 
 ## 🚀 Getting Started & Configuration

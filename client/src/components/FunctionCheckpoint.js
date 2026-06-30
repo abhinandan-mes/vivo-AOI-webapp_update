@@ -115,6 +115,8 @@ export default function FunctionCheckpoint({ currentUser }) {
 
   const isFormValid = formData.line && formData.group_name && formData.shift && formData.date;
 
+  const isInspector = currentUser?.role === 'inspector';
+
   return (
     <div className="checkpoint-container">
       <div className="checkpoint-header">
@@ -122,9 +124,21 @@ export default function FunctionCheckpoint({ currentUser }) {
         <p>{t('cp_desc')}</p>
       </div>
 
+      {isInspector && (
+        <div className="readonly-banner" role="status">
+          <span>⚠️</span>
+          <span>
+            {currentUser?.language === 'zh'
+              ? '只读模式：检验员只能查看数据，无法填写或提交每日功能检查。'
+              : 'Read-Only Mode: Inspectors can only view checksheet data and cannot fill or submit daily function checks.'}
+          </span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="checkpoint-form">
-        <div className="form-section">
-          <h2>{t('cp_basic_info')}</h2>
+        <fieldset disabled={isInspector} style={{ border: 'none', padding: 0, margin: 0, display: 'contents' }}>
+          <div className="form-section">
+            <h2>{t('cp_basic_info')}</h2>
           <div className="form-grid-6">
             <div className="form-group">
               <label htmlFor="line-select">{t('cp_line_req')}</label>
@@ -278,6 +292,7 @@ export default function FunctionCheckpoint({ currentUser }) {
           </button>
           {message && <div className={`message ${message.startsWith('✓') ? 'success' : 'error'}`}>{message}</div>}
         </div>
+        </fieldset>
       </form>
     </div>
   );

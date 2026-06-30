@@ -118,6 +118,8 @@ export default function TechnicianChecklist({ currentUser }) {
     }
   };
 
+  const isInspector = currentUser?.role === 'inspector';
+
   return (
     <div className="checklist-container">
       <div className="checklist-header">
@@ -125,9 +127,21 @@ export default function TechnicianChecklist({ currentUser }) {
         <p>{t('cl_desc')}</p>
       </div>
 
+      {isInspector && (
+        <div className="readonly-banner" role="status">
+          <span>⚠️</span>
+          <span>
+            {language === 'zh'
+              ? '只读模式：检验员只能查看数据，无法填写或提交技术员检查表。'
+              : 'Read-Only Mode: Inspectors can only view checksheet data and cannot fill or submit technician checklists.'}
+          </span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="checklist-form">
-        <div className="form-section">
-          <h2>{language === 'zh' ? '班次信息' : 'Shift Information'}</h2>
+        <fieldset disabled={isInspector} style={{ border: 'none', padding: 0, margin: 0, display: 'contents' }}>
+          <div className="form-section">
+            <h2>{language === 'zh' ? '班次信息' : 'Shift Information'}</h2>
           <div className="form-grid-4">
             <div className="form-group">
               <label htmlFor="line-select">{t('cp_line_req')}</label>
@@ -420,6 +434,7 @@ export default function TechnicianChecklist({ currentUser }) {
           </button>
           {message && <div className={`message ${message.startsWith('✓') ? 'success' : 'error'}`}>{message}</div>}
         </div>
+        </fieldset>
       </form>
     </div>
   );
