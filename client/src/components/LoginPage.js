@@ -33,14 +33,14 @@ export default function LoginPage({ onLogin }) {
   };
 
   const EyeOpen = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
       <circle cx="12" cy="12" r="3"/>
     </svg>
   );
 
   const EyeOff = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
       <line x1="1" y1="1" x2="23" y2="23"/>
     </svg>
@@ -50,35 +50,17 @@ export default function LoginPage({ onLogin }) {
     <main className="login-page">
       <section className="login-shell">
 
-        {/* Language Switcher */}
-        <div className="login-lang-selector">
-          <button
-            type="button"
-            className={`login-lang-btn ${language === 'en' ? 'active' : ''}`}
-            onClick={() => changeLanguage('en')}
-          >
-            EN
-          </button>
-          <button
-            type="button"
-            className={`login-lang-btn ${language === 'zh' ? 'active' : ''}`}
-            onClick={() => changeLanguage('zh')}
-          >
-            中文
-          </button>
-        </div>
-
-        {/* Brand Row — left panel top */}
+        {/* ── Left Panel: Brand Row ── */}
         <div className="login-brand">
           <img src={vivoLogo} alt="vivo" />
           <span aria-hidden="true" />
           <strong>AOI Digital Checksheet</strong>
         </div>
 
-        {/* Hero Copy — left panel */}
+        {/* ── Left Panel: Hero Copy ── */}
         <div className="login-copy">
           <div className="login-copy-badge">
-            {language === 'zh' ? '✦ 企业检查系统' : '✦ Enterprise Inspection System'}
+            {language === 'zh' ? '✦ 自动光学检查系统' : '✦ Automatic Optical Inspection'}
           </div>
           <h1>{t('login_title')}</h1>
           <p>{t('login_desc')}</p>
@@ -95,8 +77,31 @@ export default function LoginPage({ onLogin }) {
           </div>
         </div>
 
-        {/* Form — right panel */}
+        {/* ── Right Panel: Form ── */}
         <div className="login-form-panel">
+
+          {/* Language switcher — top of white panel, always visible */}
+          <div className="login-form-topbar">
+            <div className="login-lang-selector" role="group" aria-label="Language selector">
+              <button
+                type="button"
+                className={`login-lang-btn ${language === 'en' ? 'active' : ''}`}
+                onClick={() => changeLanguage('en')}
+                aria-pressed={language === 'en'}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                className={`login-lang-btn ${language === 'zh' ? 'active' : ''}`}
+                onClick={() => changeLanguage('zh')}
+                aria-pressed={language === 'zh'}
+              >
+                中文
+              </button>
+            </div>
+          </div>
+
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="login-form-heading">
               <h2>{t('login_secure_heading')}</h2>
@@ -140,7 +145,10 @@ export default function LoginPage({ onLogin }) {
               </div>
             </div>
 
-            <button type="submit" disabled={loading || !credentials.username || !credentials.password}>
+            <button
+              type="submit"
+              disabled={loading || !credentials.username || !credentials.password}
+            >
               {loading ? t('login_btn_loading') : t('login_btn')}
             </button>
 
