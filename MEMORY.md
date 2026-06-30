@@ -267,6 +267,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: Role-Based Form Submissions Restriction (June 2026)
 *   **Inspector Read-Only Access**: Added a check in [TechnicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/TechnicianChecklist.js) and [FunctionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/FunctionCheckpoint.js) to detect if `currentUser.role === 'inspector'`. When true, a status warning banner is rendered, and all form controls/submit buttons are disabled via an HTML5 `<fieldset disabled={isInspector}>` wrapper.
+*   **Inspector Navigation and Route Blockage**: Updated [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js) to hide navigation links to `/checklist` and `/checkpoint` for users with the `inspector` role, and blocked direct route access (automatically redirecting back to `/` if accessed directly).
 *   **Backend Role Verification**: Updated [server/routes/technicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/technicianChecklist.js) and [server/routes/functionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/functionCheckpoint.js) `POST` endpoints to require `'technician'`, `'admin'`, or `'super_admin'` roles, throwing a 403 Forbidden to any `inspector` attempting to submit form payloads.
 
 ----

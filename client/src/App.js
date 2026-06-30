@@ -206,18 +206,22 @@ function App() {
             >
               {t('nav_home')}
             </NavLink>
-            <NavLink
-              to="/checklist"
-              className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-            >
-              {t('nav_checklist')}
-            </NavLink>
-            <NavLink
-              to="/checkpoint"
-              className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-            >
-              {t('nav_checkpoint')}
-            </NavLink>
+            {user.role !== 'inspector' && (
+              <>
+                <NavLink
+                  to="/checklist"
+                  className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+                >
+                  {t('nav_checklist')}
+                </NavLink>
+                <NavLink
+                  to="/checkpoint"
+                  className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+                >
+                  {t('nav_checkpoint')}
+                </NavLink>
+              </>
+            )}
             <NavLink
               to="/reports"
               className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
@@ -265,8 +269,12 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home currentUser={user} />} />
-          <Route path="/checkpoint" element={<FunctionCheckpoint currentUser={user} />} />
-          <Route path="/checklist" element={<TechnicianChecklist currentUser={user} />} />
+          {user.role !== 'inspector' && (
+            <>
+              <Route path="/checkpoint" element={<FunctionCheckpoint currentUser={user} />} />
+              <Route path="/checklist" element={<TechnicianChecklist currentUser={user} />} />
+            </>
+          )}
           <Route path="/reports" element={<Reports />} />
           {(user.role === 'super_admin' || user.role === 'admin') ? (
             <Route path="/users" element={<UserManagement currentUser={user} />} />
