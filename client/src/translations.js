@@ -42,6 +42,10 @@ export const translations = {
     login_btn: "Sign In",
     login_btn_loading: "Signing in...",
     login_error_default: "Wrong username or password.",
+    login_error_credentials: "Wrong username or password.",
+    login_error_ratelimit: "Too many login attempts. Please wait 15 minutes before trying again.",
+    login_error_network: "Cannot reach the server. Please check your connection.",
+    login_error_server: "Something went wrong on our end. Please try again later.",
     login_forgot_pwd: "Forgot password? Contact your administrator.",
 
     // Profile Modal
@@ -271,6 +275,10 @@ export const translations = {
     login_btn: "登录",
     login_btn_loading: "正在登录...",
     login_error_default: "用户名或密码错误。",
+    login_error_credentials: "用户名或密码错误。",
+    login_error_ratelimit: "登录尝试次数过多，请等徕15分钟后再试。",
+    login_error_network: "无法连接服务器，请检查您的网络连接。",
+    login_error_server: "服务器内部错误，请稍后重试。",
     login_forgot_pwd: "忘记密码？请联系系统管理员。",
 
     // Profile Modal

@@ -26,8 +26,16 @@ export default function LoginPage({ onLogin }) {
         password: credentials.password
       });
     } catch (err) {
-      // Always show the localised error — the server message is English-only
-      setError(t('login_error_default'));
+      const status = err.response?.status;
+      if (status === 401 || status === 400) {
+        setError(t('login_error_credentials'));
+      } else if (status === 429) {
+        setError(t('login_error_ratelimit'));
+      } else if (!err.response) {
+        setError(t('login_error_network'));
+      } else {
+        setError(t('login_error_server'));
+      }
     } finally {
       setLoading(false);
     }
