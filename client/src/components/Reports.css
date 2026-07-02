@@ -120,14 +120,29 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
   margin: 0;
 }
 
-.summary-date-badge {
+.summary-date-picker {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: 99px;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.summary-date-picker:hover {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.summary-date-picker:focus {
+  border-color: #415fff;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(65, 95, 255, 0.12);
 }
 
 .summary-metric-row {

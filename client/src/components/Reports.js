@@ -214,24 +214,25 @@ export default function Reports() {
       && (!filters.group || row.group_name === filters.group);
   }), [rows, filters]);
 
-  // Today's summary metrics calculations
-  const todayStr = useMemo(() => dateKey(new Date()), []);
+  // Summary metrics date selection states
+  const [techSummaryDate, setTechSummaryDate] = useState(() => dateKey(new Date()));
+  const [funcSummaryDate, setFuncSummaryDate] = useState(() => dateKey(new Date()));
 
-  // Technician Checklist Today
+  // Technician Checklist Today / Selected Date
   const techTodayDoneLines = useMemo(() => {
-    const todayRows = checklists.filter(r => dateKey(r.date) === todayStr);
+    const todayRows = checklists.filter(r => dateKey(r.date) === techSummaryDate);
     return Array.from(new Set(todayRows.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
-  }, [checklists, todayStr, lineOptions]);
+  }, [checklists, techSummaryDate, lineOptions]);
 
   const techTodayPendingLines = useMemo(() => {
     return lineOptions.filter(l => !techTodayDoneLines.includes(l));
   }, [lineOptions, techTodayDoneLines]);
 
-  // Daily Function Check Today
+  // Daily Function Check Today / Selected Date
   const funcTodayDoneLines = useMemo(() => {
-    const todayRows = checkpoints.filter(r => dateKey(r.date) === todayStr);
+    const todayRows = checkpoints.filter(r => dateKey(r.date) === funcSummaryDate);
     return Array.from(new Set(todayRows.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
-  }, [checkpoints, todayStr, lineOptions]);
+  }, [checkpoints, funcSummaryDate, lineOptions]);
 
   const funcTodayPendingLines = useMemo(() => {
     return lineOptions.filter(l => !funcTodayDoneLines.includes(l));
@@ -323,7 +324,7 @@ export default function Reports() {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, doneLines, pendingLines, colorThemeClass) => {
+  const renderSummaryCard = (title, doneLines, pendingLines, colorThemeClass, dateValue, onDateChange) => {
     const totalLines = lineOptions.length;
     const progressPercent = totalLines > 0 ? Math.round((doneLines.length / totalLines) * 100) : 0;
     
@@ -331,7 +332,14 @@ export default function Reports() {
       <div className={`summary-card ${colorThemeClass}`}>
         <div className="summary-card-header">
           <h3>{title}</h3>
-          <span className="summary-date-badge">{formatDate(new Date())}</span>
+          <input 
+            type="date"
+            className="summary-date-picker"
+            value={dateValue}
+            onChange={(e) => onDateChange(e.target.value)}
+            max={dateKey(new Date())}
+            aria-label={`${title} date`}
+          />
         </div>
         
         <div className="summary-card-body">
@@ -441,8 +449,8 @@ export default function Reports() {
 
       {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard">
-        {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techTodayPendingLines, 'tech-theme')}
-        {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcTodayPendingLines, 'func-theme')}
+        {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techTodayPendingLines, 'tech-theme', techSummaryDate, setTechSummaryDate)}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcTodayPendingLines, 'func-theme', funcSummaryDate, setFuncSummaryDate)}
       </div>
 
       <div className="report-segmented-toggle">

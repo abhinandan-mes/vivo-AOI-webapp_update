@@ -272,7 +272,8 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: Today's Line Submission Summary Dashboard (July 2026)
 *   **Dual-Dataset Prefetch**: Refactored [Reports.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/Reports.js) to concurrently fetch both checklists and checkpoints via `Promise.all` on mount, allowing real-time cross-tab computations.
-*   **Today's Metrics Calculation**: Computes today's submissions for both forms by filtering records matching the local system date against the official 25-line options array (`401` to `425`).
+*   **Dynamic Metrics Calculation**: Computes submissions for both forms by filtering records matching the selected summary date against the official 25-line options array (`401` to `425`).
+*   **Interactive Summary Date Pickers**: Replaced the static date badges inside the summary cards with interactive `.summary-date-picker` inputs. This lets users select any historical date to check which lines were submitted vs pending on that day.
 *   **Summary Cards UI**: Implemented two premium summary cards (one for Technician Checklist, one for Daily Function Check) displaying:
     *   **Done vs Pending Counters** (e.g., `3 / 25`)
     *   **Dynamic SVG Progress Ring** showing completion percentage
