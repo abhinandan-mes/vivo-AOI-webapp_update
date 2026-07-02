@@ -82,15 +82,19 @@ export default function TechnicianChecklist({ currentUser }) {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.status === 'Production' && formData.confirmation !== 'Yes') {
       setMessage(t('cl_msg_confirm_lock'));
       return;
     }
-    const shouldSubmit = window.confirm(t('cl_confirm_submit'));
-    if (!shouldSubmit) return;
+    setShowConfirmModal(true);
+  };
 
+  const executeSubmit = async () => {
+    setShowConfirmModal(false);
     setLoading(true);
     try {
       await apiService.createChecklist(formData);
@@ -487,6 +491,73 @@ export default function TechnicianChecklist({ currentUser }) {
         </div>
         </fieldset>
       </form>
+
+      {showConfirmModal && (
+        <div className="inactivity-modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+          <div className="inactivity-modal submit-confirm-modal">
+            <div className="confirm-modal-icon-wrapper">
+              <div className={`confirm-modal-icon ${formData.status === 'Line Stop' ? 'linestop-icon' : ''}`}>
+                {formData.status === 'Line Stop' ? '🛑' : '📄'}
+              </div>
+            </div>
+            
+            <div className="confirm-modal-header">
+              <h2>{language === 'zh' ? '核对检查表信息' : 'Confirm Checklist Details'}</h2>
+              <p>{language === 'zh' ? '请核对以下点检信息，确认无误后提交' : 'Please verify the following settings before final submission'}</p>
+            </div>
+
+            <div className="confirm-details-table">
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{t('line')}</span>
+                <span className="confirm-detail-value">{formData.line}</span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{t('group')}</span>
+                <span className="confirm-detail-value">{formData.group_name}</span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{t('date')}</span>
+                <span className="confirm-detail-value">{formData.date}</span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{t('shift')}</span>
+                <span className="confirm-detail-value">
+                  {formData.shift === 'Day' ? t('day') : (formData.shift === 'Night' ? t('night') : '—')}
+                </span>
+              </div>
+              <div className="confirm-detail-item" style={{ gridColumn: 'span 2' }}>
+                <span className="confirm-detail-label">{t('cl_line_status')}</span>
+                <span className={`confirm-detail-value ${formData.status === 'Line Stop' ? 'linestop' : 'production'}`}>
+                  {formData.status === 'Line Stop' ? `🛑 ${t('cl_status_linestop')}` : `⚙️ ${t('cl_status_production')}`}
+                </span>
+              </div>
+            </div>
+
+            <div className="confirm-warning-box">
+              ⚠️ {language === 'zh' 
+                ? '确认提交后，此点检表将被锁定，无法再修改或编辑。' 
+                : 'Warning: Once submitted, this checksheet is locked and cannot be edited.'}
+            </div>
+
+            <div className="confirm-modal-actions">
+              <button 
+                type="button" 
+                className="confirm-btn-cancel" 
+                onClick={() => setShowConfirmModal(false)}
+              >
+                {language === 'zh' ? '取消 / 返回核对' : 'Cancel & Edit'}
+              </button>
+              <button 
+                type="button" 
+                className={`confirm-btn-submit-active ${formData.status === 'Line Stop' ? 'linestop-theme' : ''}`}
+                onClick={executeSubmit}
+              >
+                {language === 'zh' ? '确认提交' : 'Confirm Submission'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
