@@ -280,6 +280,17 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     *   **Detail Pill Badges** showing the specific line numbers that are either Submitted (Green) or Pending (Gray).
 *   **Localization Support**: Added translation mappings in [translations.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/translations.js) for all summary headers and tags.
 
+### Resolved: Line Status Option (Production vs. Line Stop) (July 2026)
+*   **Database Extension**: Mapped the `status` (`VARCHAR(50)`) field defaulting to `"Production"` to both `AoiFunctionCheckpoint` and `AoiTechnicianChecklist` database models.
+*   **Backend Validation Bypass**: Updated `validation.js` middleware to bypass form questionnaire details and confirmation checks if `status === 'Line Stop'`.
+*   **Frontend Segmented Controls**: Added status radios in checksheets rendering immediately after line selection. Selecting `Line Stop` collapses all questionnaire checks, prompting a visual alert card allowing immediate submission.
+*   **Reports List Display**: Added the status column to the report tables, displaying green/red indicator badges. Bypasses other grid values and lists stopped line cells as `—`.
+
+### Resolved: Submission Confirmation Modal Redesign (July 2026)
+*   **Overlay Modals**: Replaced native browser `window.confirm` blockers in Technician Checklists and Daily Function Checks with a fixed, centered, overlay viewport dialog (`global-modal-overlay` with a frosted blur backdrop-filter).
+*   **Checklist Data Verification Grid**: Renders a details list showing selected Line, Group, Date, Shift, and Line Status for visual parameters verification before submitting.
+*   **Caution Locks**: Includes a warning box informing operators that once submitted, checksheet files are locked and cannot be edited.
+
 ----
 
 ## 🚀 Getting Started & Configuration
