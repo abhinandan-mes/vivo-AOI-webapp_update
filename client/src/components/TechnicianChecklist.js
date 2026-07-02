@@ -293,7 +293,7 @@ export default function TechnicianChecklist({ currentUser }) {
               <h3>{language === 'zh' ? 'B面 (B Side)' : 'B Side'}</h3>
               <div className="form-grid-3">
                 <div className="form-group">
-                  <label htmlFor="barcode-read-a-layer">{t('cl_read_layer')}</label>
+                  <label htmlFor="barcode-read-a-layer">{t('cl_read_laser')}</label>
                   <select
                     id="barcode-read-a-layer"
                     name="barcode_read_a_layer"
@@ -343,7 +343,7 @@ export default function TechnicianChecklist({ currentUser }) {
               <h3>{language === 'zh' ? 'A面 (A Side)' : 'A Side'}</h3>
               <div className="form-grid-3">
                 <div className="form-group">
-                  <label htmlFor="barcode-read-b-layer">{t('cl_read_layer')}</label>
+                  <label htmlFor="barcode-read-b-layer">{t('cl_read_laser')}</label>
                   <select
                     id="barcode-read-b-layer"
                     name="barcode_read_b_layer"
