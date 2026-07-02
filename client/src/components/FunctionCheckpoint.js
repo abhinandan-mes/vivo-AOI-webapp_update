@@ -345,7 +345,7 @@ export default function FunctionCheckpoint({ currentUser }) {
       </form>
 
       {showConfirmModal && (
-        <div className="inactivity-modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+        <div className="global-modal-overlay">
           <div className="inactivity-modal submit-confirm-modal">
             <div className="confirm-modal-icon-wrapper">
               <div className={`confirm-modal-icon ${formData.status === 'Line Stop' ? 'linestop-icon' : ''}`}>

@@ -453,6 +453,22 @@ body {
   box-shadow: 0 4px 12px rgba(180, 83, 9, 0.03);
 }
 
+/* Global Modal Overlay */
+.global-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 1rem;
+}
+
 /* Submission Confirmation Modal Styles */
 .submit-confirm-modal {
   max-width: 500px !important;
