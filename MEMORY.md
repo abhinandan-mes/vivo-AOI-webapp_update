@@ -270,6 +270,15 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Inspector Navigation and Route Blockage**: Updated [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js) to hide navigation links to `/checklist` and `/checkpoint` for users with the `inspector` role, and blocked direct route access (automatically redirecting back to `/` if accessed directly).
 *   **Backend Role Verification**: Updated [server/routes/technicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/technicianChecklist.js) and [server/routes/functionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/functionCheckpoint.js) `POST` endpoints to require `'technician'`, `'admin'`, or `'super_admin'` roles, throwing a 403 Forbidden to any `inspector` attempting to submit form payloads.
 
+### Resolved: Today's Line Submission Summary Dashboard (July 2026)
+*   **Dual-Dataset Prefetch**: Refactored [Reports.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/Reports.js) to concurrently fetch both checklists and checkpoints via `Promise.all` on mount, allowing real-time cross-tab computations.
+*   **Today's Metrics Calculation**: Computes today's submissions for both forms by filtering records matching the local system date against the official 25-line options array (`401` to `425`).
+*   **Summary Cards UI**: Implemented two premium summary cards (one for Technician Checklist, one for Daily Function Check) displaying:
+    *   **Done vs Pending Counters** (e.g., `3 / 25`)
+    *   **Dynamic SVG Progress Ring** showing completion percentage
+    *   **Detail Pill Badges** showing the specific line numbers that are either Submitted (Green) or Pending (Gray).
+*   **Localization Support**: Added translation mappings in [translations.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/translations.js) for all summary headers and tags.
+
 ----
 
 ## 🚀 Getting Started & Configuration

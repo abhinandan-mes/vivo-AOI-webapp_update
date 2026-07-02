@@ -89,7 +89,8 @@ const escapeHtml = value => String(value ?? '')
 export default function Reports() {
   const { t, language } = useLanguage();
   const [reportType, setReportType] = useState('checklist');
-  const [rows, setRows] = useState([]);
+  const [checklists, setChecklists] = useState([]);
+  const [checkpoints, setCheckpoints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState({ from: '', to: '', line: '', shift: '', group: '' });
@@ -126,7 +127,7 @@ export default function Reports() {
 
   const shiftOptions = ['Day', 'Night'];
   const groupOptions = ['A', 'B', 'C'];
-  const lineOptions = Array.from({ length: 25 }, (_, index) => String(401 + index));
+  const lineOptions = useMemo(() => Array.from({ length: 25 }, (_, index) => String(401 + index)), []);
 
   const formatDate = value => {
     if (!value) return '—';
@@ -179,16 +180,30 @@ export default function Reports() {
     let active = true;
     setLoading(true);
     setError('');
-    setFilters({ from: '', to: '', line: '', shift: '', group: '' });
-    const request = reportType === 'checkpoint'
-      ? apiService.getAllCheckpoints()
-      : apiService.getAllChecklists();
-    request
-      .then(response => active && setRows(response.data.data || []))
-      .catch(err => active && setError(err.message))
-      .finally(() => active && setLoading(false));
+    
+    Promise.all([
+      apiService.getAllChecklists(),
+      apiService.getAllCheckpoints()
+    ])
+      .then(([checklistRes, checkpointRes]) => {
+        if (active) {
+          setChecklists(checklistRes.data.data || []);
+          setCheckpoints(checkpointRes.data.data || []);
+        }
+      })
+      .catch(err => {
+        if (active) setError(err.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
     return () => { active = false; };
   }, [reportType]);
+
+  const rows = useMemo(() => {
+    return reportType === 'checkpoint' ? checkpoints : checklists;
+  }, [reportType, checklists, checkpoints]);
 
   const filteredRows = useMemo(() => rows.filter(row => {
     const date = dateKey(row.date);
@@ -198,6 +213,29 @@ export default function Reports() {
       && (!filters.shift || row.shift === filters.shift)
       && (!filters.group || row.group_name === filters.group);
   }), [rows, filters]);
+
+  // Today's summary metrics calculations
+  const todayStr = useMemo(() => dateKey(new Date()), []);
+
+  // Technician Checklist Today
+  const techTodayDoneLines = useMemo(() => {
+    const todayRows = checklists.filter(r => dateKey(r.date) === todayStr);
+    return Array.from(new Set(todayRows.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [checklists, todayStr, lineOptions]);
+
+  const techTodayPendingLines = useMemo(() => {
+    return lineOptions.filter(l => !techTodayDoneLines.includes(l));
+  }, [lineOptions, techTodayDoneLines]);
+
+  // Daily Function Check Today
+  const funcTodayDoneLines = useMemo(() => {
+    const todayRows = checkpoints.filter(r => dateKey(r.date) === todayStr);
+    return Array.from(new Set(todayRows.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [checkpoints, todayStr, lineOptions]);
+
+  const funcTodayPendingLines = useMemo(() => {
+    return lineOptions.filter(l => !funcTodayDoneLines.includes(l));
+  }, [lineOptions, funcTodayDoneLines]);
 
   const updateFilter = event => {
     const { name, value } = event.target;
@@ -285,6 +323,80 @@ export default function Reports() {
     if (format === 'pdf') exportPdf();
   };
 
+  const renderSummaryCard = (title, doneLines, pendingLines, colorThemeClass) => {
+    const totalLines = lineOptions.length;
+    const progressPercent = totalLines > 0 ? Math.round((doneLines.length / totalLines) * 100) : 0;
+    
+    return (
+      <div className={`summary-card ${colorThemeClass}`}>
+        <div className="summary-card-header">
+          <h3>{title}</h3>
+          <span className="summary-date-badge">{formatDate(new Date())}</span>
+        </div>
+        
+        <div className="summary-card-body">
+          <div className="summary-metric-row">
+            <div className="summary-metric-item">
+              <span className="metric-label">{t('rep_summary_submitted')}</span>
+              <span className="metric-value done">{doneLines.length} <small>/ {totalLines}</small></span>
+            </div>
+            <div className="summary-metric-item">
+              <span className="metric-label">{t('rep_summary_pending')}</span>
+              <span className="metric-value pending">{pendingLines.length} <small>/ {totalLines}</small></span>
+            </div>
+            <div className="summary-progress-ring-container">
+              <svg className="progress-ring" width="56" height="56">
+                <circle className="progress-ring-bg" stroke="#f1f5f9" strokeWidth="5" fill="transparent" r="22" cx="28" cy="28"/>
+                <circle 
+                  className="progress-ring-fill" 
+                  stroke={colorThemeClass === 'tech-theme' ? '#415fff' : '#0ea5e9'} 
+                  strokeWidth="5" 
+                  fill="transparent" 
+                  r="22" 
+                  cx="28" 
+                  cy="28"
+                  style={{ 
+                    strokeDasharray: `${2 * Math.PI * 22}`, 
+                    strokeDashoffset: `${2 * Math.PI * 22 * (1 - progressPercent / 100)}` 
+                  }}
+                />
+              </svg>
+              <span className="progress-percent">{progressPercent}%</span>
+            </div>
+          </div>
+          
+          <div className="summary-line-breakdown">
+            <div className="line-breakdown-group">
+              <span className="breakdown-label">{t('rep_summary_submitted')}:</span>
+              <div className="line-chips-container">
+                {doneLines.length > 0 ? (
+                  doneLines.map(line => (
+                    <span key={line} className="line-chip done">{line}</span>
+                  ))
+                ) : (
+                  <span className="empty-chips-label">{t('rep_summary_empty')}</span>
+                )}
+              </div>
+            </div>
+            
+            <div className="line-breakdown-group">
+              <span className="breakdown-label">{t('rep_summary_pending')}:</span>
+              <div className="line-chips-container">
+                {pendingLines.length > 0 ? (
+                  pendingLines.map(line => (
+                    <span key={line} className="line-chip pending">{line}</span>
+                  ))
+                ) : (
+                  <span className="empty-chips-label">{t('rep_summary_empty')}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const hasActiveFilters = Object.values(filters).some(value => value !== '');
 
   return (
@@ -325,6 +437,12 @@ export default function Reports() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* ── Summary Dashboard Panel ── */}
+      <div className="reports-summary-dashboard">
+        {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techTodayPendingLines, 'tech-theme')}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcTodayPendingLines, 'func-theme')}
       </div>
 
       <div className="report-segmented-toggle">
