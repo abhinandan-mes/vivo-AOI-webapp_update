@@ -108,6 +108,7 @@ export default function Reports() {
     [t('line'), 'line'],
     [t('group'), 'group_name'],
     [t('shift'), 'shift'],
+    [t('rep_th_status'), 'status'],
     [t('rep_th_submitted_at'), 'created_at'],
     [t('rep_th_submitted_by'), 'submitted_by'],
     [t('rep_th_program'), 'pre_aoi_program_full_name'],
@@ -148,6 +149,7 @@ export default function Reports() {
         [t('line'), 'line'],
         [t('group'), 'group_name'],
         [t('shift'), 'shift'],
+        [t('rep_th_status'), 'status'],
         [t('rep_th_resp_person'), 'responsible_person'],
         [t('rep_th_time'), 'time'],
         [t('rep_th_submitted_by'), 'submitted_by'],
@@ -164,6 +166,9 @@ export default function Reports() {
     if (reportType === 'checkpoint' && isCheckpointColumn(key)) return row[key] ? t('yes') : t('no');
     
     // Localize options values
+    if (key === 'status') {
+      return row[key] === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production');
+    }
     if (key === 'shift') {
       return row[key] === 'Day' ? t('day') : (row[key] === 'Night' ? t('night') : row[key]);
     }
@@ -517,6 +522,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
         <th rowSpan="2" className="sticky-line">{t('line')}</th>
         <th rowSpan="2" className="sticky-group">{t('group')}</th>
         <th rowSpan="2">{t('shift')}</th>
+        <th rowSpan="2">{t('rep_th_status')}</th>
         <th rowSpan="2">{t('cp_resp_person')}</th>
         <th rowSpan="2">{t('cp_time')}</th>
         <th rowSpan="2">{t('rep_th_submitted_by')}</th>
@@ -530,11 +536,25 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
       <td className="sticky-line">{text(row.line)}</td>
       <td className="sticky-group">{text(row.group_name)}</td>
       <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : text(row.shift))}</td>
+      <td>
+        <span className={`status-mark ${row.status === 'Line Stop' ? 'not-checked' : 'checked'}`} style={{ minWidth: '76px' }}>
+          {row.status === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
+        </span>
+      </td>
       <td>{text(row.responsible_person)}</td>
       <td>{text(row.time)}</td>
       <td>{text(row.submitted_by)}</td>
       <td>{formatDateTime(row.created_at)}</td>
-      {checkpointColumns.map(column => <td key={column.key} className="check-status-cell"><span className={`status-mark ${row[column.key] ? 'checked' : 'not-checked'}`} title={row[column.key] ? t('yes') : t('no')}>{row[column.key] ? `✓ ${t('yes')}` : `— ${t('no')}`}</span></td>)}
+      {checkpointColumns.map(column => {
+        const isLineStop = row.status === 'Line Stop';
+        return (
+          <td key={column.key} className="check-status-cell">
+            <span className={`status-mark ${isLineStop ? 'not-checked' : (row[column.key] ? 'checked' : 'not-checked')}`} title={isLineStop ? t('cl_status_linestop') : (row[column.key] ? t('yes') : t('no'))}>
+              {isLineStop ? `—` : (row[column.key] ? `✓ ${t('yes')}` : `— ${t('no')}`)}
+            </span>
+          </td>
+        );
+      })}
     </tr>) }</tbody>
   </table>;
 }
@@ -543,6 +563,14 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
   const renderCell = (key, value) => {
     const cleanVal = text(value);
     
+    // Localize status display
+    if (key === 'status') {
+      return (
+        <span className={`status-mark ${value === 'Line Stop' ? 'not-checked' : 'checked'}`} style={{ minWidth: '76px' }}>
+          {value === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
+        </span>
+      );
+    }
     // Localize shift display
     if (key === 'shift') {
       return value === 'Day' ? t('day') : (value === 'Night' ? t('night') : cleanVal);
@@ -565,6 +593,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
           <th rowSpan="2" className="sticky-line">{t('line')}</th>
           <th rowSpan="2" className="sticky-group">{t('group')}</th>
           <th rowSpan="2">{t('shift')}</th>
+          <th rowSpan="2">{t('rep_th_status')}</th>
           <th rowSpan="2">{t('rep_th_submitted_at')}</th>
           <th rowSpan="2">{t('rep_th_submitted_by')}</th>
           <th className="function-heading">{language === 'zh' ? 'Pre-AOI 程序' : 'Pre-AOI Program'}</th>
@@ -574,7 +603,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
           <th className="function-heading">{t('cl_confirmation')}</th>
         </tr>
         <tr>
-          {checklistColumns.slice(6).map(([label]) => (
+          {checklistColumns.slice(7).map(([label]) => (
             <th key={label}>{label}</th>
           ))}
         </tr>

@@ -24,6 +24,7 @@ const functionCheckpointModel = {
       responsible_person: data.responsible_person || null,
       time: data.time || null,
       submitted_by: data.submitted_by || null,
+      status: data.status || 'Production',
     };
 
     checkpointFields.forEach(field => {

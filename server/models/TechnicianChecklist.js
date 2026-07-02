@@ -21,7 +21,8 @@ const technicianChecklistModel = {
         workorder_info_post_aoi: data.workorder_info_post_aoi || null,
         aoi_scan_tools_workorder_traceability: data.aoi_scan_tools_workorder_traceability || null,
         confirmation: data.confirmation || null,
-        submitted_by: data.submitted_by || null
+        submitted_by: data.submitted_by || null,
+        status: data.status || 'Production'
       }
     });
   },

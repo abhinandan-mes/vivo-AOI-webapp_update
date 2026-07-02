@@ -50,7 +50,8 @@ export default function TechnicianChecklist({ currentUser }) {
     workorder_info_post_aoi: '',
     aoi_scan_tools_workorder_traceability: '',
     confirmation: 'Yes',
-    submitted_by: defaultConfirmedBy
+    submitted_by: defaultConfirmedBy,
+    status: 'Production'
   });
 
   React.useEffect(() => {
@@ -64,7 +65,14 @@ export default function TechnicianChecklist({ currentUser }) {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const isFormComplete = requiredFields.every(field => String(formData[field] || '').trim() !== '');
+
+  const isFormComplete = React.useMemo(() => {
+    const basicFields = ['line', 'group_name', 'date', 'shift', 'submitted_by'];
+    if (formData.status === 'Line Stop') {
+      return basicFields.every(field => String(formData[field] || '').trim() !== '');
+    }
+    return requiredFields.every(field => String(formData[field] || '').trim() !== '');
+  }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +84,7 @@ export default function TechnicianChecklist({ currentUser }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.confirmation !== 'Yes') {
+    if (formData.status === 'Production' && formData.confirmation !== 'Yes') {
       setMessage(t('cl_msg_confirm_lock'));
       return;
     }
@@ -109,7 +117,8 @@ export default function TechnicianChecklist({ currentUser }) {
         workorder_info_post_aoi: '',
         aoi_scan_tools_workorder_traceability: '',
         confirmation: 'Yes',
-        submitted_by: currentUser ? `${currentUser.full_name} (${currentUser.username})` : ''
+        submitted_by: currentUser ? `${currentUser.full_name} (${currentUser.username})` : '',
+        status: 'Production'
       });
     } catch (error) {
       setMessage('✗ ' + t('error') + ': ' + error.message);
@@ -195,7 +204,35 @@ export default function TechnicianChecklist({ currentUser }) {
               </select>
             </div>
           </div>
+          {formData.line && (
+            <div className="form-group" style={{ marginTop: '1.5rem' }}>
+              <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.55rem', display: 'block' }}>
+                {t('cl_line_status')}
+              </label>
+              <div className="status-segmented-control" style={{ display: 'inline-flex', background: '#f1f5f9', padding: '0.25rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                <button
+                  type="button"
+                  className={`toggle-btn ${formData.status === 'Production' ? 'active' : ''}`}
+                  onClick={() => setFormData(prev => ({ ...prev, status: 'Production' }))}
+                  style={{ border: 'none', background: formData.status === 'Production' ? '#fff' : 'transparent', color: formData.status === 'Production' ? '#415fff' : '#64748b', padding: '0.55rem 1.25rem', borderRadius: '10px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: formData.status === 'Production' ? '0 4px 10px rgba(15, 23, 42, 0.05)' : 'none' }}
+                >
+                  ⚙️ {t('cl_status_production')}
+                </button>
+                <button
+                  type="button"
+                  className={`toggle-btn ${formData.status === 'Line Stop' ? 'active' : ''}`}
+                  onClick={() => setFormData(prev => ({ ...prev, status: 'Line Stop' }))}
+                  style={{ border: 'none', background: formData.status === 'Line Stop' ? '#fff' : 'transparent', color: formData.status === 'Line Stop' ? '#ef4444' : '#64748b', padding: '0.55rem 1.25rem', borderRadius: '10px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: formData.status === 'Line Stop' ? '0 4px 10px rgba(15, 23, 42, 0.05)' : 'none' }}
+                >
+                  🛑 {t('cl_status_linestop')}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
+
+        {formData.status === 'Production' ? (
+          <>
 
         <div className="form-section">
           <h2>{language === 'zh' ? '程序与设置信息' : 'Program & Setup Information'}</h2>
@@ -427,9 +464,23 @@ export default function TechnicianChecklist({ currentUser }) {
             </div>
           </div>
         </div>
+          </>
+        ) : (
+          <div className="form-section linestop-info-section" style={{ textAlign: 'center', padding: '3rem 2rem', background: '#fff' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛑</div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>
+              {language === 'zh' ? '线别处于停线状态' : 'Line is Stopped'}
+            </h3>
+            <p style={{ color: '#64748b', fontSize: '0.95rem', maxWidth: '420px', margin: '0 auto' }}>
+              {language === 'zh' 
+                ? '当前线别处于停线模式下。您无需填写任何点检内容，可以直接提交点检表。' 
+                : 'The selected line is currently in stopped status. No checksheet inputs are required, you may submit directly.'}
+            </p>
+          </div>
+        )}
 
         <div className="form-actions">
-          <button type="submit" disabled={loading || !isFormComplete || formData.confirmation !== 'Yes'} className="btn-submit">
+          <button type="submit" disabled={loading || !isFormComplete || (formData.status === 'Production' && formData.confirmation !== 'Yes')} className="btn-submit">
             {loading ? t('cl_btn_submitting') : t('cl_btn_submit')}
           </button>
           {message && <div className={`message ${message.startsWith('✓') ? 'success' : 'error'}`}>{message}</div>}

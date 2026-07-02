@@ -196,7 +196,9 @@ const validateChecklist = (req, res, next) => {
   const traceErr = validateString(aoi_scan_tools_workorder_traceability, 255);
   if (traceErr) errors.aoi_scan_tools_workorder_traceability = traceErr;
 
-  const confErr = validateString(confirmation, 50, true);
+  const isLineStop = req.body.status === 'Line Stop';
+
+  const confErr = validateString(confirmation, 50, !isLineStop);
   if (confErr) errors.confirmation = confErr;
 
   const subErr = validateString(submitted_by, 150);
