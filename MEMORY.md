@@ -314,6 +314,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Login Page Footer Integration**: Structured the login layout container to display the footer clearly at the bottom of the login page. Set the login background and flex styling so it remains visible immediately without scrolling.
 *   **Aesthetic Styling**: Added link colors, hover decoration states, and custom styles inside `App.css` and `LoginPage.css` to keep the footer appearance consistent across authenticated and public states.
 
+### Resolved: Login Page Layout & Vertical Centering (July 2026)
+*   **Vertical Center Alignment**: Introduced a custom `.login-main-content` flex wrapper layout inside `App.js` for the public login route. This isolates the login page from main app content blocks, enabling vertical centering on all desktops, laptops, and tablets.
+*   **Height Constraints & Scroll Prevention**: Styled `.login-main-content` and updated `.login-page` in `LoginPage.css` to use flex box rules instead of hardcoded `min-height: 100vh`. This ensures the card centers perfectly in the remaining viewport height, keeping the footer at the bottom of the screen without scrollbars.
+
 ----
 
 ## 🚀 Getting Started & Configuration
