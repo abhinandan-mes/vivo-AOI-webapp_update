@@ -297,6 +297,12 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Reports Submission Sorting**: Sorted both Daily Function Checks and Technician Checklists report records by `created_at` timestamp in descending order, displaying the newest entries first in the Web UI and propagating this sorted sequence to CSV and PDF exports.
 *   **Backend Database Ordering**: Updated the database model `getAll` queries for both checkpoints and checklists to order by `created_at: 'desc'` rather than `date: 'desc'`, ensuring a consistent and performance-optimized database retrieval ordering.
 
+### Resolved: Full Screen Fluid Responsiveness & Layout Alignment (July 2026)
+*   **Fluid Screen-Filling Dashboards**: Updated the navbar (`.navbar-container`), Home page (`.home-container`), and Reports page (`.reports-container`) to span `100%` width with `2rem` side padding on desktop viewports, removing the wide empty margins on high-resolution screens.
+*   **Centralized Spacing Rules**: Moved the desktop and mobile screen margin rules to the parent `.main-content` wrapper (`padding: 1rem 2rem 2rem 2rem` on desktop, `padding: 1rem` on mobile) to guarantee perfect horizontal alignment across all views.
+*   **Spacious Centered Forms**: Constrained the inputs inside the checklist form (`1000px`), checkpoint form (`1200px`), and user management card (`1200px`) to prevent them from stretching too wide, maintaining clean readability on high-res displays while keeping them centered.
+*   **Clean Mobile Breakpoints**: Configured mobile styles to set all child page containers to `width: 100%; max-width: 100%; padding: 0;` on viewports under `768px` so they render properly.
+
 ----
 
 ## 🚀 Getting Started & Configuration
