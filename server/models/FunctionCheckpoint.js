@@ -40,7 +40,7 @@ const functionCheckpointModel = {
 
   getAll: async () => {
     return await prisma.aoiFunctionCheckpoint.findMany({
-      orderBy: { date: 'desc' },
+      orderBy: { created_at: 'desc' },
       take: 100
     });
   },

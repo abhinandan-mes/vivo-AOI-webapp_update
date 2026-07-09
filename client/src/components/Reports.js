@@ -207,7 +207,12 @@ export default function Reports() {
   }, [reportType]);
 
   const rows = useMemo(() => {
-    return reportType === 'checkpoint' ? checkpoints : checklists;
+    const data = reportType === 'checkpoint' ? checkpoints : checklists;
+    return [...data].sort((a, b) => {
+      const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return timeB - timeA;
+    });
   }, [reportType, checklists, checkpoints]);
 
   const filteredRows = useMemo(() => rows.filter(row => {

@@ -20,6 +20,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+
+
+
 // Rate limiting for login attempts — only active in production
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

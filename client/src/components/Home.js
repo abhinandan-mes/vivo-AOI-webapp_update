@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import apiService from '../services/api';
 import './Home.css';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -13,6 +13,22 @@ export default function Home({ currentUser }) {
   const [expandedUser, setExpandedUser] = useState(null);
 
   const isSuperAdmin = currentUser?.role === 'super_admin';
+
+  const sortedUsersSummary = useMemo(() => {
+    return [...usersSummary].sort((a, b) => {
+      const timeA = a.last_login ? new Date(a.last_login).getTime() : 0;
+      const timeB = b.last_login ? new Date(b.last_login).getTime() : 0;
+      return timeB - timeA;
+    });
+  }, [usersSummary]);
+
+  const sortedSessions = useMemo(() => {
+    return [...sessions].sort((a, b) => {
+      const timeA = a.login_time ? new Date(a.login_time).getTime() : 0;
+      const timeB = b.login_time ? new Date(b.login_time).getTime() : 0;
+      return timeB - timeA;
+    });
+  }, [sessions]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -200,7 +216,7 @@ export default function Home({ currentUser }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {usersSummary.map((user) => {
+                  {sortedUsersSummary.map((user) => {
                     const isExpanded = expandedUser === user.id;
                     return (
                       <React.Fragment key={user.id}>
@@ -248,7 +264,11 @@ export default function Home({ currentUser }) {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {user.active_sessions.map(session => {
+                                      {[...user.active_sessions].sort((a, b) => {
+                                        const timeA = a.login_time ? new Date(a.login_time).getTime() : 0;
+                                        const timeB = b.login_time ? new Date(b.login_time).getTime() : 0;
+                                        return timeB - timeA;
+                                      }).map(session => {
                                         const isMyCurrent = session.session_id === currentUser?.session_id;
                                         return (
                                           <tr key={session.session_id} className={isMyCurrent ? 'highlight-session' : ''}>
@@ -306,7 +326,7 @@ export default function Home({ currentUser }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sessions.map((session) => {
+                  {sortedSessions.map((session) => {
                     const isActive = session.status === 'active';
                     const isCurrent = session.session_id === currentUser?.session_id;
                     return (

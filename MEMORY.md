@@ -291,6 +291,12 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Checklist Data Verification Grid**: Renders a details list showing selected Line, Group, Date, Shift, and Line Status for visual parameters verification before submitting.
 *   **Caution Locks**: Includes a warning box informing operators that once submitted, checksheet files are locked and cannot be edited.
 
+### Resolved: Chronological Sorting in Sessions & Reports (July 2026)
+*   **Active Sessions Sorting**: Configured the "All Active Sessions by User" dashboard table to sort by the users' `last_login` timestamp in descending order, showing the most recently active users first.
+*   **User Session Log Sorting**: Sorted the user's personal session log history and active sessions nested list by `login_time` in descending order.
+*   **Reports Submission Sorting**: Sorted both Daily Function Checks and Technician Checklists report records by `created_at` timestamp in descending order, displaying the newest entries first in the Web UI and propagating this sorted sequence to CSV and PDF exports.
+*   **Backend Database Ordering**: Updated the database model `getAll` queries for both checkpoints and checklists to order by `created_at: 'desc'` rather than `date: 'desc'`, ensuring a consistent and performance-optimized database retrieval ordering.
+
 ----
 
 ## 🚀 Getting Started & Configuration
