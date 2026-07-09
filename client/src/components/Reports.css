@@ -18,7 +18,7 @@
 .export-btn-trigger:hover:not(:disabled) { background: #2f4be6; box-shadow: 0 6px 20px rgba(65, 95, 255, 0.3); transform: translateY(-1px); }
 .export-btn-trigger:active:not(:disabled) { transform: translateY(0); }
 .export-btn-trigger:disabled { background: #cbd5e1; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
-.export-dropdown-menu { position: absolute; top: 115%; right: 0; z-index: 10; min-width: 220px; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12); padding: 0.5rem 0; overflow: hidden; animation: slideDownFade 0.2s ease-out; }
+.export-dropdown-menu { position: absolute; top: 100%; right: 0; z-index: 10; min-width: 220px; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12); padding: 0.5rem 0; overflow: hidden; animation: slideDownFade 0.2s ease-out; }
 @keyframes slideDownFade { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 .export-menu-item { display: flex; align-items: center; width: 100%; border: none; background: transparent; padding: 0.75rem 1.25rem; text-align: left; font-size: 0.85rem; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.15s ease; }
 .export-menu-item:hover { background: #f8fafc; color: #415fff; }
