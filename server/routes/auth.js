@@ -26,18 +26,24 @@ const createToken = (user, sessionId) => jwt.sign(
 router.post('/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password) return res.status(400).json({ success: false, error: 'Username and password are required' });
+    console.log(`[AUTH] Login attempt received for username: "${username}"`);
+    if (!username || !password) {
+      console.log('[AUTH] Login failed: Missing username or password');
+      return res.status(400).json({ success: false, error: 'Username and password are required' });
+    }
 
     const user = await prisma.appUser.findUnique({
       where: { username: username.trim() }
     });
     if (!user) {
+      console.log(`[AUTH] Login failed: Username "${username.trim()}" not found`);
       await logActivity('LOGIN_FAILURE', username.trim(), req, 'Invalid username');
       return res.status(401).json({ success: false, error: 'Invalid username or password' });
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password_hash);
     if (!passwordMatches) {
+      console.log(`[AUTH] Login failed: Incorrect password for user "${user.username}"`);
       await logActivity('LOGIN_FAILURE', username.trim(), req, 'Invalid password');
       return res.status(401).json({ success: false, error: 'Invalid username or password' });
     }
@@ -54,6 +60,7 @@ router.post('/auth/login', async (req, res) => {
       }
     });
 
+    console.log(`[AUTH] Login successful: User "${user.username}" (Role: ${user.role})`);
     await logActivity('LOGIN_SUCCESS', user.username, req, 'User logged in successfully');
 
     const token = createToken(user, sessionId);
