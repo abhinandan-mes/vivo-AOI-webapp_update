@@ -1,8 +1,8 @@
 .checkpoint-container {
-  max-width: 1400px;
-  width: 95%;
+  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 1rem 0 2rem 0;
 }
 
 .checkpoint-header {
@@ -243,7 +243,7 @@
   .checkpoint-container {
     width: 100%;
     max-width: 100%;
-    padding: 1rem;
+    padding: 0;
   }
 
   .checkpoint-header h1 {

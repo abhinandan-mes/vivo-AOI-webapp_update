@@ -1,8 +1,8 @@
 .checklist-container {
-  max-width: 1300px;
-  width: 95%;
+  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 1rem 0 2rem 0;
 }
 
 .checklist-header {
@@ -207,7 +207,7 @@
   .checklist-container {
     width: 100%;
     max-width: 100%;
-    padding: 1rem;
+    padding: 0;
   }
 
   .checklist-header h1 {

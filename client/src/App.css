@@ -39,10 +39,10 @@ body {
 }
 
 .navbar-container {
-  max-width: 1720px;
-  width: 95%;
-  margin: 0 auto;
-  padding: 0;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -215,7 +215,7 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 1rem 0 2rem 0;
+  padding: 1rem 2rem 2rem 2rem;
   background: #f8fafc;
 }
 
@@ -304,7 +304,7 @@ body {
   }
 
   .main-content {
-    padding: 1rem 0;
+    padding: 1rem;
   }
 }
 

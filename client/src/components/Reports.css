@@ -1,4 +1,4 @@
-.reports-container { max-width: 1720px; width: 95%; margin: 0 auto; padding: 2rem 0; }
+.reports-container { max-width: 100%; width: 100%; margin: 0; padding: 1rem 0 2rem 0; }
 .reports-heading { display: flex; justify-content: space-between; align-items: center; gap: 2rem; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1.25rem; }
 .reports-heading h1 { color: #0f172a; font-size: 2.25rem; margin: 0 0 .35rem; letter-spacing: -0.02em; font-weight: 800; }
 .reports-heading p { color: #64748b; margin: 0; font-size: 0.95rem; }
@@ -277,7 +277,7 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
   .reports-container {
     width: 100%;
     max-width: 100%;
-    padding: 1.5rem 1rem;
+    padding: 0;
   }
 }
 
