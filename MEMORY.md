@@ -324,10 +324,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Secure Administration API**: Implemented `/api/activity-logs` to query logs sorted descending by `created_at`. Wrapped endpoint in JWT authentication and restricted access to `super_admin` and `admin` roles.
 *   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `系统日志` / EN: `Activity Logs`) in React. Includes paginated table views, search filters by username, select dropdown filters by activity type, and colored status pill badges.
 
-### Resolved: PM2 Background Services Configuration (July 2026)
-*   **Daemonized Background Execution**: Setup PM2 (Process Manager) under Windows to permanently run the backend Express server (`aoi-backend`) and frontend React client (`aoi-frontend`) in the background.
-*   **Elimination of Active Terminals**: Freed up port locks and terminated local foreground shell processes, allowing developers to close all terminal windows while keeping the web application fully accessible.
-*   **Startup Configurations**: Executed `pm2 save` to persist the process list configurations so both servers can restart automatically.
+### Resolved: Windows VBS Background Services Configuration (July 2026)
+*   **Detached Background Execution**: Created `run-background.vbs` in the workspace root to launch the backend Express server (`node server.js` on port 5001) and frontend React client (`node start-frontend.js` on port 3000) completely hidden.
+*   **Zero Terminals Open**: Enables running both servers in the background without keeping any command prompt windows open.
+*   **Auto-Start on Boot**: Users can paste a shortcut of `run-background.vbs` into the Windows Startup folder (`shell:startup`) to run the application automatically when the system starts.
 
 ----
 
