@@ -1,9 +1,19 @@
 const functionCheckpointModel = require('../models/FunctionCheckpoint');
+const { logActivity } = require('../utils/activityLogger');
 
 const functionCheckpointController = {
   createCheckpoint: async (req, res) => {
     try {
       const checkpoint = await functionCheckpointModel.create(req.body);
+      
+      // Log the submission activity
+      await logActivity(
+        'CHECKPOINT_SUBMIT', 
+        req.user?.username, 
+        req, 
+        `Line: ${checkpoint.line}, Shift: ${checkpoint.shift}, Status: ${checkpoint.status}, Group: ${checkpoint.group_name}`
+      );
+
       res.status(201).json({ success: true, data: checkpoint });
     } catch (error) {
       console.error('Error creating checkpoint:', error);

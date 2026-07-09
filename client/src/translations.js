@@ -27,6 +27,7 @@ export const translations = {
     nav_checkpoint: "Daily Function Check",
     nav_reports: "Reports",
     nav_users: "User Management",
+    nav_activity_logs: "Activity Logs",
     nav_logout: "Logout",
     nav_loading: "Loading AOI Digital Checksheet...",
 
@@ -240,6 +241,23 @@ export const translations = {
     um_msg_update_success: "User updated successfully.",
     um_msg_delete_success: "User deleted successfully.",
 
+    // Activity Logs
+    act_title: "System Activity Logs",
+    act_desc: "Monitor system operations, security, login attempts, and checksheet submissions.",
+    act_th_id: "Log ID",
+    act_th_type: "Activity Type",
+    act_th_user: "User",
+    act_th_ip: "IP Address",
+    act_th_time: "Timestamp",
+    act_th_details: "Operation Details",
+    act_filter_type: "Filter by Activity",
+    act_search_user: "Search Username",
+    act_type_login_success: "Login Success",
+    act_type_login_failure: "Login Failure",
+    act_type_checklist_submit: "Checklist Submit",
+    act_type_checkpoint_submit: "Checkpoint Submit",
+    act_empty: "No activity logs found matching the filter.",
+
     // Inactivity warning
     idle_warning_title: "Inactivity Warning",
     idle_warning_desc: "You will be logged out due to inactivity in {seconds} seconds.",
@@ -274,6 +292,7 @@ export const translations = {
     nav_checkpoint: "每日功能检查",
     nav_reports: "报告",
     nav_users: "用户管理",
+    nav_activity_logs: "系统日志",
     nav_logout: "退出登录",
     nav_loading: "正在加载 AOI 检查点系统...",
 
@@ -486,6 +505,23 @@ export const translations = {
     um_msg_create_success: "新用户创建成功。",
     um_msg_update_success: "用户信息更新成功。",
     um_msg_delete_success: "用户已被成功注销。",
+
+    // Activity Logs
+    act_title: "系统活动日志",
+    act_desc: "监控系统日常运行操作、账号登录记录及点检提交日志。",
+    act_th_id: "日志编号",
+    act_th_type: "活动类型",
+    act_th_user: "操作人",
+    act_th_ip: "客户端 IP",
+    act_th_time: "记录时间",
+    act_th_details: "操作详情",
+    act_filter_type: "按活动筛选",
+    act_search_user: "搜索账号用户名",
+    act_type_login_success: "登录成功",
+    act_type_login_failure: "登录失败",
+    act_type_checklist_submit: "技术员检查表提交",
+    act_type_checkpoint_submit: "每日功能检查提交",
+    act_empty: "未找到符合过滤条件的系统活动日志记录。",
 
     // Inactivity warning
     idle_warning_title: "登录超时提醒",

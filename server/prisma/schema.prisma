@@ -115,3 +115,16 @@ model AppSession {
 
   @@map("app_sessions")
 }
+
+model AppActivityLog {
+  id            Int      @id @default(autoincrement())
+  activity_type String   @db.VarChar(100)
+  username      String   @db.VarChar(100)
+  public_ip     String?  @db.VarChar(100)
+  details       String?  @db.Text
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([created_at])
+  @@index([activity_type])
+  @@map("app_activity_logs")
+}

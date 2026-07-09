@@ -1,9 +1,19 @@
 const technicianChecklistModel = require('../models/TechnicianChecklist');
+const { logActivity } = require('../utils/activityLogger');
 
 const technicianChecklistController = {
   createChecklist: async (req, res) => {
     try {
       const checklist = await technicianChecklistModel.create(req.body);
+
+      // Log the submission activity
+      await logActivity(
+        'CHECKLIST_SUBMIT', 
+        req.user?.username, 
+        req, 
+        `Line: ${checklist.line}, Shift: ${checklist.shift}, Status: ${checklist.status}, Group: ${checklist.group_name}`
+      );
+
       res.status(201).json({ success: true, data: checklist });
     } catch (error) {
       console.error('Error creating checklist:', error);

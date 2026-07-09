@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const prisma = require('../config/db');
 const { authenticateToken, requireRoles, JWT_SECRET } = require('../middleware/auth');
 const { validateCreateUser, validateUpdateUser } = require('../middleware/validation');
+const { logActivity } = require('../utils/activityLogger');
 
 const router = express.Router();
 
@@ -30,10 +31,16 @@ router.post('/auth/login', async (req, res) => {
     const user = await prisma.appUser.findUnique({
       where: { username: username.trim() }
     });
-    if (!user) return res.status(401).json({ success: false, error: 'Invalid username or password' });
+    if (!user) {
+      await logActivity('LOGIN_FAILURE', username.trim(), req, 'Invalid username');
+      return res.status(401).json({ success: false, error: 'Invalid username or password' });
+    }
 
     const passwordMatches = await bcrypt.compare(password, user.password_hash);
-    if (!passwordMatches) return res.status(401).json({ success: false, error: 'Invalid username or password' });
+    if (!passwordMatches) {
+      await logActivity('LOGIN_FAILURE', username.trim(), req, 'Invalid password');
+      return res.status(401).json({ success: false, error: 'Invalid username or password' });
+    }
 
     const sessionId = crypto.randomUUID();
     const publicIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
@@ -46,6 +53,8 @@ router.post('/auth/login', async (req, res) => {
         status: 'active'
       }
     });
+
+    await logActivity('LOGIN_SUCCESS', user.username, req, 'User logged in successfully');
 
     const token = createToken(user, sessionId);
 

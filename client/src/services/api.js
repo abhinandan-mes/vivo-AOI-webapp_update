@@ -49,6 +49,7 @@ export const apiService = {
   getAllSessionsSummary: () => API.get('/auth/sessions/all'),
   revokeSession: (sessionId) => API.post(`/auth/sessions/${sessionId}/revoke`),
   changePassword: (payload) => API.post('/auth/change-password', payload),
+  getActivityLogs: () => API.get('/activity-logs'),
 
   // Function Checkpoint APIs
   createCheckpoint: (data) => API.post('/checkpoint', data),
