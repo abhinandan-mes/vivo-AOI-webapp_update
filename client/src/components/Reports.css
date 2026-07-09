@@ -172,8 +172,13 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
   line-height: 1.1;
 }
 
-.metric-value.done {
+.metric-value.done,
+.metric-value.production {
   color: #10b981;
+}
+
+.metric-value.linestop {
+  color: #ef4444;
 }
 
 .metric-value.pending {
@@ -247,10 +252,17 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
   line-height: 1.2;
 }
 
-.line-chip.done {
+.line-chip.done,
+.line-chip.production {
   background: #ecfdf3;
   color: #027a48;
   border: 1px solid #abf1c6;
+}
+
+.line-chip.linestop {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
 }
 
 .line-chip.pending {

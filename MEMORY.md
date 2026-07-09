@@ -303,6 +303,12 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Spacious Centered Forms**: Constrained the inputs inside the checklist form (`1000px`), checkpoint form (`1200px`), and user management card (`1200px`) to prevent them from stretching too wide, maintaining clean readability on high-res displays while keeping them centered.
 *   **Clean Mobile Breakpoints**: Configured mobile styles to set all child page containers to `width: 100%; max-width: 100%; padding: 0;` on viewports under `768px` so they render properly.
 
+### Resolved: Reports Dashboard Split Status Counts (July 2026)
+*   **Production & Line Stop Metrics**: Expanded the summary dashboard cards in Reports to split "Submitted" counts into separate, color-coded "Production" (Green) and "Line Stop" (Red) metrics.
+*   **Not Filled (Pending) Category**: Labeled and styled the remaining unsubmitted lines count as "Not Filled" (Gray) to clearly represent what's missing for the selected day.
+*   **Segmented Line Breakdown Chips**: Refactored the line chip lists under both checklist and checkpoint cards to display in three distinct sections: Production lines, Line Stop lines, and Not Filled lines, making it easy to identify the exact status of each line at a glance.
+*   **Internationalization Support**: Added EN/ZH translation keys in `translations.js` for "Production", "Line Stop", and "Not Filled" summary dashboard headers.
+
 ----
 
 ## 🚀 Getting Started & Configuration

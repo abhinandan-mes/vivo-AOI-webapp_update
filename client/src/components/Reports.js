@@ -229,24 +229,48 @@ export default function Reports() {
   const [funcSummaryDate, setFuncSummaryDate] = useState(() => dateKey(new Date()));
 
   // Technician Checklist Today / Selected Date
+  const techTodaySubmissions = useMemo(() => {
+    return checklists.filter(r => dateKey(r.date) === techSummaryDate);
+  }, [checklists, techSummaryDate]);
+
   const techTodayDoneLines = useMemo(() => {
-    const todayRows = checklists.filter(r => dateKey(r.date) === techSummaryDate);
-    return Array.from(new Set(todayRows.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
-  }, [checklists, techSummaryDate, lineOptions]);
+    return Array.from(new Set(techTodaySubmissions.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [techTodaySubmissions, lineOptions]);
 
   const techTodayPendingLines = useMemo(() => {
     return lineOptions.filter(l => !techTodayDoneLines.includes(l));
   }, [lineOptions, techTodayDoneLines]);
 
+  const techLineStopLines = useMemo(() => {
+    const lineStops = techTodaySubmissions.filter(r => r.status === 'Line Stop');
+    return Array.from(new Set(lineStops.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [techTodaySubmissions, lineOptions]);
+
+  const techProductionLines = useMemo(() => {
+    return techTodayDoneLines.filter(l => !techLineStopLines.includes(l));
+  }, [techTodayDoneLines, techLineStopLines]);
+
   // Daily Function Check Today / Selected Date
+  const funcTodaySubmissions = useMemo(() => {
+    return checkpoints.filter(r => dateKey(r.date) === funcSummaryDate);
+  }, [checkpoints, funcSummaryDate]);
+
   const funcTodayDoneLines = useMemo(() => {
-    const todayRows = checkpoints.filter(r => dateKey(r.date) === funcSummaryDate);
-    return Array.from(new Set(todayRows.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
-  }, [checkpoints, funcSummaryDate, lineOptions]);
+    return Array.from(new Set(funcTodaySubmissions.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [funcTodaySubmissions, lineOptions]);
 
   const funcTodayPendingLines = useMemo(() => {
     return lineOptions.filter(l => !funcTodayDoneLines.includes(l));
   }, [lineOptions, funcTodayDoneLines]);
+
+  const funcLineStopLines = useMemo(() => {
+    const lineStops = funcTodaySubmissions.filter(r => r.status === 'Line Stop');
+    return Array.from(new Set(lineStops.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [funcTodaySubmissions, lineOptions]);
+
+  const funcProductionLines = useMemo(() => {
+    return funcTodayDoneLines.filter(l => !funcLineStopLines.includes(l));
+  }, [funcTodayDoneLines, funcLineStopLines]);
 
   const updateFilter = event => {
     const { name, value } = event.target;
@@ -334,9 +358,10 @@ export default function Reports() {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, doneLines, pendingLines, colorThemeClass, dateValue, onDateChange) => {
+  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, colorThemeClass, dateValue, onDateChange) => {
     const totalLines = lineOptions.length;
-    const progressPercent = totalLines > 0 ? Math.round((doneLines.length / totalLines) * 100) : 0;
+    const submittedCount = productionLines.length + lineStopLines.length;
+    const progressPercent = totalLines > 0 ? Math.round((submittedCount / totalLines) * 100) : 0;
     
     return (
       <div className={`summary-card ${colorThemeClass}`}>
@@ -355,11 +380,15 @@ export default function Reports() {
         <div className="summary-card-body">
           <div className="summary-metric-row">
             <div className="summary-metric-item">
-              <span className="metric-label">{t('rep_summary_submitted')}</span>
-              <span className="metric-value done">{doneLines.length} <small>/ {totalLines}</small></span>
+              <span className="metric-label">{t('rep_summary_production')}</span>
+              <span className="metric-value production">{productionLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label">{t('rep_summary_pending')}</span>
+              <span className="metric-label" style={{ color: '#ef4444' }}>{t('rep_summary_linestop')}</span>
+              <span className="metric-value linestop">{lineStopLines.length} <small>/ {totalLines}</small></span>
+            </div>
+            <div className="summary-metric-item">
+              <span className="metric-label">{t('rep_summary_notfilled')}</span>
               <span className="metric-value pending">{pendingLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-progress-ring-container">
@@ -385,11 +414,24 @@ export default function Reports() {
           
           <div className="summary-line-breakdown">
             <div className="line-breakdown-group">
-              <span className="breakdown-label">{t('rep_summary_submitted')}:</span>
+              <span className="breakdown-label">{t('rep_summary_production')}:</span>
               <div className="line-chips-container">
-                {doneLines.length > 0 ? (
-                  doneLines.map(line => (
-                    <span key={line} className="line-chip done">{line}</span>
+                {productionLines.length > 0 ? (
+                  productionLines.map(line => (
+                    <span key={line} className="line-chip production">{line}</span>
+                  ))
+                ) : (
+                  <span className="empty-chips-label">{t('rep_summary_empty')}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="line-breakdown-group">
+              <span className="breakdown-label" style={{ color: '#ef4444' }}>{t('rep_summary_linestop')}:</span>
+              <div className="line-chips-container">
+                {lineStopLines.length > 0 ? (
+                  lineStopLines.map(line => (
+                    <span key={line} className="line-chip linestop">{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
@@ -398,7 +440,7 @@ export default function Reports() {
             </div>
             
             <div className="line-breakdown-group">
-              <span className="breakdown-label">{t('rep_summary_pending')}:</span>
+              <span className="breakdown-label">{t('rep_summary_notfilled')}:</span>
               <div className="line-chips-container">
                 {pendingLines.length > 0 ? (
                   pendingLines.map(line => (
@@ -459,8 +501,8 @@ export default function Reports() {
 
       {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard">
-        {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techTodayPendingLines, 'tech-theme', techSummaryDate, setTechSummaryDate)}
-        {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcTodayPendingLines, 'func-theme', funcSummaryDate, setFuncSummaryDate)}
+        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, 'tech-theme', techSummaryDate, setTechSummaryDate)}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, 'func-theme', funcSummaryDate, setFuncSummaryDate)}
       </div>
 
       <div className="report-segmented-toggle">
