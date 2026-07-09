@@ -318,6 +318,12 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Vertical Center Alignment**: Introduced a custom `.login-main-content` flex wrapper layout inside `App.js` for the public login route. This isolates the login page from main app content blocks, enabling vertical centering on all desktops, laptops, and tablets.
 *   **Height Constraints & Scroll Prevention**: Styled `.login-main-content` and updated `.login-page` in `LoginPage.css` to use flex box rules instead of hardcoded `min-height: 100vh`. This ensures the card centers perfectly in the remaining viewport height, keeping the footer at the bottom of the screen without scrollbars.
 
+### Resolved: System Activity Log & Audit Trail Page (July 2026)
+*   **Database Log Model**: Created the `AppActivityLog` model inside `schema.prisma` mapping to the `app_activity_logs` database table. Executed dev migrations to add the table in PostgreSQL and regenerated the Prisma client.
+*   **Real-time Operations Logging**: Integrated a centralized `logActivity` logger. Records successful logins, failed logins (capturing attempted usernames and specific failure reasons like invalid password/user), and daily checklist/checkpoint submissions with line/group metadata.
+*   **Secure Administration API**: Implemented `/api/activity-logs` to query logs sorted descending by `created_at`. Wrapped endpoint in JWT authentication and restricted access to `super_admin` and `admin` roles.
+*   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `系统日志` / EN: `Activity Logs`) in React. Includes paginated table views, search filters by username, select dropdown filters by activity type, and colored status pill badges.
+
 ----
 
 ## 🚀 Getting Started & Configuration
