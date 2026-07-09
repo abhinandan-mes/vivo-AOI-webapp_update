@@ -324,10 +324,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Secure Administration API**: Implemented `/api/activity-logs` to query logs sorted descending by `created_at`. Wrapped endpoint in JWT authentication and restricted access to `super_admin` and `admin` roles.
 *   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `系统日志` / EN: `Activity Logs`) in React. Includes paginated table views, search filters by username, select dropdown filters by activity type, and colored status pill badges.
 
-### Resolved: Windows VBS Background Services Configuration (July 2026)
-*   **Detached Background Execution**: Created `run-background.vbs` in the workspace root to launch the backend Express server (`node server.js` on port 5001) and frontend React client (`node start-frontend.js` on port 3000) completely hidden.
-*   **Zero Terminals Open**: Enables running both servers in the background without keeping any command prompt windows open.
-*   **Auto-Start on Boot**: Users can paste a shortcut of `run-background.vbs` into the Windows Startup folder (`shell:startup`) to run the application automatically when the system starts.
+### Resolved: IIS Production Hosting & Windows Service Backend (July 2026)
+*   **Static React Build**: Compiled frontend production files under `client/build` pointing directly to the backend API (`http://localhost:5001/api`).
+*   **IIS URL Rewrite Configuration**: Created `web.config` inside `client/public` to rewrite React routing URLs (like `/reports`, `/logs`), ensuring refreshes do not return 404 errors on IIS.
+*   **Windows Startup Task Service**: Registered a permanent task `AOI-Backend-Service` in Windows Task Scheduler under `NT AUTHORITY\SYSTEM`. Automatically starts the backend server on port 5001 at machine boot, completely hidden.
 
 ----
 
