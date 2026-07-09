@@ -10,3 +10,5 @@ No pending migrations to apply.
 ✅ Prisma migrations applied successfully
 👤 Default admin user checked/created successfully
 🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)

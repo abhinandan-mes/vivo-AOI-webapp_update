@@ -320,9 +320,9 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: System Activity Log & Audit Trail Page (July 2026)
 *   **Database Log Model**: Created the `AppActivityLog` model inside `schema.prisma` mapping to the `app_activity_logs` database table. Executed dev migrations to add the table in PostgreSQL and regenerated the Prisma client.
-*   **Real-time Operations Logging**: Integrated a centralized `logActivity` logger. Records successful logins, failed logins (capturing attempted usernames and specific failure reasons like invalid password/user), and daily checklist/checkpoint submissions with line/group metadata.
-*   **Secure Administration API**: Implemented `/api/activity-logs` to query logs sorted descending by `created_at`. Wrapped endpoint in JWT authentication and restricted access to `super_admin` and `admin` roles.
-*   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `系统日志` / EN: `Activity Logs`) in React. Includes paginated table views, search filters by username, select dropdown filters by activity type, and colored status pill badges.
+*   **Real-time Operations Logging**: Integrated a centralized `logActivity` logger. Records successful logins, failed logins (capturing attempted usernames and specific failure reasons like invalid password/user), regular logouts, session revocations, and daily checklist/checkpoint submissions with line/group metadata. Strips the `::ffff:` IPv6 prefix to display clean IPv4 addresses.
+*   **Row-Level Access Security**: Implemented role-based filters on the `/api/activity-logs` endpoint. `super_admin` and `admin` roles can query all activity logs, while normal roles (technicians, inspectors) can only retrieve their own activity history.
+*   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `系统日志` / EN: `Activity Logs`) in React, globally accessible to all roles. Hides the username search input for non-admin accounts. Includes paginated table views, dropdown filters by activity type, and colored status pill badges (incorporating a new gray badge for logout actions).
 
 ### Resolved: IIS Production Hosting & Windows Service Backend (July 2026)
 *   **Static React Build**: Compiled frontend production files under `client/build` pointing directly to the backend API (`http://localhost:5001/api`).
