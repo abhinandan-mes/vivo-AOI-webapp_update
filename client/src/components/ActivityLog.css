@@ -224,6 +224,12 @@
   border-color: #99f6e4;
 }
 
+.badge-logout {
+  background: #f1f5f9;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+
 .badge-default {
   background: #f8fafc;
   color: #64748b;

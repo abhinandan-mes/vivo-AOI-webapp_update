@@ -308,6 +308,8 @@ router.post('/auth/logout', authenticateToken, async (req, res) => {
           logout_time: new Date()
         }
       });
+      // Log the logout activity
+      await logActivity('LOGOUT', req.user.username, req, 'User logged out successfully');
     }
     res.json({ success: true, message: 'Logged out successfully' });
   } catch (error) {
@@ -391,6 +393,16 @@ router.post('/auth/sessions/:sessionId/revoke', authenticateToken, async (req, r
         logout_time: new Date()
       }
     });
+
+    // Log the revoke/logout activity
+    const sessionUser = await prisma.appUser.findUnique({
+      where: { id: session.user_id }
+    });
+    const sessionUsername = sessionUser ? sessionUser.username : 'Unknown';
+    const detailMsg = session.user_id === req.user.id
+      ? 'Session terminated by user'
+      : `Session revoked by Super Admin (${req.user.username})`;
+    await logActivity('LOGOUT', sessionUsername, req, detailMsg);
 
     res.json({ success: true, message: 'Session revoked successfully' });
   } catch (error) {

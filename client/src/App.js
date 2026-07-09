@@ -270,21 +270,19 @@ function App() {
               {t('nav_reports')}
             </NavLink>
             {(user.role === 'super_admin' || user.role === 'admin') && (
-              <>
-                <NavLink
-                  to="/users"
-                  className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-                >
-                  {t('nav_users')}
-                </NavLink>
-                <NavLink
-                  to="/logs"
-                  className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-                >
-                  {t('nav_activity_logs')}
-                </NavLink>
-              </>
+              <NavLink
+                to="/users"
+                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+              >
+                {t('nav_users')}
+              </NavLink>
             )}
+            <NavLink
+              to="/logs"
+              className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+            >
+              {t('nav_activity_logs')}
+            </NavLink>
           </div>
           <div className="user-menu">
             <div className="header-lang-selector">
@@ -326,11 +324,9 @@ function App() {
           )}
           <Route path="/reports" element={<Reports />} />
           {(user.role === 'super_admin' || user.role === 'admin') ? (
-            <>
-              <Route path="/users" element={<UserManagement currentUser={user} />} />
-              <Route path="/logs" element={<ActivityLog />} />
-            </>
+            <Route path="/users" element={<UserManagement currentUser={user} />} />
           ) : null}
+          <Route path="/logs" element={<ActivityLog currentUser={user} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

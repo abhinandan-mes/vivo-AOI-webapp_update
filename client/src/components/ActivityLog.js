@@ -3,8 +3,9 @@ import { useLanguage } from '../contexts/LanguageContext';
 import apiService from '../services/api';
 import './ActivityLog.css';
 
-export default function ActivityLog() {
+export default function ActivityLog({ currentUser }) {
   const { t, language } = useLanguage();
+  const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -43,6 +44,7 @@ export default function ActivityLog() {
       case 'LOGIN_FAILURE': return t('act_type_login_failure');
       case 'CHECKLIST_SUBMIT': return t('act_type_checklist_submit');
       case 'CHECKPOINT_SUBMIT': return t('act_type_checkpoint_submit');
+      case 'LOGOUT': return language === 'zh' ? '安全退出' : 'Logout';
       default: return type;
     }
   };
@@ -53,6 +55,7 @@ export default function ActivityLog() {
       case 'LOGIN_FAILURE': return 'badge-login-failure';
       case 'CHECKLIST_SUBMIT': return 'badge-checklist';
       case 'CHECKPOINT_SUBMIT': return 'badge-checkpoint';
+      case 'LOGOUT': return 'badge-logout';
       default: return 'badge-default';
     }
   };
@@ -98,7 +101,7 @@ export default function ActivityLog() {
       <div className="activity-log-header">
         <div className="header-title">
           <h1>{t('act_title')}</h1>
-          <p>{t('act_desc')}</p>
+          <p>{isAdmin ? t('act_desc') : (language === 'zh' ? '监控您的账户活动、登录历史和点检提交记录。' : 'Monitor your account activity, login history, and checksheet submissions.')}</p>
         </div>
         <button className="btn-refresh" onClick={fetchLogs} disabled={loading}>
           🔄 {loading ? t('loading') : (language === 'zh' ? '刷新' : 'Refresh')}
@@ -110,15 +113,17 @@ export default function ActivityLog() {
       {/* Filter Toolbar */}
       <div className="activity-filters-card">
         <div className="filters-grid">
-          <label className="filter-item">
-            <span>{t('act_search_user')}</span>
-            <input 
-              type="text" 
-              value={searchUser} 
-              onChange={e => setSearchUser(e.target.value)} 
-              placeholder={language === 'zh' ? '输入用户名...' : 'Enter username...'}
-            />
-          </label>
+          {isAdmin && (
+            <label className="filter-item">
+              <span>{t('act_search_user')}</span>
+              <input 
+                type="text" 
+                value={searchUser} 
+                onChange={e => setSearchUser(e.target.value)} 
+                placeholder={language === 'zh' ? '输入用户名...' : 'Enter username...'}
+              />
+            </label>
+          )}
 
           <label className="filter-item">
             <span>{t('act_filter_type')}</span>
@@ -126,6 +131,7 @@ export default function ActivityLog() {
               <option value="ALL">{language === 'zh' ? '全部活动' : 'All Activities'}</option>
               <option value="LOGIN_SUCCESS">{t('act_type_login_success')}</option>
               <option value="LOGIN_FAILURE">{t('act_type_login_failure')}</option>
+              <option value="LOGOUT">{language === 'zh' ? '安全退出' : 'Logout'}</option>
               <option value="CHECKLIST_SUBMIT">{t('act_type_checklist_submit')}</option>
               <option value="CHECKPOINT_SUBMIT">{t('act_type_checkpoint_submit')}</option>
             </select>
