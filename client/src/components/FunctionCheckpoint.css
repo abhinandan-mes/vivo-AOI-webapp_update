@@ -1,7 +1,8 @@
 .checkpoint-container {
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 95%;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 0;
 }
 
 .checkpoint-header {
@@ -240,6 +241,8 @@
 
 @media (max-width: 768px) {
   .checkpoint-container {
+    width: 100%;
+    max-width: 100%;
     padding: 1rem;
   }
 

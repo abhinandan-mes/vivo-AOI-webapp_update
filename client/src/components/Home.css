@@ -1,7 +1,8 @@
 .home-container {
-  max-width: 1200px;
+  max-width: 1720px;
+  width: 95%;
   margin: 0 auto;
-  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+  padding: 0.5rem 0 1.5rem 0;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -480,6 +481,8 @@
 /* Responsive Styles */
 @media (max-width: 768px) {
   .home-container {
+    width: 100%;
+    max-width: 100%;
     padding: 1rem;
     gap: 1.5rem;
   }

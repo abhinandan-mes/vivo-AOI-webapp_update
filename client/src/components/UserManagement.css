@@ -3,7 +3,8 @@
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
   padding: 2rem;
-  max-width: 1000px;
+  max-width: 1400px;
+  width: 95%;
   margin: 0 auto;
 }
 
@@ -296,6 +297,8 @@
 
 @media (max-width: 768px) {
   .user-management-card {
+    width: 100%;
+    max-width: 100%;
     padding: 1rem;
   }
   .user-management-form {

@@ -39,9 +39,10 @@ body {
 }
 
 .navbar-container {
-  max-width: 1400px;
+  max-width: 1720px;
+  width: 95%;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -240,6 +241,8 @@ body {
 /* Grid-based Responsive Navbar on Mobile Screen widths */
 @media (max-width: 768px) {
   .navbar-container {
+    width: 100%;
+    max-width: 100%;
     display: grid;
     grid-template-areas: 
       "logo menu"
