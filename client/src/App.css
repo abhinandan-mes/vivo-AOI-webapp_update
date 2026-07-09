@@ -238,6 +238,32 @@ body {
   letter-spacing: 0.01em;
 }
 
+.developer-link {
+  color: #415fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.developer-link:hover {
+  color: #2438c0;
+  text-decoration: underline;
+}
+
+.login-layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #eef1f8;
+}
+
+.login-footer {
+  background: transparent;
+  border-top: none;
+  margin-top: 0;
+  padding: 1.5rem;
+}
+
 /* Grid-based Responsive Navbar on Mobile Screen widths */
 @media (max-width: 768px) {
   .navbar-container {

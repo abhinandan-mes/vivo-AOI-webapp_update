@@ -168,24 +168,64 @@ function App() {
     };
   }, [user]);
 
+  const handleDeveloperClick = (e) => {
+    e.preventDefault();
+    const url = "http://localhost:8951/?action=talkapi&toUserCode=95003989";
+    const newWindow = window.open(url, "_blank");
+    
+    if (newWindow) {
+      const messageListener = (event) => {
+        if (event.origin === "http://localhost:8951") {
+          newWindow.close();
+          window.removeEventListener("message", messageListener);
+        }
+      };
+      window.addEventListener("message", messageListener);
+
+      setTimeout(() => {
+        if (newWindow && !newWindow.closed) {
+          newWindow.close();
+        }
+        window.removeEventListener("message", messageListener);
+      }, 2500);
+    }
+  };
+
   if (checkingSession) {
     return <div className="auth-loading">{t('nav_loading')}</div>;
   }
 
   if (!user) {
     return (
-      <Routes>
-        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-        <Route 
-          path="*" 
-          element={
-            <Navigate 
-              to={`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`} 
-              replace 
+      <div className="login-layout-container">
+        <main className="main-content">
+          <Routes>
+            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+            <Route 
+              path="*" 
+              element={
+                <Navigate 
+                  to={`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`} 
+                  replace 
+                />
+              } 
             />
-          } 
-        />
-      </Routes>
+          </Routes>
+        </main>
+        <footer className="footer login-footer">
+          <p>AOI Digital Checksheet &copy; 2026 Vivo</p>
+          <p className="footer-credit">
+            Designed, Developed &amp; Maintained by{" "}
+            <a 
+              href="http://localhost:8951/?action=talkapi&toUserCode=95003989" 
+              onClick={handleDeveloperClick}
+              className="developer-link"
+            >
+              Abhinandan Kumar
+            </a>
+          </p>
+        </footer>
+      </div>
     );
   }
 
@@ -285,7 +325,16 @@ function App() {
 
       <footer className="footer">
         <p>AOI Digital Checksheet &copy; 2026 Vivo</p>
-        <p className="footer-credit">Designed, Developed &amp; Maintained by Abhinandan Kumar</p>
+        <p className="footer-credit">
+          Designed, Developed &amp; Maintained by{" "}
+          <a 
+            href="http://localhost:8951/?action=talkapi&toUserCode=95003989" 
+            onClick={handleDeveloperClick}
+            className="developer-link"
+          >
+            Abhinandan Kumar
+          </a>
+        </p>
       </footer>
 
       {showProfileModal && (
