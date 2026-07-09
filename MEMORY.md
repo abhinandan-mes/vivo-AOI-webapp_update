@@ -309,6 +309,11 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Segmented Line Breakdown Chips**: Refactored the line chip lists under both checklist and checkpoint cards to display in three distinct sections: Production lines, Line Stop lines, and Not Filled lines, making it easy to identify the exact status of each line at a glance.
 *   **Internationalization Support**: Added EN/ZH translation keys in `translations.js` for "Production", "Line Stop", and "Not Filled" summary dashboard headers.
 
+### Resolved: Footer Link Redirection & Login Page Footer (July 2026)
+*   **Redirect Click Handler**: Wrapped the developer name "Abhinandan Kumar" in a styled clickable anchor link. Clicking it opens the local API link (`http://localhost:8951/?action=talkapi&toUserCode=95003989`) in a new tab, listens to a message event, and uses a fallback timer of 2.5 seconds to auto-close the tab once the action has triggered.
+*   **Login Page Footer Integration**: Structured the login layout container to display the footer clearly at the bottom of the login page. Set the login background and flex styling so it remains visible immediately without scrolling.
+*   **Aesthetic Styling**: Added link colors, hover decoration states, and custom styles inside `App.css` and `LoginPage.css` to keep the footer appearance consistent across authenticated and public states.
+
 ----
 
 ## 🚀 Getting Started & Configuration
