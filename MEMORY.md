@@ -324,6 +324,11 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Secure Administration API**: Implemented `/api/activity-logs` to query logs sorted descending by `created_at`. Wrapped endpoint in JWT authentication and restricted access to `super_admin` and `admin` roles.
 *   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `系统日志` / EN: `Activity Logs`) in React. Includes paginated table views, search filters by username, select dropdown filters by activity type, and colored status pill badges.
 
+### Resolved: PM2 Background Services Configuration (July 2026)
+*   **Daemonized Background Execution**: Setup PM2 (Process Manager) under Windows to permanently run the backend Express server (`aoi-backend`) and frontend React client (`aoi-frontend`) in the background.
+*   **Elimination of Active Terminals**: Freed up port locks and terminated local foreground shell processes, allowing developers to close all terminal windows while keeping the web application fully accessible.
+*   **Startup Configurations**: Executed `pm2 save` to persist the process list configurations so both servers can restart automatically.
+
 ----
 
 ## 🚀 Getting Started & Configuration
