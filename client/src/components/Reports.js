@@ -93,7 +93,10 @@ export default function Reports() {
   const [checkpoints, setCheckpoints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filters, setFilters] = useState({ from: '', to: '', line: '', shift: '', group: '' });
+  const [filters, setFilters] = useState(() => {
+    const todayStr = dateKey(new Date());
+    return { from: todayStr, to: todayStr, line: '', shift: '', group: '' };
+  });
   const [showExport, setShowExport] = useState(false);
   const [exportConfirm, setExportConfirm] = useState({ show: false, format: '' });
 
