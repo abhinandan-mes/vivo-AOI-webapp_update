@@ -264,6 +264,22 @@ body {
   padding: 1.5rem;
 }
 
+.login-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 2rem 0 2rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .login-main-content {
+    padding: 1rem 1rem 0 1rem;
+  }
+}
+
 /* Grid-based Responsive Navbar on Mobile Screen widths */
 @media (max-width: 768px) {
   .navbar-container {

@@ -198,7 +198,7 @@ function App() {
   if (!user) {
     return (
       <div className="login-layout-container">
-        <main className="main-content">
+        <main className="login-main-content">
           <Routes>
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
             <Route 
