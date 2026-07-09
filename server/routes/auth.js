@@ -49,7 +49,10 @@ router.post('/auth/login', async (req, res) => {
     }
 
     const sessionId = crypto.randomUUID();
-    const publicIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+    let publicIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+    if (publicIp && publicIp.startsWith('::ffff:')) {
+      publicIp = publicIp.substring(7);
+    }
 
     await prisma.appSession.create({
       data: {
