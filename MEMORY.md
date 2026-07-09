@@ -329,6 +329,11 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **IIS URL Rewrite Configuration**: Created `web.config` inside `client/public` to rewrite React routing URLs (like `/reports`, `/logs`), ensuring refreshes do not return 404 errors on IIS.
 *   **Windows Startup Task Service**: Registered a permanent task `AOI-Backend-Service` in Windows Task Scheduler under `NT AUTHORITY\SYSTEM`. Automatically starts the backend server on port 5001 at machine boot, completely hidden.
 
+### Resolved: Reports Page Export & Filtering Enhancements (July 2026)
+*   **Custom Export Confirmation Modal**: Swapped out the default browser `window.confirm` popup with a styled React modal window (`submit-confirm-modal`), incorporating an animated transition, status headers, action buttons, and a grid summary of export targets (report type, file format, total records, and active filter parameters).
+*   **Export Dropdown Interaction Fix**: Repositioned the absolute dropdown container flush with the trigger button (`top: 100%` in `Reports.css`) to eliminate the 6px empty gap. This resolves the bug where moving the cursor over options triggered `onMouseLeave` and closed the menu prematurely.
+*   **Default Date Filtering**: Programmed the `filters` initial state in `Reports.js` to default the `from` and `to` values to today's date (`YYYY-MM-DD`). Allows users to search other dates, and click "✕ Clear" to view all historical data.
+
 ----
 
 ## 🚀 Getting Started & Configuration
