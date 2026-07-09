@@ -95,6 +95,7 @@ export default function Reports() {
   const [error, setError] = useState('');
   const [filters, setFilters] = useState({ from: '', to: '', line: '', shift: '', group: '' });
   const [showExport, setShowExport] = useState(false);
+  const [exportConfirm, setExportConfirm] = useState({ show: false, format: '' });
 
   const checkpointColumns = useMemo(() => {
     return checkpointGroups.flatMap(group => group.positions.map(position => ({
@@ -347,13 +348,14 @@ export default function Reports() {
 
   const triggerExport = (format) => {
     setShowExport(false);
-    const label = format === 'csv' ? 'CSV' : format === 'pdf' ? 'PDF' : '';
-    const confirmMsg = language === 'zh'
-      ? `是否将 ${filteredRows.length} 条记录导出为 ${label}？`
-      : `Export ${filteredRows.length} ${reportTitle(reportType)} record${filteredRows.length === 1 ? '' : 's'} as ${label}?`;
-    
-    const shouldExport = label && window.confirm(confirmMsg);
-    if (!shouldExport) return;
+    if (format === 'csv' || format === 'pdf') {
+      setExportConfirm({ show: true, format });
+    }
+  };
+
+  const executeExport = () => {
+    const format = exportConfirm.format;
+    setExportConfirm({ show: false, format: '' });
     if (format === 'csv') downloadCsv();
     if (format === 'pdf') exportPdf();
   };
@@ -555,6 +557,76 @@ export default function Reports() {
             ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} /> 
             : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} />
           }
+        </div>
+      )}
+
+      {/* Custom Export Confirmation Modal */}
+      {exportConfirm.show && (
+        <div className="global-modal-overlay">
+          <div className="modal-content submit-confirm-modal">
+            <div className="confirm-modal-icon-wrapper">
+              <div className="confirm-modal-icon">
+                📥
+              </div>
+            </div>
+            
+            <div className="confirm-modal-header">
+              <h2>{language === 'zh' ? '确认导出数据' : 'Confirm Data Export'}</h2>
+              <p>{language === 'zh' ? '请核对以下导出配置，确认无误后下载文件' : 'Please verify the following export configurations before downloading'}</p>
+            </div>
+
+            <div className="confirm-details-table">
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{language === 'zh' ? '报表类型' : 'Report Type'}</span>
+                <span className="confirm-detail-value">{reportTitle(reportType)}</span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{language === 'zh' ? '文件格式' : 'File Format'}</span>
+                <span className="confirm-detail-value" style={{ fontWeight: 'bold', color: '#415fff' }}>{exportConfirm.format.toUpperCase()}</span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{language === 'zh' ? '筛选记录数' : 'Filtered Records'}</span>
+                <span className="confirm-detail-value" style={{ color: '#027a48', fontWeight: 600 }}>{filteredRows.length} {language === 'zh' ? '条' : 'records'}</span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{language === 'zh' ? '线别筛选' : 'Line Filter'}</span>
+                <span className="confirm-detail-value">{filters.line || (language === 'zh' ? '全部' : 'All')}</span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{language === 'zh' ? '班次筛选' : 'Shift Filter'}</span>
+                <span className="confirm-detail-value">
+                  {filters.shift ? (filters.shift === 'Day' ? t('day') : t('night')) : (language === 'zh' ? '全部' : 'All')}
+                </span>
+              </div>
+              <div className="confirm-detail-item">
+                <span className="confirm-detail-label">{language === 'zh' ? '班组筛选' : 'Group Filter'}</span>
+                <span className="confirm-detail-value">{filters.group || (language === 'zh' ? '全部' : 'All')}</span>
+              </div>
+              <div className="confirm-detail-item" style={{ gridColumn: 'span 2' }}>
+                <span className="confirm-detail-label">{language === 'zh' ? '日期范围' : 'Date Range'}</span>
+                <span className="confirm-detail-value" style={{ fontSize: '0.88rem' }}>
+                  {filters.from || '—'} {language === 'zh' ? '至' : 'to'} {filters.to || '—'}
+                </span>
+              </div>
+            </div>
+
+            <div className="confirm-modal-actions">
+              <button 
+                type="button" 
+                className="confirm-btn-cancel" 
+                onClick={() => setExportConfirm({ show: false, format: '' })}
+              >
+                {language === 'zh' ? '取消' : 'Cancel'}
+              </button>
+              <button 
+                type="button" 
+                className="confirm-btn-submit-active"
+                onClick={executeExport}
+              >
+                {language === 'zh' ? '确认下载' : 'Download File'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </section>
