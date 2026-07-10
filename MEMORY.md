@@ -334,6 +334,23 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Export Dropdown Interaction Fix**: Repositioned the absolute dropdown container flush with the trigger button (`top: 100%` in `Reports.css`) to eliminate the 6px empty gap. This resolves the bug where moving the cursor over options triggered `onMouseLeave` and closed the menu prematurely.
 *   **Default Date Filtering**: Programmed the `filters` initial state in `Reports.js` to default the `from` and `to` values to today's date (`YYYY-MM-DD`). Allows users to search other dates, and click "✕ Clear" to view all historical data.
 
+### Resolved: User Management Redesign & Schema Expansion (July 2026)
+*   **Database Schema Migration**: Added optional `email` (VarChar(150)) and `phone` (VarChar(50)) fields to the `AppUser` model in `schema.prisma`. Generated and ran database migrations, updating the PostgreSQL tables and generating the Prisma Client.
+*   **Backend Controller Updates**: Modified auth routes (`/auth/create-user`, `/auth/users/:id`, and `/auth/users`) to read, write, validate, and return the new `email` and `phone` values, along with account creation timestamp `created_at`.
+*   **Top Summary Stat Cards**: Added a dashboard of statistics cards displaying metrics: Total Users, Active (users with live sessions), Inactive (offline users), and Admins (users with admin/super admin roles).
+*   **Modern Pagination & Quick Search**: Integrated a page sizing selector (defaulting to 10 entries per page), dynamic pagination buttons, and a quick text search bar filtering username, fullname, email, phone, or role in real-time.
+*   **Mockup Table Redesign**: Restructured columns to match layout: user avatars (initials avatar circle with deterministic color theme based on name), email, phone, role pills, status pills (Active/Inactive), created timestamp, last login timestamp, and styled edit/password/delete action buttons.
+*   **Modal Form Overlays**: Relocated the User Creation, User Details Update, and Password Reset forms into distinct, styled modal overlay dialogs (`global-modal-overlay`).
+
+### Resolved: Homepage Metrics Redesign & Today's Submissions (July 2026)
+*   **Dashboard Stats Endpoint**: Built `/api/auth/dashboard-stats` (GET) endpoint that queries the `AoiFunctionCheckpoint` and `AoiTechnicianChecklist` tables in PostgreSQL, filtering for the current local date (midnight). Returns counts grouped by shift (Day/Night) and unique active groups (Group A, B, C, etc.).
+*   **Welcome greeting redesign**: Restructured header greeting to match mockup: WELCOME BACK subtitle, user fullname with greeting wave icon, current local date badge, and user security role badge.
+*   **Mockup Gradient Cards**: Implemented 4 modern stats cards on the homepage with custom colors:
+    - **Today's Checklists** (Purple): count of Technician Checklists submitted today, with shift details.
+    - **Today's Checksheets** (Blue): count of Daily Function Checks submitted today, with shift details.
+    - **Active Groups** (Rose): count of unique active groups today, with scrollable group breakdown text (e.g. `A: 3 | B: 2`).
+    - **Total Submissions** (Orange): combined sum of all today's submissions with Day/Night totals.
+
 ----
 
 ## 🚀 Getting Started & Configuration

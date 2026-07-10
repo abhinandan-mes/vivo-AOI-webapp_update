@@ -12,6 +12,12 @@ export default function Home({ currentUser }) {
   const [successMsg, setSuccessMsg] = useState('');
   const [expandedUser, setExpandedUser] = useState(null);
 
+  // New state for Checklist/Checksheet submission statistics
+  const [dashboardStats, setDashboardStats] = useState({
+    checkpoint: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
+    checklist: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
+  });
+
   const isSuperAdmin = currentUser?.role === 'super_admin';
 
   const sortedUsersSummary = useMemo(() => {
@@ -38,6 +44,16 @@ export default function Home({ currentUser }) {
     setLoading(true);
     setError('');
     try {
+      // 1. Fetch daily submission stats
+      const statsResponse = await apiService.getDashboardStats();
+      if (statsResponse.data.success) {
+        setDashboardStats({
+          checkpoint: statsResponse.data.checkpoint,
+          checklist: statsResponse.data.checklist
+        });
+      }
+
+      // 2. Fetch sessions list
       if (isSuperAdmin) {
         const response = await apiService.getAllSessionsSummary();
         setUsersSummary(response.data.users || []);
@@ -69,8 +85,6 @@ export default function Home({ currentUser }) {
       await apiService.revokeSession(sessionId);
       setSuccessMsg(t('home_success_revoke'));
       
-      // If user terminated their own current session, let the response interceptor log them out
-      // otherwise, refresh dashboard data
       if (isCurrent && sessionId === currentUser?.session_id) {
         window.location.reload();
       } else {
@@ -103,95 +117,148 @@ export default function Home({ currentUser }) {
 
   const getRoleLabel = (role) => {
     switch (role) {
-      case 'super_admin': return t('um_role_super_admin');
-      case 'admin': return t('um_role_admin');
-      case 'inspector': return t('um_role_inspector');
-      case 'technician': return t('um_role_technician');
+      case 'super_admin': return language === 'zh' ? '超级管理员' : 'Super Admin';
+      case 'admin': return language === 'zh' ? '管理员' : 'Admin';
+      case 'inspector': return language === 'zh' ? '检验员' : 'Inspector';
+      case 'technician': return language === 'zh' ? '技术员' : 'Technician';
+      case 'operator': return language === 'zh' ? '操作员' : 'Operator';
       default: return role;
     }
   };
+
+  // Submission statistics computations
+  const stats = dashboardStats;
+  const checklistTotal = stats.checklist.total;
+  const checkpointTotal = stats.checkpoint.total;
+  const combinedTotal = checklistTotal + checkpointTotal;
+
+  // Extract unique active groups from both submissions
+  const activeGroups = useMemo(() => {
+    const groupsSet = new Set([
+      ...Object.keys(stats.checklist.groups),
+      ...Object.keys(stats.checkpoint.groups)
+    ]);
+    groupsSet.delete('Unknown');
+    return Array.from(groupsSet);
+  }, [stats]);
+
+  const activeGroupsCount = activeGroups.length || 0;
+
+  // Group breakdown display text
+  const groupBreakdownStr = useMemo(() => {
+    const combinedGroups = {};
+    activeGroups.forEach(g => {
+      combinedGroups[g] = (stats.checklist.groups[g] || 0) + (stats.checkpoint.groups[g] || 0);
+    });
+    const entries = Object.entries(combinedGroups);
+    if (entries.length === 0) return language === 'zh' ? '无' : 'None';
+    return entries.map(([g, count]) => `${g}: ${count}`).join(' | ');
+  }, [activeGroups, stats, language]);
+
+  const totalDay = stats.checklist.shifts.day + stats.checkpoint.shifts.day;
+  const totalNight = stats.checklist.shifts.night + stats.checkpoint.shifts.night;
 
   if (loading && sessions.length === 0 && usersSummary.length === 0) {
     return <div className="home-loading">{t('home_loading')}</div>;
   }
 
-  // Calculate quick stats
-  const totalUsersCount = usersSummary.length;
-  const activeSessionsSystemCount = usersSummary.reduce((acc, u) => acc + (u.active_sessions_count || 0), 0);
-  
-  const myTotalSessions = sessions.length;
-  const myActiveSessions = sessions.filter(s => s.status === 'active').length;
-  const currentIp = sessions.find(s => s.session_id === currentUser?.session_id)?.public_ip || 'Unknown';
-
   return (
     <div className="home-container">
-      {/* Welcome Banner */}
-      <div className="welcome-banner">
-        <div className="welcome-info">
-          <h1>{t('home_welcome', { name: currentUser?.full_name })}</h1>
-          <p>{t('home_logged_as')} <span className={`role-badge role-${currentUser?.role}`}>{getRoleLabel(currentUser?.role)}</span></p>
+      {/* Redesigned Mockup Welcome Banner */}
+      <div className="home-header-row">
+        <div className="header-greeting-meta">
+          <span className="greet-sub-tag">✨ {language === 'zh' ? '欢迎回来' : 'WELCOME BACK'}</span>
+          <h1>
+            <span className="wave-greet-icon">👋</span> {currentUser?.full_name || 'User'}
+          </h1>
         </div>
-        <div className="welcome-time">
-          <span className="current-date-badge">{new Date().toLocaleDateString(language === 'zh' ? 'zh-CN' : undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <div className="header-pill-badges">
+          <div className="date-pill-badge">
+            📅 {new Date().toLocaleDateString(language === 'zh' ? 'zh-CN' : undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          </div>
+          <div className="role-pill-badge">
+            🛡️ {getRoleLabel(currentUser?.role)}
+          </div>
         </div>
       </div>
 
       {successMsg && <div className="home-alert alert-success">{successMsg}</div>}
       {error && <div className="home-alert alert-danger">{error}</div>}
 
-      {/* Dashboard Stats */}
-      {isSuperAdmin ? (
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon users-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            </div>
-            <div className="stat-content">
-              <h3>{t('home_total_users')}</h3>
-              <p className="stat-number">{totalUsersCount}</p>
-            </div>
+      {/* ── Redesigned Stat Cards Grid ── */}
+      <div className="home-stats-grid">
+        {/* Card 1 (Purple): Checklists */}
+        <div className="home-stat-card card-gradient-purple">
+          <div className="card-overlay-badges">
+            <span className="card-badge-left">{language === 'zh' ? '检查表' : 'Checklists'}</span>
+            <span className="card-badge-right">{language === 'zh' ? '今日' : 'Today'}</span>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon active-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </div>
-            <div className="stat-content">
-              <h3>{t('home_active_sessions')}</h3>
-              <p className="stat-number">{activeSessionsSystemCount}</p>
-            </div>
+          <div className="card-center-val">
+            <span className="card-large-number">{checklistTotal}</span>
+            <span className="card-small-label">{language === 'zh' ? '今日检查表提交' : 'TODAY\'S CHECKLISTS'}</span>
+          </div>
+          <div className="card-bottom-footer">
+            <span className="footer-bullet-dot" />
+            <span className="footer-label-text">
+              {language === 'zh' ? `白班: ${stats.checklist.shifts.day} | 夜班: ${stats.checklist.shifts.night}` : `Day: ${stats.checklist.shifts.day} | Night: ${stats.checklist.shifts.night}`}
+            </span>
           </div>
         </div>
-      ) : (
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon sessions-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-            </div>
-            <div className="stat-content">
-              <h3>{t('home_my_total_sessions')}</h3>
-              <p className="stat-number">{myTotalSessions}</p>
-            </div>
+
+        {/* Card 2 (Blue): Checksheets */}
+        <div className="home-stat-card card-gradient-blue">
+          <div className="card-overlay-badges">
+            <span className="card-badge-left">{language === 'zh' ? '功能检查' : 'Checksheets'}</span>
+            <span className="card-badge-right">{language === 'zh' ? '今日' : 'Today'}</span>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon active-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </div>
-            <div className="stat-content">
-              <h3>{t('home_my_active_sessions')}</h3>
-              <p className="stat-number">{myActiveSessions}</p>
-            </div>
+          <div className="card-center-val">
+            <span className="card-large-number">{checkpointTotal}</span>
+            <span className="card-small-label">{language === 'zh' ? '今日功能检查点' : 'TODAY\'S CHECKSHEETS'}</span>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon ip-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            </div>
-            <div className="stat-content">
-              <h3>{t('home_current_ip')}</h3>
-              <p className="stat-number font-small">{currentIp}</p>
-            </div>
+          <div className="card-bottom-footer">
+            <span className="footer-bullet-dot" />
+            <span className="footer-label-text">
+              {language === 'zh' ? `白班: ${stats.checkpoint.shifts.day} | 夜班: ${stats.checkpoint.shifts.night}` : `Day: ${stats.checkpoint.shifts.day} | Night: ${stats.checkpoint.shifts.night}`}
+            </span>
           </div>
         </div>
-      )}
+
+        {/* Card 3 (Rose): Group Breakdown */}
+        <div className="home-stat-card card-gradient-rose">
+          <div className="card-overlay-badges">
+            <span className="card-badge-left">{language === 'zh' ? '班组填报' : 'Groups'}</span>
+            <span className="card-badge-right">{language === 'zh' ? '在线' : 'Active'}</span>
+          </div>
+          <div className="card-center-val">
+            <span className="card-large-number">{activeGroupsCount}</span>
+            <span className="card-small-label">{language === 'zh' ? '今日活跃班组' : 'ACTIVE GROUPS TODAY'}</span>
+          </div>
+          <div className="card-bottom-footer">
+            <span className="footer-bullet-dot animate-pulse-bullet" />
+            <span className="footer-label-text scrollable-footer-text" title={groupBreakdownStr}>
+              {groupBreakdownStr}
+            </span>
+          </div>
+        </div>
+
+        {/* Card 4 (Orange): Combined Total */}
+        <div className="home-stat-card card-gradient-orange">
+          <div className="card-overlay-badges">
+            <span className="card-badge-left">{language === 'zh' ? '合并统计' : 'Combined'}</span>
+            <span className="card-badge-right">{language === 'zh' ? '今日总数' : 'Total'}</span>
+          </div>
+          <div className="card-center-val">
+            <span className="card-large-number">{combinedTotal}</span>
+            <span className="card-small-label">{language === 'zh' ? '今日填报总数' : 'COMBINED SUBMISSIONS'}</span>
+          </div>
+          <div className="card-bottom-footer">
+            <span className="footer-bullet-dot" />
+            <span className="footer-label-text">
+              {language === 'zh' ? `白班: ${totalDay} | 夜班: ${totalNight}` : `Day: ${totalDay} | Night: ${totalNight}`}
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content Area */}
       <div className="dashboard-content">

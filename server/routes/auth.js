@@ -460,4 +460,68 @@ router.post('/auth/change-password', authenticateToken, async (req, res) => {
   }
 });
 
+// Get dashboard stats for today's submissions (checklists & checksheets)
+router.get('/auth/dashboard-stats', authenticateToken, async (req, res) => {
+  try {
+    const targetDateStr = req.query.date || new Date().toLocaleDateString('en-CA');
+    const targetDate = new Date(targetDateStr);
+
+    if (isNaN(targetDate.getTime())) {
+      return res.status(400).json({ success: false, error: 'Invalid date parameter' });
+    }
+
+    // 1. Fetch checkpoints for targetDate
+    const checkpoints = await prisma.aoiFunctionCheckpoint.findMany({
+      where: { date: targetDate }
+    });
+
+    // 2. Fetch checklists for targetDate
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+      where: { date: targetDate }
+    });
+
+    // Calculate statistics
+    const checkpointCount = checkpoints.length;
+    const checklistCount = checklists.length;
+
+    // Shift breakdown
+    const checkpointDayShift = checkpoints.filter(c => c.shift === 'Day').length;
+    const checkpointNightShift = checkpoints.filter(c => c.shift === 'Night').length;
+
+    const checklistDayShift = checklists.filter(c => c.shift === 'Day').length;
+    const checklistNightShift = checklists.filter(c => c.shift === 'Night').length;
+
+    // Group breakdown counts
+    const checkpointGroups = {};
+    checkpoints.forEach(c => {
+      const g = c.group_name || 'Unknown';
+      checkpointGroups[g] = (checkpointGroups[g] || 0) + 1;
+    });
+
+    const checklistGroups = {};
+    checklists.forEach(c => {
+      const g = c.group_name || 'Unknown';
+      checklistGroups[g] = (checklistGroups[g] || 0) + 1;
+    });
+
+    res.json({
+      success: true,
+      date: targetDateStr,
+      checkpoint: {
+        total: checkpointCount,
+        shifts: { day: checkpointDayShift, night: checkpointNightShift },
+        groups: checkpointGroups
+      },
+      checklist: {
+        total: checklistCount,
+        shifts: { day: checklistDayShift, night: checklistNightShift },
+        groups: checklistGroups
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    res.status(500).json({ success: false, error: 'An unexpected error occurred' });
+  }
+});
+
 module.exports = router;
