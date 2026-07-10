@@ -351,6 +351,24 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     - **Active Groups** (Rose): count of unique active groups today, with scrollable group breakdown text (e.g. `A: 3 | B: 2`).
     - **Total Submissions** (Orange): combined sum of all today's submissions with Day/Night totals.
 
+### Resolved: Activity Logs Page Redesign & Endpoint Joining (July 2026)
+*   **Log User Details Mapping**: Enhanced the `/api/activity-logs` GET controller to perform a dynamic in-memory lookup joining logs with the `AppUser` model based on usernames. This resolves and returns the corresponding `full_name` and `email` properties for each log entry.
+*   **Activity Logs Metrics Dashboard**: Implemented 4 summary metrics cards at the top of the activity logs page showing:
+    - **Total Events** (Purple): total count of all activity logs in the system.
+    - **Logins** (Green): count of successful user login events.
+    - **Daily Checklists** (Blue): count of Daily Technician Checklists submitted today (local date).
+    - **Daily Checksheets** (Rose): count of Daily Function Checkpoints submitted today (local date).
+*   **Log Filter Panel**: Redesigned the filter toolbar to include an interactive dropdown list of system users (fetched dynamically from the database), filter type selector, start and end date range Pickers, and Apply / Clear action buttons.
+*   **Mockup Table Redesign**: Formatted the logs table to display split date/time vertical stacks, user avatars (initials avatar circle with name and email stacks), colorful custom activity pills, entity labels, and description truncations.
+*   **Detailed Log Modal View**: Added a click action on the far-right Details column that triggers a styled modal overlay popup window displaying full structured log details.
+
+### Resolved: Reports Page Summary Card Colors and Labeling (July 2026)
+*   **Production to Submitted Labeling**: Renamed the `PRODUCTION` summary column and line breakdown headers to `SUBMITTED` (mapped to localized key `rep_summary_submitted` in translations), representing checklist and checksheet submissions.
+*   **Color Alignment**: Tuned summary states and chip colors:
+    - **Submitted**: Styled in green (`#10b981`).
+    - **Line Stop**: Changed from red to warning amber/orange (`#f59e0b`).
+    - **Not Filled**: Changed from gray to error red (`#ef4444`).
+
 ----
 
 ## 🚀 Getting Started & Configuration

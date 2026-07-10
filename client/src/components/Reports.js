@@ -385,15 +385,15 @@ export default function Reports() {
         <div className="summary-card-body">
           <div className="summary-metric-row">
             <div className="summary-metric-item">
-              <span className="metric-label">{t('rep_summary_production')}</span>
+              <span className="metric-label submitted">{t('rep_summary_submitted')}</span>
               <span className="metric-value production">{productionLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label" style={{ color: '#ef4444' }}>{t('rep_summary_linestop')}</span>
+              <span className="metric-label linestop">{t('rep_summary_linestop')}</span>
               <span className="metric-value linestop">{lineStopLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label">{t('rep_summary_notfilled')}</span>
+              <span className="metric-label notfilled">{t('rep_summary_notfilled')}</span>
               <span className="metric-value pending">{pendingLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-progress-ring-container">
@@ -419,7 +419,7 @@ export default function Reports() {
           
           <div className="summary-line-breakdown">
             <div className="line-breakdown-group">
-              <span className="breakdown-label">{t('rep_summary_production')}:</span>
+              <span className="breakdown-label submitted">{t('rep_summary_submitted')}:</span>
               <div className="line-chips-container">
                 {productionLines.length > 0 ? (
                   productionLines.map(line => (
@@ -432,7 +432,7 @@ export default function Reports() {
             </div>
 
             <div className="line-breakdown-group">
-              <span className="breakdown-label" style={{ color: '#ef4444' }}>{t('rep_summary_linestop')}:</span>
+              <span className="breakdown-label linestop">{t('rep_summary_linestop')}:</span>
               <div className="line-chips-container">
                 {lineStopLines.length > 0 ? (
                   lineStopLines.map(line => (
@@ -445,7 +445,7 @@ export default function Reports() {
             </div>
             
             <div className="line-breakdown-group">
-              <span className="breakdown-label">{t('rep_summary_notfilled')}:</span>
+              <span className="breakdown-label notfilled">{t('rep_summary_notfilled')}:</span>
               <div className="line-chips-container">
                 {pendingLines.length > 0 ? (
                   pendingLines.map(line => (

@@ -21,7 +21,29 @@ router.get('/activity-logs', authenticateToken, async (req, res) => {
     }
 
     const logs = await prisma.appActivityLog.findMany(queryOptions);
-    res.json({ success: true, logs });
+
+    // Fetch corresponding user full_name and email
+    const usernames = Array.from(new Set(logs.map(l => l.username)));
+    const users = await prisma.appUser.findMany({
+      where: { username: { in: usernames } },
+      select: { username: true, full_name: true, email: true }
+    });
+
+    const userMap = {};
+    users.forEach(u => {
+      userMap[u.username] = u;
+    });
+
+    const formattedLogs = logs.map(l => {
+      const u = userMap[l.username];
+      return {
+        ...l,
+        full_name: u ? u.full_name : l.username,
+        email: u ? u.email : ''
+      };
+    });
+
+    res.json({ success: true, logs: formattedLogs });
   } catch (error) {
     console.error('Error fetching activity logs:', error);
     res.status(500).json({ success: false, error: 'An unexpected error occurred' });

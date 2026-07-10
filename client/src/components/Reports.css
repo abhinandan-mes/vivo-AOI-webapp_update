@@ -172,17 +172,21 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
   line-height: 1.1;
 }
 
+.metric-label.submitted, .breakdown-label.submitted { color: #10b981; }
+.metric-label.linestop, .breakdown-label.linestop { color: #f59e0b; }
+.metric-label.notfilled, .breakdown-label.notfilled { color: #ef4444; }
+
 .metric-value.done,
 .metric-value.production {
   color: #10b981;
 }
 
 .metric-value.linestop {
-  color: #ef4444;
+  color: #f59e0b;
 }
 
 .metric-value.pending {
-  color: #64748b;
+  color: #ef4444;
 }
 
 .metric-value small {
@@ -260,15 +264,15 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
 }
 
 .line-chip.linestop {
-  background: #fef2f2;
-  color: #ef4444;
-  border: 1px solid #fca5a5;
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fcd34d;
 }
 
 .line-chip.pending {
-  background: #f8fafc;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
 }
 
 .empty-chips-label {
