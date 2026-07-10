@@ -9,5 +9,6 @@ router.post('/checkpoint', requireRoles(['technician', 'admin', 'super_admin']),
 router.get('/checkpoint', functionCheckpointController.getAllCheckpoints);
 router.get('/checkpoint/:id', functionCheckpointController.getCheckpointById);
 router.get('/checkpoint/date/:date', functionCheckpointController.getCheckpointsByDate);
+router.delete('/checkpoint/:id', requireRoles(['super_admin']), functionCheckpointController.deleteCheckpoint);
 
 module.exports = router;

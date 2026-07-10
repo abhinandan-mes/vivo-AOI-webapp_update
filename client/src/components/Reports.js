@@ -185,30 +185,67 @@ export default function Reports() {
     return row[key] ?? '';
   };
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   useEffect(() => {
-    let active = true;
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        setCurrentUser(JSON.parse(userStr));
+      }
+    } catch (e) {
+      console.error('Error loading current user from localStorage:', e);
+    }
+  }, []);
+
+  const isSuperAdmin = currentUser?.role === 'super_admin';
+
+  const loadData = () => {
     setLoading(true);
     setError('');
-    
     Promise.all([
       apiService.getAllChecklists(),
       apiService.getAllCheckpoints()
     ])
       .then(([checklistRes, checkpointRes]) => {
-        if (active) {
-          setChecklists(checklistRes.data.data || []);
-          setCheckpoints(checkpointRes.data.data || []);
-        }
+        setChecklists(checklistRes.data.data || []);
+        setCheckpoints(checkpointRes.data.data || []);
       })
       .catch(err => {
-        if (active) setError(err.message);
+        setError(err.message);
       })
       .finally(() => {
-        if (active) setLoading(false);
+        setLoading(false);
       });
+  };
 
-    return () => { active = false; };
+  useEffect(() => {
+    loadData();
   }, [reportType]);
+
+  const handleDelete = async (id, type) => {
+    const isConfirmed = window.confirm(
+      language === 'zh'
+        ? '您确定要删除此条点检记录吗？此操作将永久移除该条数据且无法撤销！'
+        : 'Are you sure you want to delete this record? This action will permanently remove it and cannot be undone!'
+    );
+    if (!isConfirmed) return;
+
+    try {
+      setLoading(true);
+      if (type === 'checkpoint') {
+        await apiService.deleteCheckpoint(id);
+      } else {
+        await apiService.deleteChecklist(id);
+      }
+      loadData();
+      alert(language === 'zh' ? '删除成功' : 'Record deleted successfully');
+    } catch (err) {
+      console.error(err);
+      alert((language === 'zh' ? '删除失败：' : 'Delete failed: ') + (err.message || err));
+      setLoading(false);
+    }
+  };
 
   const rows = useMemo(() => {
     const data = reportType === 'checkpoint' ? checkpoints : checklists;
@@ -557,8 +594,8 @@ export default function Reports() {
       {!loading && !error && filteredRows.length > 0 && (
         <div className="report-table-wrap">
           {reportType === 'checkpoint' 
-            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} /> 
-            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} />
+            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDelete} /> 
+            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDelete} />
           }
         </div>
       )}
@@ -636,7 +673,7 @@ export default function Reports() {
   );
 }
 
-function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime }) {
+function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete }) {
   return <table className="report-table detailed-checkpoint-report">
     <thead>
       <tr>
@@ -650,6 +687,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
         <th rowSpan="2">{t('rep_th_submitted_by')}</th>
         <th rowSpan="2">{t('rep_th_submitted_at')}</th>
         {checkpointGroups.map(group => <th key={group.prefix} colSpan={group.positions.length} className="function-heading">{t('label_' + group.prefix)}</th>)}
+        {isSuperAdmin && <th rowSpan="2" style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
       </tr>
       <tr>{checkpointGroups.flatMap(group => group.positions.map(position => <th key={`${group.prefix}_${position.key}`} title={t('label_' + group.prefix) + ' - ' + t('cp_th_' + position.key)}>{t('cp_th_' + position.key)}</th>))}</tr>
     </thead>
@@ -677,11 +715,23 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
           </td>
         );
       })}
+      {isSuperAdmin && (
+        <td style={{ textAlign: 'center' }}>
+          <button 
+            type="button"
+            className="btn-delete-report-row" 
+            onClick={() => onDelete(row.id, 'checkpoint')}
+            title={language === 'zh' ? '删除记录' : 'Delete Record'}
+          >
+            🗑️
+          </button>
+        </td>
+      )}
     </tr>) }</tbody>
   </table>;
 }
 
-function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime }) {
+function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete }) {
   const renderCell = (key, value) => {
     const cleanVal = text(value);
     
@@ -723,6 +773,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
           <th colSpan="6" className="function-heading">{language === 'zh' ? '条码读取状态' : 'Barcode Read Information'}</th>
           <th colSpan="3" className="function-heading">{language === 'zh' ? 'AOI 扫描工具' : 'AOI Scan Tools'}</th>
           <th className="function-heading">{t('cl_confirmation')}</th>
+          {isSuperAdmin && <th rowSpan="2" style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
         </tr>
         <tr>
           {checklistColumns.slice(7).map(([label]) => (
@@ -745,6 +796,18 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     : renderCell(key, row[key])}
               </td>
             ))}
+            {isSuperAdmin && (
+              <td style={{ textAlign: 'center' }}>
+                <button 
+                  type="button"
+                  className="btn-delete-report-row" 
+                  onClick={() => onDelete(row.id, 'checklist')}
+                  title={language === 'zh' ? '删除记录' : 'Delete Record'}
+                >
+                  🗑️
+                </button>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>

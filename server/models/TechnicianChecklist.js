@@ -50,6 +50,22 @@ const technicianChecklistModel = {
     return await prisma.aoiTechnicianChecklist.findMany({
       where: { line: line }
     });
+  },
+
+  checkDuplicate: async (date, line, shift) => {
+    return await prisma.aoiTechnicianChecklist.findFirst({
+      where: {
+        date: new Date(date),
+        line: line,
+        shift: shift
+      }
+    });
+  },
+
+  delete: async (id) => {
+    return await prisma.aoiTechnicianChecklist.delete({
+      where: { id: parseInt(id) }
+    });
   }
 };
 

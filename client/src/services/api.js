@@ -57,13 +57,15 @@ export const apiService = {
   getAllCheckpoints: () => API.get('/checkpoint'),
   getCheckpointById: (id) => API.get(`/checkpoint/${id}`),
   getCheckpointsByDate: (date) => API.get(`/checkpoint/date/${date}`),
+  deleteCheckpoint: (id) => API.delete(`/checkpoint/${id}`),
 
   // Technician Checklist APIs
   createChecklist: (data) => API.post('/checklist', data),
   getAllChecklists: () => API.get('/checklist'),
   getChecklistById: (id) => API.get(`/checklist/${id}`),
   getChecklistsByDate: (date) => API.get(`/checklist/date/${date}`),
-  getChecklistsByLine: (line) => API.get(`/checklist/line/${line}`)
+  getChecklistsByLine: (line) => API.get(`/checklist/line/${line}`),
+  deleteChecklist: (id) => API.delete(`/checklist/${id}`)
 };
 
 export default apiService;

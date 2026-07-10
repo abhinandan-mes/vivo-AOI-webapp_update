@@ -377,6 +377,11 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Affected Files**: Updated styles in `Home.css`, `UserManagement.css`, `ActivityLog.css`, `Reports.css`, `TechnicianChecklist.css`, and `FunctionCheckpoint.css`.
 *   **Fallback Contrast**: Defined `#1e3a8a` as a solid text color fallback for rendering compatibility in older web browsers.
 
+### Resolved: One-Submission-Per-Shift Restriction & Super Admin Deletion (July 2026)
+*   **Duplicate Submission Enforcement**: Integrated a duplicate check (`checkDuplicate`) inside the `TechnicianChecklistController.js` and `FunctionCheckpointController.js` creation routes. When a user attempts to submit a checklist or checksheet, the backend queries the database for any matching combination of date, line, and shift. If found, a `400 Bad Request` duplicate error is returned and displayed on the client.
+*   **Super Admin Deletion Endpoints**: Registered secure backend DELETE routes `/api/checklist/:id` and `/api/checkpoint/:id` mapped to the controllers' `deleteChecklist` and `deleteCheckpoint` methods. These endpoints are strictly protected to authorize only `super_admin` users.
+*   **Frontend Action Column**: Refactored the `CheckpointReport` and `ChecklistReport` tables in `Reports.js` to render an "Actions" column containing a trash icon button (`🗑️`) when logged in as a `super_admin`. Prompts a modal-style confirm warning before executing the deletion call and refreshing the report dashboard list.
+
 ----
 
 ## 🚀 Getting Started & Configuration

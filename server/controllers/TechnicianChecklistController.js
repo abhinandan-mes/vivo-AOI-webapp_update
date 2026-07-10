@@ -4,6 +4,15 @@ const { logActivity } = require('../utils/activityLogger');
 const technicianChecklistController = {
   createChecklist: async (req, res) => {
     try {
+      // Check for duplicate submission (date, line, shift)
+      const existing = await technicianChecklistModel.checkDuplicate(req.body.date, req.body.line, req.body.shift);
+      if (existing) {
+        return res.status(400).json({
+          success: false,
+          error: `Duplicate Submission: Checklist for Line ${req.body.line} during ${req.body.shift} shift has already been submitted for this date.`
+        });
+      }
+
       const checklist = await technicianChecklistModel.create(req.body);
 
       // Log the submission activity
@@ -17,6 +26,41 @@ const technicianChecklistController = {
       res.status(201).json({ success: true, data: checklist });
     } catch (error) {
       console.error('Error creating checklist:', error);
+      res.status(500).json({ success: false, error: 'An unexpected error occurred' });
+    }
+  },
+
+  deleteChecklist: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const targetId = parseInt(id);
+      if (isNaN(targetId)) {
+        return res.status(400).json({ success: false, error: 'Invalid checklist ID' });
+      }
+
+      // Role check: Only super_admin is authorized to delete
+      if (req.user?.role !== 'super_admin') {
+        return res.status(403).json({ success: false, error: 'Unauthorized: Only Super Admin can delete checklist data' });
+      }
+
+      const checklist = await technicianChecklistModel.getById(targetId);
+      if (!checklist) {
+        return res.status(404).json({ success: false, error: 'Checklist not found' });
+      }
+
+      await technicianChecklistModel.delete(targetId);
+
+      // Log activity
+      await logActivity(
+        'CHECKLIST_DELETE',
+        req.user?.username,
+        req,
+        `Deleted checklist ID: ${targetId} for Line: ${checklist.line}, Shift: ${checklist.shift}`
+      );
+
+      res.status(200).json({ success: true, message: 'Checklist deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting checklist:', error);
       res.status(500).json({ success: false, error: 'An unexpected error occurred' });
     }
   },

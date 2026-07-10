@@ -55,6 +55,22 @@ const functionCheckpointModel = {
     return await prisma.aoiFunctionCheckpoint.findMany({
       where: { date: new Date(date) }
     });
+  },
+
+  checkDuplicate: async (date, line, shift) => {
+    return await prisma.aoiFunctionCheckpoint.findFirst({
+      where: {
+        date: new Date(date),
+        line: line,
+        shift: shift
+      }
+    });
+  },
+
+  delete: async (id) => {
+    return await prisma.aoiFunctionCheckpoint.delete({
+      where: { id: parseInt(id) }
+    });
   }
 };
 

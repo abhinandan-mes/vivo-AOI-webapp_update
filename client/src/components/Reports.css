@@ -297,3 +297,23 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
   }
 }
 
+.btn-delete-report-row {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete-report-row:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  transform: scale(1.15);
+}
+
