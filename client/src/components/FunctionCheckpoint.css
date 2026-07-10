@@ -12,9 +12,12 @@
 
 .checkpoint-header h1 {
   font-size: 2rem;
-  color: #0f172a;
   margin: 0 0 0.5rem 0;
   font-weight: 700;
+  color: #1e3a8a;
+  background: linear-gradient(135deg, #0b1a30 10%, #415fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .checkpoint-header p {

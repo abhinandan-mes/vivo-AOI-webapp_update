@@ -372,6 +372,11 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 ### Resolved: User Management Header Overlap Bug Fix (July 2026)
 *   **CSS Class Namespace Scoping**: Found that the `.header-left` styling class added globally in `ActivityLog.css` was colliding with the `.header-left` wrapper container on the User Management page. Scoped the `.header-left` styling rules inside `ActivityLog.css` under the `.table-card-header` namespace. This immediately resolves the styling leakage, restoring the correct vertical layout hierarchy for the header elements on the User Management page.
 
+### Resolved: Typography Color Redesign for Page Headings (July 2026)
+*   **Premium Gradient Headings**: Replaced the raw slate-black (`#0f172a`) color on all main page headings (`h1` elements) with a modern, high-end text gradient. The gradient starts at a deep sapphire-navy (`#0b1a30` 10%) and shifts smoothly to the primary brand blue-violet (`#415fff` 100%), matching the navbar logo and active tab styling guidelines perfectly.
+*   **Affected Files**: Updated styles in `Home.css`, `UserManagement.css`, `ActivityLog.css`, `Reports.css`, `TechnicianChecklist.css`, and `FunctionCheckpoint.css`.
+*   **Fallback Contrast**: Defined `#1e3a8a` as a solid text color fallback for rendering compatibility in older web browsers.
+
 ----
 
 ## 🚀 Getting Started & Configuration
