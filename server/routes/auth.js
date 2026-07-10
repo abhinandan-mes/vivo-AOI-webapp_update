@@ -13,7 +13,9 @@ const publicUser = user => ({
   id: user.id,
   username: user.username,
   full_name: user.full_name,
-  role: user.role
+  role: user.role,
+  email: user.email,
+  phone: user.phone
 });
 
 const createToken = (user, sessionId) => jwt.sign(
@@ -78,7 +80,7 @@ router.post('/auth/login', async (req, res) => {
 // Create User (Restricted to Super Admin & Admin)
 router.post('/auth/create-user', authenticateToken, requireRoles(['super_admin', 'admin']), validateCreateUser, async (req, res) => {
   try {
-    const { username, password, fullName, role } = req.body;
+    const { username, password, fullName, role, email, phone } = req.body;
     const normalizedUsername = username.trim();
     const normalizedFullName = fullName.trim();
     const normalizedRole = role.trim();
@@ -105,13 +107,17 @@ router.post('/auth/create-user', authenticateToken, requireRoles(['super_admin',
         username: normalizedUsername,
         password_hash: passwordHash,
         full_name: normalizedFullName,
-        role: normalizedRole
+        role: normalizedRole,
+        email: email ? email.trim() : null,
+        phone: phone ? phone.trim() : null
       },
       select: {
         id: true,
         username: true,
         full_name: true,
-        role: true
+        role: true,
+        email: true,
+        phone: true
       }
     });
 
@@ -157,9 +163,12 @@ router.get('/auth/users', authenticateToken, requireRoles(['super_admin', 'admin
         username: u.username,
         full_name: u.full_name,
         role: u.role,
+        email: u.email,
+        phone: u.phone,
         last_login: latestSession ? latestSession.login_time : null,
         session_status: latestSession ? latestSession.status : null,
-        last_ip: latestSession ? latestSession.public_ip : null
+        last_ip: latestSession ? latestSession.public_ip : null,
+        created_at: u.created_at
       };
     });
 
@@ -174,7 +183,7 @@ router.get('/auth/users', authenticateToken, requireRoles(['super_admin', 'admin
 router.put('/auth/users/:id', authenticateToken, validateUpdateUser, async (req, res) => {
   try {
     const { id } = req.params;
-    const { username, fullName, role, password } = req.body;
+    const { username, fullName, role, password, email, phone } = req.body;
 
     const targetId = parseInt(id);
     if (isNaN(targetId)) {
@@ -228,6 +237,14 @@ router.put('/auth/users/:id', authenticateToken, validateUpdateUser, async (req,
 
     if (password) {
       dataToUpdate.password_hash = await bcrypt.hash(password, 10);
+    }
+
+    if (email !== undefined) {
+      dataToUpdate.email = email ? email.trim() : null;
+    }
+
+    if (phone !== undefined) {
+      dataToUpdate.phone = phone ? phone.trim() : null;
     }
 
     if (username && username.trim() !== targetUser.username) {

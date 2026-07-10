@@ -24,7 +24,7 @@ const validateDate = (val) => {
 };
 
 const validateCreateUser = (req, res, next) => {
-  const { username, password, fullName, role } = req.body;
+  const { username, password, fullName, role, email, phone } = req.body;
   const errors = {};
 
   const userErr = validateString(username, 100, true);
@@ -44,6 +44,16 @@ const validateCreateUser = (req, res, next) => {
     errors.role = 'is invalid';
   }
 
+  if (email !== undefined && email !== '') {
+    const emailErr = validateString(email, 150);
+    if (emailErr) errors.email = emailErr;
+  }
+
+  if (phone !== undefined && phone !== '') {
+    const phoneErr = validateString(phone, 50);
+    if (phoneErr) errors.phone = phoneErr;
+  }
+
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({ success: false, error: 'Validation failed', validationErrors: errors });
   }
@@ -52,7 +62,7 @@ const validateCreateUser = (req, res, next) => {
 };
 
 const validateUpdateUser = (req, res, next) => {
-  const { username, password, fullName, role } = req.body;
+  const { username, password, fullName, role, email, phone } = req.body;
   const errors = {};
 
   if (username !== undefined) {
@@ -78,6 +88,16 @@ const validateUpdateUser = (req, res, next) => {
     else if (!['super_admin', 'admin', 'inspector', 'technician', 'operator'].includes(role.trim())) {
       errors.role = 'is invalid';
     }
+  }
+
+  if (email !== undefined && email !== '') {
+    const emailErr = validateString(email, 150);
+    if (emailErr) errors.email = emailErr;
+  }
+
+  if (phone !== undefined && phone !== '') {
+    const phoneErr = validateString(phone, 50);
+    if (phoneErr) errors.phone = phoneErr;
   }
 
   if (Object.keys(errors).length > 0) {
