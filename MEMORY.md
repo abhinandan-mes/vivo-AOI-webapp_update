@@ -382,6 +382,13 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Super Admin Deletion Endpoints**: Registered secure backend DELETE routes `/api/checklist/:id` and `/api/checkpoint/:id` mapped to the controllers' `deleteChecklist` and `deleteCheckpoint` methods. These endpoints are strictly protected to authorize only `super_admin` users.
 *   **Frontend Action Column**: Refactored the `CheckpointReport` and `ChecklistReport` tables in `Reports.js` to render an "Actions" column containing a trash icon button (`🗑️`) when logged in as a `super_admin`. Prompts a modal-style confirm warning before executing the deletion call and refreshing the report dashboard list.
 
+### Bug Fix: Reports Page currentUser Prop (July 2026)
+*   **Root Cause**: `Reports.js` was attempting to read the logged-in user from `localStorage.getItem('user')`. However, the app **never writes the user object to localStorage** — it only stores the JWT token under the key `'aoi_auth_token'`. The user object lives exclusively in React state inside `App.js`. This caused `isSuperAdmin` to always evaluate to `false`, permanently hiding the Actions column.
+*   **Fix Applied**:
+    *   `App.js` → Updated the `<Reports />` route to pass `currentUser={user}` as a prop.
+    *   `Reports.js` → Changed function signature from `Reports()` to `Reports({ currentUser })` and removed the broken `useState`/`useEffect`/`localStorage` block entirely. The `isSuperAdmin` flag is now derived directly from the received prop: `currentUser?.role === 'super_admin'`.
+*   **Key Rule**: Always pass the logged-in user via props from `App.js`. Never attempt to read it from `localStorage` in a child component — it will not be there.
+
 ----
 
 ## 🚀 Getting Started & Configuration
