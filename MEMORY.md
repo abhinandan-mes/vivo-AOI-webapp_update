@@ -369,6 +369,9 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     - **Line Stop**: Changed from red to warning amber/orange (`#f59e0b`).
     - **Not Filled**: Changed from gray to error red (`#ef4444`).
 
+### Resolved: User Management Header Overlap Bug Fix (July 2026)
+*   **CSS Class Namespace Scoping**: Found that the `.header-left` styling class added globally in `ActivityLog.css` was colliding with the `.header-left` wrapper container on the User Management page. Scoped the `.header-left` styling rules inside `ActivityLog.css` under the `.table-card-header` namespace. This immediately resolves the styling leakage, restoring the correct vertical layout hierarchy for the header elements on the User Management page.
+
 ----
 
 ## 🚀 Getting Started & Configuration
