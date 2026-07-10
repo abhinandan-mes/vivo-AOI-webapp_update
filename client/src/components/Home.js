@@ -167,9 +167,12 @@ export default function Home({ currentUser }) {
       {/* Redesigned Mockup Welcome Banner */}
       <div className="home-header-row">
         <div className="header-greeting-meta">
-          <span className="greet-sub-tag">✨ {language === 'zh' ? '欢迎回来' : 'WELCOME BACK'}</span>
+          <span className="greet-sub-tag">
+            <span className="sub-tag-bullet">✦</span> {language === 'zh' ? '欢迎回来' : 'WELCOME BACK'}
+          </span>
           <h1>
-            <span className="wave-greet-icon">👋</span> {currentUser?.full_name || 'User'}
+            <span className="wave-greet-icon">👋</span>
+            <span className="greet-name-text">{currentUser?.full_name || 'User'}</span>
           </h1>
         </div>
         <div className="header-pill-badges">

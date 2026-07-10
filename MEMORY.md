@@ -344,8 +344,8 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: Homepage Metrics Redesign & Today's Submissions (July 2026)
 *   **Dashboard Stats Endpoint**: Built `/api/auth/dashboard-stats` (GET) endpoint that queries the `AoiFunctionCheckpoint` and `AoiTechnicianChecklist` tables in PostgreSQL, filtering for the current local date (midnight). Returns counts grouped by shift (Day/Night) and unique active groups (Group A, B, C, etc.).
-*   **Welcome greeting redesign**: Restructured header greeting to match mockup: WELCOME BACK subtitle, user fullname with greeting wave icon, current local date badge, and user security role badge.
-*   **Mockup Gradient Cards**: Implemented 4 modern stats cards on the homepage with custom colors:
+*   **Welcome greeting redesign**: Restructured header greeting to match mockup: WELCOME BACK subtitle (prefixed with an elegant vector gold star `✦` bullet rather than sparkles emoji), user fullname with greeting wave icon perfectly aligned to the text baseline, current local date badge, and user security role badge.
+*   **Mockup Gradient Cards**: Implemented 4 modern stats cards on the homepage with custom tuned vibrant gradients (luxury indigo, ocean sky blue, modern rose-coral pink, and sunset orange gold) matching modern visual aesthetics:
     - **Today's Checklists** (Purple): count of Technician Checklists submitted today, with shift details.
     - **Today's Checksheets** (Blue): count of Daily Function Checks submitted today, with shift details.
     - **Active Groups** (Rose): count of unique active groups today, with scrollable group breakdown text (e.g. `A: 3 | B: 2`).
