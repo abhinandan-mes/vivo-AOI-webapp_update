@@ -428,3 +428,22 @@ chmod +x setup.sh
 ### Running the App
 - **Backend**: Navigate to `server` and run `npm run dev` (starts on port `5001`).
 - **Frontend**: Navigate to `client` and run `npm start` (starts on port `3000` and proxies `/api` requests to `5001`).
+
+### Production Server Startup (Windows — `vivoadmin` machine)
+The production server on the `vivoadmin` machine is configured to start automatically and silently on every Windows login.
+
+*   **Hidden Launcher Script**: `D:\AOi_check_sheet\server\start-server-hidden.vbs`
+    *   A VBScript file that runs `run-server.bat` with `WindowStyle = 0` (completely hidden — no Command Prompt window appears).
+    *   To start the server manually: **double-click** `start-server-hidden.vbs`.
+
+*   **Windows Auto-Startup Shortcut**: `C:\Users\vivoadmin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\AOI-Server.lnk`
+    *   A shortcut pointing to `start-server-hidden.vbs` placed in the Windows Startup folder.
+    *   The server launches **automatically** every time `vivoadmin` logs into Windows — no manual action required.
+
+*   **Verify server is running**: Check that port `5001` is listening:
+    ```powershell
+    Get-NetTCPConnection -LocalPort 5001 -ErrorAction SilentlyContinue
+    ```
+    If it returns a row with `State = Listen`, the server is up.
+
+*   **Note**: If `server.log` becomes locked (Access Denied error), delete it from `D:\AOi_check_sheet\server\` before restarting.
