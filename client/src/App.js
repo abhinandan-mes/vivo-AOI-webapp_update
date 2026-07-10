@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import FunctionCheckpoint from './components/FunctionCheckpoint';
 import TechnicianChecklist from './components/TechnicianChecklist';
 import Reports from './components/Reports';
@@ -18,7 +18,6 @@ function App() {
   const [user, setUser] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // JWT expiry fired by Axios interceptor — treat as inactivity (preserve redirect)
@@ -67,9 +66,9 @@ function App() {
     const searchParams = new URLSearchParams(window.location.search);
     const redirectPath = searchParams.get('redirect');
     if (redirectPath) {
-      navigate(decodeURIComponent(redirectPath));
+      window.location.href = decodeURIComponent(redirectPath);
     } else {
-      navigate('/');
+      window.location.href = '/';
     }
   };
 
