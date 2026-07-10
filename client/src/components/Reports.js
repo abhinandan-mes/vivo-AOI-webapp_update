@@ -86,7 +86,7 @@ const escapeHtml = value => String(value ?? '')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;');
 
-export default function Reports() {
+export default function Reports({ currentUser }) {
   const { t, language } = useLanguage();
   const [reportType, setReportType] = useState('checklist');
   const [checklists, setChecklists] = useState([]);
@@ -184,19 +184,6 @@ export default function Reports() {
     }
     return row[key] ?? '';
   };
-
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    try {
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        setCurrentUser(JSON.parse(userStr));
-      }
-    } catch (e) {
-      console.error('Error loading current user from localStorage:', e);
-    }
-  }, []);
 
   const isSuperAdmin = currentUser?.role === 'super_admin';
 

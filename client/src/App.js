@@ -321,7 +321,7 @@ function App() {
               <Route path="/checklist" element={<TechnicianChecklist currentUser={user} />} />
             </>
           )}
-          <Route path="/reports" element={<Reports />} />
+          <Route path="/reports" element={<Reports currentUser={user} />} />
           {(user.role === 'super_admin' || user.role === 'admin') ? (
             <Route path="/users" element={<UserManagement currentUser={user} />} />
           ) : null}
