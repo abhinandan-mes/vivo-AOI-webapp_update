@@ -18,6 +18,10 @@ export default function Home({ currentUser }) {
     checklist: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
   });
 
+  // Stats Day picker — defaults to today
+  const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const [selectedDate, setSelectedDate] = useState(todayStr);
+
   const isSuperAdmin = currentUser?.role === 'super_admin';
 
   const sortedUsersSummary = useMemo(() => {
@@ -37,15 +41,20 @@ export default function Home({ currentUser }) {
   }, [sessions]);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    fetchDashboardData(selectedDate);
+  }, []); // eslint-disable-line
 
-  const fetchDashboardData = async () => {
+  // Refetch stats whenever selectedDate changes
+  useEffect(() => {
+    fetchDashboardData(selectedDate);
+  }, [selectedDate]); // eslint-disable-line
+
+  const fetchDashboardData = async (date) => {
     setLoading(true);
     setError('');
     try {
-      // 1. Fetch daily submission stats
-      const statsResponse = await apiService.getDashboardStats();
+      // 1. Fetch daily submission stats for the selected date
+      const statsResponse = await apiService.getDashboardStats(date);
       if (statsResponse.data.success) {
         setDashboardStats({
           checkpoint: statsResponse.data.checkpoint,
@@ -176,10 +185,20 @@ export default function Home({ currentUser }) {
           </h1>
         </div>
         <div className="header-pill-badges">
-          <div className="date-pill-badge">
+          <div className="unified-header-pill">
+            📊 {language === 'zh' ? '统计日期: ' : 'Stats Day: '}
+            <input
+              type="date"
+              className="date-picker-input"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+          <div className="unified-header-pill">
             📅 {new Date().toLocaleDateString(language === 'zh' ? 'zh-CN' : undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </div>
-          <div className="role-pill-badge">
+          <div className="unified-header-pill role-pill-badge">
             🛡️ {getRoleLabel(currentUser?.role)}
           </div>
         </div>
@@ -188,79 +207,57 @@ export default function Home({ currentUser }) {
       {successMsg && <div className="home-alert alert-success">{successMsg}</div>}
       {error && <div className="home-alert alert-danger">{error}</div>}
 
-      {/* ── Redesigned Stat Cards Grid ── */}
+      {/* ── Unified Stat Cards Grid ── */}
       <div className="home-stats-grid">
-        {/* Card 1 (Purple): Checklists */}
-        <div className="home-stat-card card-gradient-purple">
-          <div className="card-overlay-badges">
-            <span className="card-badge-left">{language === 'zh' ? '检查表' : 'Checklists'}</span>
-            <span className="card-badge-right">{language === 'zh' ? '今日' : 'Today'}</span>
+
+        {/* Card 1 (Violet): Checklists */}
+        <div className="unified-stat-card accent-violet">
+          <div className="unified-icon-block icon-violet">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
           </div>
-          <div className="card-center-val">
-            <span className="card-large-number">{checklistTotal}</span>
-            <span className="card-small-label">{language === 'zh' ? '今日检查表提交' : 'TODAY\'S CHECKLISTS'}</span>
-          </div>
-          <div className="card-bottom-footer">
-            <span className="footer-bullet-dot" />
-            <span className="footer-label-text">
-              {language === 'zh' ? `白班: ${stats.checklist.shifts.day} | 夜班: ${stats.checklist.shifts.night}` : `Day: ${stats.checklist.shifts.day} | Night: ${stats.checklist.shifts.night}`}
-            </span>
+          <div className="unified-stat-content">
+            <span className="unified-stat-label">{language === 'zh' ? '今日检查表' : 'Checklists'}</span>
+            <span className="unified-stat-value">{checklistTotal}</span>
+            <span className="unified-stat-sub">{language === 'zh' ? `白班: ${stats.checklist.shifts.day} | 夜班: ${stats.checklist.shifts.night}` : `Day: ${stats.checklist.shifts.day} | Night: ${stats.checklist.shifts.night}`}</span>
           </div>
         </div>
 
         {/* Card 2 (Blue): Checksheets */}
-        <div className="home-stat-card card-gradient-blue">
-          <div className="card-overlay-badges">
-            <span className="card-badge-left">{language === 'zh' ? '功能检查' : 'Checksheets'}</span>
-            <span className="card-badge-right">{language === 'zh' ? '今日' : 'Today'}</span>
+        <div className="unified-stat-card accent-blue">
+          <div className="unified-icon-block icon-blue">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
           </div>
-          <div className="card-center-val">
-            <span className="card-large-number">{checkpointTotal}</span>
-            <span className="card-small-label">{language === 'zh' ? '今日功能检查点' : 'TODAY\'S CHECKSHEETS'}</span>
-          </div>
-          <div className="card-bottom-footer">
-            <span className="footer-bullet-dot" />
-            <span className="footer-label-text">
-              {language === 'zh' ? `白班: ${stats.checkpoint.shifts.day} | 夜班: ${stats.checkpoint.shifts.night}` : `Day: ${stats.checkpoint.shifts.day} | Night: ${stats.checkpoint.shifts.night}`}
-            </span>
+          <div className="unified-stat-content">
+            <span className="unified-stat-label">{language === 'zh' ? '今日检查点' : 'Checksheets'}</span>
+            <span className="unified-stat-value">{checkpointTotal}</span>
+            <span className="unified-stat-sub">{language === 'zh' ? `白班: ${stats.checkpoint.shifts.day} | 夜班: ${stats.checkpoint.shifts.night}` : `Day: ${stats.checkpoint.shifts.day} | Night: ${stats.checkpoint.shifts.night}`}</span>
           </div>
         </div>
 
-        {/* Card 3 (Rose): Group Breakdown */}
-        <div className="home-stat-card card-gradient-rose">
-          <div className="card-overlay-badges">
-            <span className="card-badge-left">{language === 'zh' ? '班组填报' : 'Groups'}</span>
-            <span className="card-badge-right">{language === 'zh' ? '在线' : 'Active'}</span>
+        {/* Card 3 (Amber): Active Groups */}
+        <div className="unified-stat-card accent-amber">
+          <div className="unified-icon-block icon-amber">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
           </div>
-          <div className="card-center-val">
-            <span className="card-large-number">{activeGroupsCount}</span>
-            <span className="card-small-label">{language === 'zh' ? '今日活跃班组' : 'ACTIVE GROUPS TODAY'}</span>
-          </div>
-          <div className="card-bottom-footer">
-            <span className="footer-bullet-dot animate-pulse-bullet" />
-            <span className="footer-label-text scrollable-footer-text" title={groupBreakdownStr}>
-              {groupBreakdownStr}
-            </span>
+          <div className="unified-stat-content">
+            <span className="unified-stat-label">{language === 'zh' ? '活跃班组' : 'Active Groups'}</span>
+            <span className="unified-stat-value">{activeGroupsCount}</span>
+            <span className="unified-stat-sub" title={groupBreakdownStr} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>{groupBreakdownStr}</span>
           </div>
         </div>
 
-        {/* Card 4 (Orange): Combined Total */}
-        <div className="home-stat-card card-gradient-orange">
-          <div className="card-overlay-badges">
-            <span className="card-badge-left">{language === 'zh' ? '合并统计' : 'Combined'}</span>
-            <span className="card-badge-right">{language === 'zh' ? '今日总数' : 'Total'}</span>
+        {/* Card 4 (Emerald): Combined Total */}
+        <div className="unified-stat-card accent-emerald">
+          <div className="unified-icon-block icon-emerald">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
           </div>
-          <div className="card-center-val">
-            <span className="card-large-number">{combinedTotal}</span>
-            <span className="card-small-label">{language === 'zh' ? '今日填报总数' : 'COMBINED SUBMISSIONS'}</span>
-          </div>
-          <div className="card-bottom-footer">
-            <span className="footer-bullet-dot" />
-            <span className="footer-label-text">
-              {language === 'zh' ? `白班: ${totalDay} | 夜班: ${totalNight}` : `Day: ${totalDay} | Night: ${totalNight}`}
-            </span>
+          <div className="unified-stat-content">
+            <span className="unified-stat-label">{language === 'zh' ? '今日总提交' : 'Combined Total'}</span>
+            <span className="unified-stat-value">{combinedTotal}</span>
+            <span className="unified-stat-sub">{language === 'zh' ? `白班: ${totalDay} | 夜班: ${totalNight}` : `Day: ${totalDay} | Night: ${totalNight}`}</span>
           </div>
         </div>
+
       </div>
 
       {/* Main Content Area */}
