@@ -389,6 +389,14 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     *   `Reports.js` → Changed function signature from `Reports()` to `Reports({ currentUser })` and removed the broken `useState`/`useEffect`/`localStorage` block entirely. The `isSuperAdmin` flag is now derived directly from the received prop: `currentUser?.role === 'super_admin'`.
 *   **Key Rule**: Always pass the logged-in user via props from `App.js`. Never attempt to read it from `localStorage` in a child component — it will not be there.
 
+### Resolved: User Management Action Icons & IIS Reverse Proxy Fix (July 2026)
+*   **User Action Buttons Redesign**: Replaced the solid background buttons and emojis (`✏️`, `🛡️`, `❌`) in the User Management list table with clean outline buttons:
+    *   **Edit**: Pencil SVG with an orange border (`#fed7aa`) and orange text (`#ea580c`).
+    *   **Reset Password**: Shield/Keyhole SVG with a blue border (`#bfdbfe`) and blue text (`#2563eb`).
+    *   **Delete**: Cross SVG with a red border (`#fecaca`) and red text (`#dc2626`).
+    *   **Micro-Interaction Hover States**: Added smooth hover transitions with soft background and border color shifts (e.g. orange background `#fff8f1` on edit hover).
+*   **IIS Reverse Proxy URL Rewrite Rule**: Added the missing `API Proxy` rewrite rule to both the active deployment **[client/build/web.config](file:///d:/AOi_check_sheet/client/build/web.config#L6-L9)** and the template source **[client/public/web.config](file:///d:/AOi_check_sheet/client/public/web.config#L6-L9)**. This rule correctly forwards all requests matching `^api/(.*)` to the Node backend on `http://localhost:5001/api/{R:1}` on port 5001, resolving the HTTP 500 / 404 login error on IIS port 3000.
+
 ----
 
 ## 🚀 Getting Started & Configuration
