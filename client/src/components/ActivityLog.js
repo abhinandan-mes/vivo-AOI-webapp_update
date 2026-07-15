@@ -75,6 +75,7 @@ export default function ActivityLog({ currentUser }) {
   const [usersList, setUsersList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [dashboardStats, setDashboardStats] = useState({ checklistTotal: 0, checkpointTotal: 0 });
   
   // Modal State
   const [selectedLog, setSelectedLog] = useState(null);
@@ -99,10 +100,26 @@ export default function ActivityLog({ currentUser }) {
 
   useEffect(() => {
     fetchLogs();
+    fetchDashboardStats();
     if (isAdmin) {
       fetchUsers();
     }
   }, [isAdmin]);
+
+  const fetchDashboardStats = async () => {
+    try {
+      const todayStr = new Date().toLocaleDateString('en-CA');
+      const response = await apiService.getDashboardStats(todayStr);
+      if (response.data && response.data.success) {
+        setDashboardStats({
+          checkpointTotal: response.data.checkpoint?.total || 0,
+          checklistTotal: response.data.checklist?.total || 0
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching dashboard stats for Activity Log:', err);
+    }
+  };
 
   const fetchLogs = async () => {
     setLoading(true);
@@ -221,19 +238,9 @@ export default function ActivityLog({ currentUser }) {
   const totalEvents = logs.length;
   const loginsCount = logs.filter(l => l.activity_type === 'LOGIN_SUCCESS').length;
 
-  // Count checklist and checksheet submissions for TODAY (local date)
-  const todayStr = new Date().toLocaleDateString('en-CA');
-  const todayChecklistCount = logs.filter(l => {
-    if (l.activity_type !== 'CHECKLIST_SUBMIT') return false;
-    const logDateStr = new Date(l.created_at).toLocaleDateString('en-CA');
-    return logDateStr === todayStr;
-  }).length;
-
-  const todayCheckpointCount = logs.filter(l => {
-    if (l.activity_type !== 'CHECKPOINT_SUBMIT') return false;
-    const logDateStr = new Date(l.created_at).toLocaleDateString('en-CA');
-    return logDateStr === todayStr;
-  }).length;
+  // Use the actual current database count for today's submissions to sync with Home/Reports
+  const todayChecklistCount = dashboardStats.checklistTotal;
+  const todayCheckpointCount = dashboardStats.checkpointTotal;
 
   // Filter Action Handlers
   const handleApplyFilters = () => {
