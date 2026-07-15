@@ -405,6 +405,16 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Activity Logs Tracking**: Bound the Line Management backend toggles to the central Activity Logger. Toggling a line dynamically pushes a `LINE_STATUS_UPDATE` action to the system audit logs, ensuring complete traceability of line enable/disable events.
 *   **UI Bugfixes**: Fixed the Reports table so that dummy rows correctly render their literal status ("Not Filled" or "Not Installed" pills) rather than mistakenly rendering as "Production". Re-aligned the Home page header tags and Reports filter flex-grid to perfectly wrap and accommodate the new fields gracefully on all devices.
 
+### Resolved: Home Dashboard UI Modernization & Security (July 2026)
+*   **Routing & Open Redirect Fix**: Changed the root dashboard route to `/home` (auto-redirecting from `/`). Hardened the `handleLogin` logic in `App.js` to strictly enforce relative redirect paths, mitigating an open redirect vulnerability.
+*   **Recent Submissions Widget**: Built a detailed, responsive "Recent Submissions" card for the Home page that displays the last 10 checklist/checksheet activities.
+    *   **UI/UX Design**: Uses a clean, CSS Grid-based layout for each list item. Displays professional SVG icons for submission type (Daily Function Check vs Technician Checklist), Line number, Status (with color-coded badges), Submitter avatar/name, and IP address.
+    *   **Backend Fix**: Fixed a Prisma ORM `500 Server Error` crash in `/api/activity-logs/recent-submissions` by correcting the query filter parameter from `action` to `activity_type`.
+*   **Pagination & Navigation Controls**:
+    *   Added a "View All" link to the Recent Submissions card header that instantly navigates to the full Reports module.
+    *   Implemented client-side pagination (10 rows max per page) for the "Active Sessions by User" (Super Admin) and "My Active Sessions" (Technician) tables with "Previous" and "Next" controls.
+*   **Layout Reversion**: Adjusted the `.dashboard-content` wrapper in `Home.css` from a side-by-side grid to a stacked vertical flex column layout (`display: flex; flex-direction: column`) to give the wide submission and session tables sufficient breathing room.
+
 ----
 
 ## 🚀 Getting Started & Configuration
