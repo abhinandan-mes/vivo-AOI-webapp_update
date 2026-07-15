@@ -27,6 +27,7 @@ export default function Home({ currentUser }) {
   const [selectedDate, setSelectedDate] = useState(todayStr);
 
   const isSuperAdmin = currentUser?.role === 'super_admin';
+  const isAdminOrSuper = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
 
   const sortedUsersSummary = useMemo(() => {
     return [...usersSummary].sort((a, b) => {
@@ -342,8 +343,17 @@ export default function Home({ currentUser }) {
                     </div>
 
                     <div className="rs-col rs-ip-col">
-                      <span className="rs-label">IP Address</span>
-                      <span className="rs-value">{log.public_ip || 'Unknown'}</span>
+                      {isAdminOrSuper ? (
+                        <>
+                          <span className="rs-label">IP Address</span>
+                          <span className="rs-value">{log.public_ip ? log.public_ip.split(':')[0] : 'Unknown'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="rs-label">{language === 'zh' ? '提交时间' : 'Submit Time'}</span>
+                          <span className="rs-value">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                        </>
+                      )}
                     </div>
 
                   </div>
@@ -390,7 +400,7 @@ export default function Home({ currentUser }) {
                             <span className={`role-badge role-${user.role}`}>{getRoleLabel(user.role)}</span>
                           </td>
                           <td>{formatDate(user.last_login)}</td>
-                          <td className="ip-cell">{user.last_ip || '—'}</td>
+                          <td className="ip-cell">{user.last_ip ? user.last_ip.split(':')[0] : '—'}</td>
                           <td>
                             <span className={`active-sessions-count ${user.active_sessions_count > 0 ? 'has-active' : ''}`}>
                               {user.active_sessions_count} {language === 'zh' ? '个活动' : 'active'}
@@ -433,7 +443,7 @@ export default function Home({ currentUser }) {
                                           <tr key={session.session_id} className={isMyCurrent ? 'highlight-session' : ''}>
                                             <td className="ip-cell">
                                               <div className="ip-wrapper">
-                                                {session.public_ip}
+                                                {session.public_ip ? session.public_ip.split(':')[0] : 'Unknown'}
                                                 {isMyCurrent && <span className="current-badge">{language === 'zh' ? '当前会话' : 'Your Current Session'}</span>}
                                               </div>
                                             </td>
@@ -524,7 +534,7 @@ export default function Home({ currentUser }) {
                         </td>
                         <td>{formatDate(session.login_time)}</td>
                         <td>{isActive ? '—' : formatDate(session.logout_time)}</td>
-                        <td className="ip-cell">{session.public_ip}</td>
+                        <td className="ip-cell">{session.public_ip ? session.public_ip.split(':')[0] : '—'}</td>
                         <td className="session-id-cell"><span title={session.session_id}>{session.session_id.slice(0, 8)}&hellip;</span></td>
                         <td>
                           {isActive ? (
