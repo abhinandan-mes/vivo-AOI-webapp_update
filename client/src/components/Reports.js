@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import ConfirmModal from './ConfirmModal';
 import apiService from '../services/api';
 import './Reports.css';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -99,6 +100,7 @@ export default function Reports({ currentUser }) {
   });
   const [showExport, setShowExport] = useState(false);
   const [exportConfirm, setExportConfirm] = useState({ show: false, format: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const checkpointColumns = useMemo(() => {
     return checkpointGroups.flatMap(group => group.positions.map(position => ({
@@ -234,13 +236,13 @@ export default function Reports({ currentUser }) {
     loadData();
   }, [reportType]);
 
-  const handleDelete = async (id, type) => {
-    const isConfirmed = window.confirm(
-      language === 'zh'
-        ? '您确定要删除此条点检记录吗？此操作将永久移除该条数据且无法撤销！'
-        : 'Are you sure you want to delete this record? This action will permanently remove it and cannot be undone!'
-    );
-    if (!isConfirmed) return;
+  const handleDeleteClick = (id, type) => {
+    setDeleteConfirm({ id, type });
+  };
+
+  const executeDelete = async () => {
+    if (!deleteConfirm) return;
+    const { id, type } = deleteConfirm;
 
     try {
       setLoading(true);
@@ -250,11 +252,11 @@ export default function Reports({ currentUser }) {
         await apiService.deleteChecklist(id);
       }
       loadData();
-      alert(language === 'zh' ? '删除成功' : 'Record deleted successfully');
     } catch (err) {
-      console.error(err);
-      alert((language === 'zh' ? '删除失败：' : 'Delete failed: ') + (err.message || err));
+      setError(err.message || 'Failed to delete record');
       setLoading(false);
+    } finally {
+      setDeleteConfirm(null);
     }
   };
 
@@ -665,8 +667,8 @@ export default function Reports({ currentUser }) {
       {!loading && !error && filteredRows.length > 0 && (
         <div className="report-table-wrap">
           {reportType === 'checkpoint' 
-            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDelete} /> 
-            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDelete} />
+            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} /> 
+            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} />
           }
         </div>
       )}
@@ -740,6 +742,21 @@ export default function Reports({ currentUser }) {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={!!deleteConfirm}
+        title={language === 'zh' ? '删除记录' : 'Delete Record'}
+        message={
+          language === 'zh'
+            ? '您确定要删除此条点检记录吗？此操作将永久移除该条数据且无法撤销！'
+            : 'Are you sure you want to delete this record? This action will permanently remove it and cannot be undone!'
+        }
+        onConfirm={executeDelete}
+        onCancel={() => setDeleteConfirm(null)}
+        confirmText={language === 'zh' ? '确认删除' : 'Delete'}
+        cancelText={language === 'zh' ? '取消' : 'Cancel'}
+        type="danger"
+      />
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import ConfirmModal from './ConfirmModal';
 import apiService from '../services/api';
 import './Home.css';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -21,6 +22,8 @@ export default function Home({ currentUser }) {
     checkpoint: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
     checklist: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
   });
+
+  const [sessionToRevoke, setSessionToRevoke] = useState(null);
 
   // Stats Day picker — defaults to today
   const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
@@ -92,17 +95,13 @@ export default function Home({ currentUser }) {
     }
   };
 
-  const handleRevokeSession = async (sessionId, isCurrent) => {
-    if (isCurrent) {
-      if (!window.confirm(t('home_confirm_revoke_current'))) {
-        return;
-      }
-    } else {
-      if (!window.confirm(t('home_confirm_revoke_other'))) {
-        return;
-      }
-    }
+  const handleRevokeSessionClick = (sessionId, isCurrent) => {
+    setSessionToRevoke({ sessionId, isCurrent });
+  };
 
+  const executeRevokeSession = async () => {
+    if (!sessionToRevoke) return;
+    const { sessionId, isCurrent } = sessionToRevoke;
     try {
       setError('');
       setSuccessMsg('');
@@ -116,6 +115,8 @@ export default function Home({ currentUser }) {
       }
     } catch (err) {
       setError(err.message || t('error'));
+    } finally {
+      setSessionToRevoke(null);
     }
   };
 
@@ -452,7 +453,7 @@ export default function Home({ currentUser }) {
                                             <td>
                                               <button
                                                 className="revoke-btn-danger"
-                                                onClick={() => handleRevokeSession(session.session_id, isMyCurrent)}
+                                                onClick={() => handleRevokeSessionClick(session.session_id, isMyCurrent)}
                                               >
                                                 {language === 'zh' ? '强制下线' : 'Terminate'}
                                               </button>
@@ -540,7 +541,7 @@ export default function Home({ currentUser }) {
                           {isActive ? (
                             <button
                               className="revoke-btn-danger"
-                              onClick={() => handleRevokeSession(session.session_id, isCurrent)}
+                              onClick={() => handleRevokeSessionClick(session.session_id, isCurrent)}
                               disabled={isCurrent}
                               title={isCurrent ? (language === 'zh' ? "您无法在此终止当前会话，请使用注销按钮。" : "You cannot terminate your current session from here. Use the standard Logout.") : (language === 'zh' ? "远程终止此会话" : "Terminate this session remotely")}
                             >
@@ -583,6 +584,17 @@ export default function Home({ currentUser }) {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={!!sessionToRevoke}
+        title={language === 'zh' ? '撤销会话' : 'Revoke Session'}
+        message={sessionToRevoke?.isCurrent ? t('home_confirm_revoke_current') : t('home_confirm_revoke_other')}
+        onConfirm={executeRevokeSession}
+        onCancel={() => setSessionToRevoke(null)}
+        confirmText={language === 'zh' ? '强制下线' : 'Terminate'}
+        cancelText={language === 'zh' ? '取消' : 'Cancel'}
+        type="danger"
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ConfirmModal from './ConfirmModal';
 import apiService from '../services/api';
 import './UserManagement.css';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -19,6 +20,7 @@ export default function UserManagement({ currentUser }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   // Form States
   const [targetUser, setTargetUser] = useState(null);
@@ -137,7 +139,7 @@ export default function UserManagement({ currentUser }) {
     setShowPasswordModal(true);
   };
 
-  const handleDelete = async (userId) => {
+  const handleDeleteClick = (userId) => {
     const superAdmins = users.filter(u => u.role === 'super_admin');
     const target = users.find(u => u.id === userId);
     if (target?.role === 'super_admin' && superAdmins.length <= 1) {
@@ -148,8 +150,12 @@ export default function UserManagement({ currentUser }) {
       );
       return;
     }
+    setDeleteConfirm(userId);
+  };
 
-    if (!window.confirm(t('um_confirm_delete'))) return;
+  const executeDelete = async () => {
+    if (!deleteConfirm) return;
+    const userId = deleteConfirm;
     
     setLoading(true);
     setError('');
@@ -163,6 +169,7 @@ export default function UserManagement({ currentUser }) {
       setError(err.message || t('error'));
     } finally {
       setLoading(false);
+      setDeleteConfirm(null);
     }
   };
 
@@ -550,7 +557,7 @@ export default function UserManagement({ currentUser }) {
                               type="button"
                               className="btn-action-um delete"
                               title={t('delete')}
-                              onClick={() => handleDelete(user.id)}
+                              onClick={() => handleDeleteClick(user.id)}
                               disabled={loading}
                             >
                               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="icon-delete">
@@ -916,6 +923,17 @@ export default function UserManagement({ currentUser }) {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={!!deleteConfirm}
+        title={language === 'zh' ? '删除用户' : 'Delete User'}
+        message={t('um_confirm_delete')}
+        onConfirm={executeDelete}
+        onCancel={() => setDeleteConfirm(null)}
+        confirmText={language === 'zh' ? '确认删除' : 'Delete User'}
+        cancelText={language === 'zh' ? '取消' : 'Cancel'}
+        type="danger"
+      />
     </div>
   );
 }
