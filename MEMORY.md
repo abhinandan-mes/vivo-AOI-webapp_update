@@ -415,6 +415,11 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     *   Implemented client-side pagination (10 rows max per page) for the "Active Sessions by User" (Super Admin) and "My Active Sessions" (Technician) tables with "Previous" and "Next" controls.
 *   **Layout Reversion**: Adjusted the `.dashboard-content` wrapper in `Home.css` from a side-by-side grid to a stacked vertical flex column layout (`display: flex; flex-direction: column`) to give the wide submission and session tables sufficient breathing room.
 
+### Resolved: Unified Confirm Modals & Activity Log Stats Sync (July 2026)
+*   **Unified Modal Component (`ConfirmModal.js`)**: Eliminated all blocking, unstyled native browser `window.confirm()` popups across the application. Built and integrated a unified React `<ConfirmModal />` component with glassmorphism backdrops, smooth slide-up animations, and distinct styling for warning vs. danger actions.
+*   **Component Refactors**: Integrated the `<ConfirmModal />` into `Home.js` (for revoking active sessions), `Reports.js` (for Super Admins deleting historical Checkpoints/Checklists), and `UserManagement.js` (for deleting users).
+*   **Activity Logs Stats Fix**: Fixed a bug where the "Daily Checklists" and "Daily Checksheets" summary cards on the Activity Logs page were erroneously displaying high numbers after a Super Admin deleted a record from the database. The issue was caused by the UI counting immutable `SUBMIT` logs instead of actual database records. Fixed by syncing `ActivityLog.js` to securely query the true `apiService.getDashboardStats()` endpoint just like the Home and Reports pages.
+
 ----
 
 ## 🚀 Getting Started & Configuration
