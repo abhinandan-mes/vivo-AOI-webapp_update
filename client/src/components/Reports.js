@@ -192,7 +192,10 @@ export default function Reports({ currentUser }) {
     
     // Localize options values
     if (key === 'status') {
-      return row[key] === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production');
+      if (row[key] === 'Line Stop') return t('cl_status_linestop');
+      if (row[key] === 'Not Filled') return language === 'zh' ? '未提交' : 'Not Filled';
+      if (row[key] === 'Line Not Installed') return language === 'zh' ? '未安装' : 'Line Not Installed';
+      return t('cl_status_production');
     }
     if (key === 'shift') {
       return row[key] === 'Day' ? t('day') : (row[key] === 'Night' ? t('night') : row[key]);
@@ -257,12 +260,48 @@ export default function Reports({ currentUser }) {
 
   const rows = useMemo(() => {
     const data = reportType === 'checkpoint' ? checkpoints : checklists;
-    return [...data].sort((a, b) => {
-      const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
-      const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
-      return timeB - timeA;
+    
+    // Find all unique dates in the dataset
+    const uniqueDates = Array.from(new Set(data.map(d => dateKey(d.date))));
+    if (uniqueDates.length === 0) {
+      uniqueDates.push(dateKey(new Date()));
+    }
+    
+    const completeRows = [];
+    
+    uniqueDates.forEach(dateStr => {
+      const recordsForDate = data.filter(d => dateKey(d.date) === dateStr);
+      const linesWithRecords = Array.from(new Set(recordsForDate.map(r => String(r.line))));
+      
+      // 1. Add existing records
+      completeRows.push(...recordsForDate);
+      
+      // 2. Add missing lines as dummy rows
+      allLineOptions.forEach(line => {
+        if (!linesWithRecords.includes(line)) {
+          const isInstalled = !notInstalledLines.includes(line);
+          completeRows.push({
+            id: `dummy-${dateStr}-${line}`,
+            date: dateStr,
+            line: line,
+            shift: '—',
+            group_name: '—',
+            status: isInstalled ? 'Not Filled' : 'Line Not Installed',
+            submitted_by: '—',
+            created_at: null,
+          });
+        }
+      });
     });
-  }, [reportType, checklists, checkpoints]);
+
+    return completeRows.sort((a, b) => {
+      const timeA = new Date(a.date).getTime();
+      const timeB = new Date(b.date).getTime();
+      if (timeB !== timeA) return timeB - timeA;
+      // then by line ascending
+      return String(a.line).localeCompare(String(b.line));
+    });
+  }, [reportType, checklists, checkpoints, allLineOptions, notInstalledLines]);
 
   const filteredRows = useMemo(() => rows.filter(row => {
     const date = dateKey(row.date);
@@ -270,7 +309,8 @@ export default function Reports({ currentUser }) {
       && (!filters.to || date <= filters.to)
       && (!filters.line || row.line === filters.line)
       && (!filters.shift || row.shift === filters.shift)
-      && (!filters.group || row.group_name === filters.group);
+      && (!filters.group || row.group_name === filters.group)
+      && (!filters.status || row.status === filters.status);
   }), [rows, filters]);
 
   // Summary metrics date selection states
@@ -588,11 +628,21 @@ export default function Reports({ currentUser }) {
       <div className="report-filters">
         <label>{t('rep_filter_from')}<input type="date" name="from" value={filters.from} max={filters.to || undefined} onChange={updateFilter} /></label>
         <label>{t('rep_filter_to')}<input type="date" name="to" value={filters.to} min={filters.from || undefined} onChange={updateFilter} /></label>
-        <label>{t('rep_filter_line')}<select name="line" value={filters.line} onChange={updateFilter}><option value="">{language === 'zh' ? '全部线别' : 'All lines'}</option>{lineOptions.map(line => <option key={line} value={line}>{line}</option>)}</select></label>
+        <label>{t('rep_filter_line')}<select name="line" value={filters.line} onChange={updateFilter}><option value="">{language === 'zh' ? '全部线别' : 'All lines'}</option>{allLineOptions.map(line => <option key={line} value={line}>{line}</option>)}</select></label>
         <label>{t('rep_filter_shift')}<select name="shift" value={filters.shift} onChange={updateFilter}><option value="">{language === 'zh' ? '全部班次' : 'All shifts'}</option>{shiftOptions.map(shift => <option key={shift} value={shift}>{shift === 'Day' ? t('day') : t('night')}</option>)}</select></label>
         <label>{t('rep_filter_group')}<select name="group" value={filters.group} onChange={updateFilter}><option value="">{language === 'zh' ? '全部班组' : 'All groups'}</option>{groupOptions.map(group => <option key={group} value={group}>{group}</option>)}</select></label>
+        <label>
+          {language === 'zh' ? '状态' : 'Status'}
+          <select name="status" value={filters.status} onChange={updateFilter}>
+            <option value="">{language === 'zh' ? '全部状态' : 'All statuses'}</option>
+            <option value="Production">{language === 'zh' ? '已提交(生产)' : 'Production'}</option>
+            <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>
+            <option value="Not Filled">{language === 'zh' ? '未提交' : 'Not Filled'}</option>
+            <option value="Line Not Installed">{language === 'zh' ? '未安装' : 'Line Not Installed'}</option>
+          </select>
+        </label>
         {hasActiveFilters && (
-          <button className="clear-filters" type="button" onClick={() => setFilters({ from: '', to: '', line: '', shift: '', group: '' })}>
+          <button className="clear-filters" type="button" onClick={() => setFilters({ from: '', to: '', line: '', shift: '', group: '', status: '' })}>
             ✕ {t('clear')}
           </button>
         )}
