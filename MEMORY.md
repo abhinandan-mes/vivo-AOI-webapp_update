@@ -408,7 +408,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 ### Resolved: Home Dashboard UI Modernization & Security (July 2026)
 *   **Routing & Open Redirect Fix**: Changed the root dashboard route to `/home` (auto-redirecting from `/`). Hardened the `handleLogin` logic in `App.js` to strictly enforce relative redirect paths, mitigating an open redirect vulnerability.
 *   **Recent Submissions Widget**: Built a detailed, responsive "Recent Submissions" card for the Home page that displays the last 10 checklist/checksheet activities.
-    *   **UI/UX Design**: Uses a clean, CSS Grid-based layout for each list item. Displays professional SVG icons for submission type (Daily Function Check vs Technician Checklist), Line number, Status (with color-coded badges), Submitter avatar/name, and IP address.
+    *   **UI/UX Design**: Uses a clean, CSS Grid-based layout for each list item. Displays professional SVG icons for submission type (Daily Function Check vs Technician Checklist), Line number, Shift, Group, Status (with color-coded badges), Submitter avatar/name, and IP address.
     *   **Backend Fix**: Fixed a Prisma ORM `500 Server Error` crash in `/api/activity-logs/recent-submissions` by correcting the query filter parameter from `action` to `activity_type`.
 *   **Pagination & Navigation Controls**:
     *   Added a "View All" link to the Recent Submissions card header that instantly navigates to the full Reports module.
