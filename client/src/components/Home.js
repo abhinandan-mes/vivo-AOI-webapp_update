@@ -284,20 +284,52 @@ export default function Home({ currentUser }) {
             ) : (
               recentSubmissions.map(log => {
                 const isCheckpoint = log.action === 'CHECKPOINT_SUBMIT';
+                const detailsStr = log.details || '';
+                
+                // Parse line and status from details string
+                const lineMatch = detailsStr.match(/Line:\s*([^,]+)/);
+                const lineLabel = lineMatch ? lineMatch[1] : '-';
+                
+                const statusMatch = detailsStr.match(/Status:\s*([^,]+)/);
+                const statusLabel = statusMatch ? statusMatch[1] : '-';
+                
                 return (
-                  <div key={log.id} className="recent-submission-item">
-                    <div className={`recent-icon ${isCheckpoint ? 'icon-checkpoint' : 'icon-checklist'}`}>
-                      {isCheckpoint ? '🔍' : '📋'}
-                    </div>
-                    <div className="recent-details">
-                      <div className="recent-title">
-                        <span>{isCheckpoint ? (language === 'zh' ? '检查点提交' : 'Checkpoint Submit') : (language === 'zh' ? '检查表提交' : 'Checklist Submit')}</span>
-                        <span className="recent-time">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <div key={log.id} className="recent-submission-item detailed-layout">
+                    
+                    <div className="rs-col rs-type-col">
+                      <div className={`recent-icon ${isCheckpoint ? 'icon-checkpoint' : 'icon-checklist'}`}>
+                        {isCheckpoint ? '🔍' : '📋'}
                       </div>
-                      <p className="recent-meta">
-                        <span className="recent-user">@{log.username} ({log.full_name})</span> {language === 'zh' ? '提交了记录。' : 'submitted a record.'}
-                      </p>
+                      <div className="rs-type-info">
+                        <span className="rs-title">{isCheckpoint ? (language === 'zh' ? '检查点' : 'Checkpoint') : (language === 'zh' ? '检查表' : 'Checklist')}</span>
+                        <span className="rs-time">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      </div>
                     </div>
+
+                    <div className="rs-col">
+                      <span className="rs-label">{language === 'zh' ? '产线' : 'Line'}</span>
+                      <span className="rs-value">{lineLabel}</span>
+                    </div>
+
+                    <div className="rs-col">
+                      <span className="rs-label">{language === 'zh' ? '状态' : 'Status'}</span>
+                      <span className={`rs-value status-badge ${statusLabel === 'Production' ? 'badge-prod' : 'badge-stop'}`}>
+                        {statusLabel}
+                      </span>
+                    </div>
+
+                    <div className="rs-col">
+                      <span className="rs-label">{language === 'zh' ? '提交者' : 'Submitted By'}</span>
+                      <span className="rs-value submitter-value">
+                        <span className="rs-avatar">👤</span> {log.full_name || log.username}
+                      </span>
+                    </div>
+
+                    <div className="rs-col rs-ip-col">
+                      <span className="rs-label">IP Address</span>
+                      <span className="rs-value">{log.public_ip || 'Unknown'}</span>
+                    </div>
+
                   </div>
                 );
               })
