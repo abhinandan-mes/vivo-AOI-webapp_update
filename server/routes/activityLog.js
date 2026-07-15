@@ -4,6 +4,44 @@ const { authenticateToken, requireRoles } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Get recent submissions for home page (descending by created_at)
+router.get('/activity-logs/recent-submissions', authenticateToken, async (req, res) => {
+  try {
+    const logs = await prisma.appActivityLog.findMany({
+      where: {
+        action: {
+          in: ['CHECKLIST_SUBMIT', 'CHECKPOINT_SUBMIT']
+        }
+      },
+      orderBy: { created_at: 'desc' },
+      take: 10
+    });
+
+    const usernames = Array.from(new Set(logs.map(l => l.username)));
+    const users = await prisma.appUser.findMany({
+      where: { username: { in: usernames } },
+      select: { username: true, full_name: true, email: true }
+    });
+
+    const userMap = {};
+    users.forEach(u => { userMap[u.username] = u; });
+
+    const formattedLogs = logs.map(l => {
+      const u = userMap[l.username];
+      return {
+        ...l,
+        full_name: u ? u.full_name : l.username,
+        email: u ? u.email : ''
+      };
+    });
+
+    res.json({ success: true, logs: formattedLogs });
+  } catch (error) {
+    console.error('Error fetching recent submissions:', error);
+    res.status(500).json({ success: false, error: 'An unexpected error occurred' });
+  }
+});
+
 // Get logs (descending by created_at)
 router.get('/activity-logs', authenticateToken, async (req, res) => {
   try {

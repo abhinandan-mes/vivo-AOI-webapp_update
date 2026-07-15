@@ -11,6 +11,7 @@ export default function Home({ currentUser }) {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [expandedUser, setExpandedUser] = useState(null);
+  const [recentSubmissions, setRecentSubmissions] = useState([]);
 
   // New state for Checklist/Checksheet submission statistics
   const [dashboardStats, setDashboardStats] = useState({
@@ -60,6 +61,12 @@ export default function Home({ currentUser }) {
           checkpoint: statsResponse.data.checkpoint,
           checklist: statsResponse.data.checklist
         });
+      }
+
+      // Fetch recent submissions for the new widget
+      const recentResponse = await apiService.getRecentSubmissions();
+      if (recentResponse.data && recentResponse.data.success) {
+        setRecentSubmissions(recentResponse.data.logs || []);
       }
 
       // 2. Fetch sessions list
@@ -262,6 +269,43 @@ export default function Home({ currentUser }) {
 
       {/* Main Content Area */}
       <div className="dashboard-content">
+        {/* Left Column: Recent Submissions Widget */}
+        <div className="dashboard-card recent-submissions-card">
+          <div className="card-header">
+            <h2>{language === 'zh' ? '最近提交活动' : 'Recent Submissions'}</h2>
+          </div>
+          <p className="card-subtitle">{language === 'zh' ? '最后 10 次检查点或检查表提交。' : 'The last 10 Checkpoint or Checklist submissions.'}</p>
+          
+          <div className="recent-submissions-list">
+            {recentSubmissions.length === 0 ? (
+              <p style={{ color: '#64748b', fontStyle: 'italic', padding: '1rem 0' }}>
+                {language === 'zh' ? '未找到最近的提交。' : 'No recent submissions found.'}
+              </p>
+            ) : (
+              recentSubmissions.map(log => {
+                const isCheckpoint = log.action === 'CHECKPOINT_SUBMIT';
+                return (
+                  <div key={log.id} className="recent-submission-item">
+                    <div className={`recent-icon ${isCheckpoint ? 'icon-checkpoint' : 'icon-checklist'}`}>
+                      {isCheckpoint ? '🔍' : '📋'}
+                    </div>
+                    <div className="recent-details">
+                      <div className="recent-title">
+                        <span>{isCheckpoint ? (language === 'zh' ? '检查点提交' : 'Checkpoint Submit') : (language === 'zh' ? '检查表提交' : 'Checklist Submit')}</span>
+                        <span className="recent-time">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      </div>
+                      <p className="recent-meta">
+                        <span className="recent-user">@{log.username} ({log.full_name})</span> {language === 'zh' ? '提交了记录。' : 'submitted a record.'}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: Active Sessions */}
         {isSuperAdmin ? (
           <div className="dashboard-card">
             <div className="card-header">

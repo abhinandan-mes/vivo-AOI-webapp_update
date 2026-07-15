@@ -65,11 +65,16 @@ function App() {
     setUser(response.data.user);
     
     const searchParams = new URLSearchParams(window.location.search);
-    const redirectPath = searchParams.get('redirect');
+    let redirectPath = searchParams.get('redirect');
     if (redirectPath) {
-      window.location.href = decodeURIComponent(redirectPath);
+      redirectPath = decodeURIComponent(redirectPath);
+      // Prevent Open Redirect vulnerability by enforcing internal paths
+      if (!redirectPath.startsWith('/') || redirectPath.startsWith('//')) {
+        redirectPath = '/home';
+      }
+      window.location.href = redirectPath;
     } else {
-      window.location.href = '/';
+      window.location.href = '/home';
     }
   };
 
@@ -241,7 +246,7 @@ function App() {
           </div>
           <div className="navbar-tabs">
             <NavLink
-              to="/"
+              to="/home"
               className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
               end
             >
@@ -253,7 +258,7 @@ function App() {
                   to="/checklist"
                   className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
                 >
-                  {t('nav_checklist')}
+                  {t('nav_checkpoint')}
                 </NavLink>
                 <NavLink
                   to="/checkpoint"
@@ -323,7 +328,8 @@ function App() {
             
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<Home currentUser={user} />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<Home currentUser={user} />} />
           {user.role !== 'inspector' && (
             <>
               <Route path="/checkpoint" element={<FunctionCheckpoint currentUser={user} />} />
@@ -338,7 +344,7 @@ function App() {
             <Route path="/lines" element={<LineManagement currentUser={user} />} />
           ) : null}
           <Route path="/logs" element={<ActivityLog currentUser={user} />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </main>
 

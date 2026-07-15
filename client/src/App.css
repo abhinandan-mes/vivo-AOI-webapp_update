@@ -89,6 +89,7 @@ body {
   -ms-overflow-style: none;
   flex: 1;
   min-width: 0;
+  justify-content: center;
 }
 .navbar-tabs::-webkit-scrollbar {
   display: none;
