@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import apiService from '../services/api';
 import './Home.css';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -12,6 +13,8 @@ export default function Home({ currentUser }) {
   const [successMsg, setSuccessMsg] = useState('');
   const [expandedUser, setExpandedUser] = useState(null);
   const [recentSubmissions, setRecentSubmissions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // New state for Checklist/Checksheet submission statistics
   const [dashboardStats, setDashboardStats] = useState({
@@ -40,6 +43,10 @@ export default function Home({ currentUser }) {
       return timeB - timeA;
     });
   }, [sessions]);
+
+  const totalPages = Math.ceil((isSuperAdmin ? sortedUsersSummary.length : sortedSessions.length) / itemsPerPage) || 1;
+  const paginatedUsers = sortedUsersSummary.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedSessions = sortedSessions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
     fetchDashboardData(selectedDate);
@@ -271,10 +278,15 @@ export default function Home({ currentUser }) {
       <div className="dashboard-content">
         {/* Left Column: Recent Submissions Widget */}
         <div className="dashboard-card recent-submissions-card">
-          <div className="card-header">
-            <h2>{language === 'zh' ? '最近提交活动' : 'Recent Submissions'}</h2>
+          <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h2 style={{ margin: 0 }}>{language === 'zh' ? '最近提交活动' : 'Recent Submissions'}</h2>
+              <p className="card-subtitle" style={{ margin: '0.2rem 0 0 0' }}>{language === 'zh' ? '最后 10 次检查点或检查表提交。' : 'The last 10 Checkpoint or Checklist submissions.'}</p>
+            </div>
+            <Link to="/reports" style={{textDecoration: 'none', color: '#2563eb', fontWeight: '600', fontSize: '0.9rem', padding: '0.4rem 0.8rem', background: '#eff6ff', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.3rem'}}>
+              {language === 'zh' ? '查看全部' : 'View All'} <span>&rarr;</span>
+            </Link>
           </div>
-          <p className="card-subtitle">{language === 'zh' ? '最后 10 次检查点或检查表提交。' : 'The last 10 Checkpoint or Checklist submissions.'}</p>
           
           <div className="recent-submissions-list">
             {recentSubmissions.length === 0 ? (
@@ -283,7 +295,7 @@ export default function Home({ currentUser }) {
               </p>
             ) : (
               recentSubmissions.map(log => {
-                const isCheckpoint = log.action === 'CHECKPOINT_SUBMIT';
+                const isCheckpoint = log.activity_type === 'CHECKPOINT_SUBMIT';
                 const detailsStr = log.details || '';
                 
                 // Parse line and status from details string
@@ -298,10 +310,14 @@ export default function Home({ currentUser }) {
                     
                     <div className="rs-col rs-type-col">
                       <div className={`recent-icon ${isCheckpoint ? 'icon-checkpoint' : 'icon-checklist'}`}>
-                        {isCheckpoint ? '🔍' : '📋'}
+                        {isCheckpoint ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path></svg>
+                        )}
                       </div>
                       <div className="rs-type-info">
-                        <span className="rs-title">{isCheckpoint ? (language === 'zh' ? '检查点' : 'Checkpoint') : (language === 'zh' ? '检查表' : 'Checklist')}</span>
+                        <span className="rs-title">{isCheckpoint ? (language === 'zh' ? '日常功能点检' : 'Daily Function Check') : (language === 'zh' ? '技术员点检表' : 'Technician Checklist')}</span>
                         <span className="rs-time">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
                     </div>
@@ -359,7 +375,7 @@ export default function Home({ currentUser }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedUsersSummary.map((user) => {
+                  {paginatedUsers.map((user) => {
                     const isExpanded = expandedUser === user.id;
                     return (
                       <React.Fragment key={user.id}>
@@ -447,6 +463,30 @@ export default function Home({ currentUser }) {
                 </tbody>
               </table>
             </div>
+
+            {totalPages > 1 && (
+              <div className="pagination-controls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
+                <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                  {language === 'zh' ? `显示 ${Math.min(sortedUsersSummary.length, (currentPage - 1) * itemsPerPage + 1)} - ${Math.min(sortedUsersSummary.length, currentPage * itemsPerPage)} 条，共 ${sortedUsersSummary.length} 条` : `Showing ${Math.min(sortedUsersSummary.length, (currentPage - 1) * itemsPerPage + 1)} - ${Math.min(sortedUsersSummary.length, currentPage * itemsPerPage)} of ${sortedUsersSummary.length} users`}
+                </span>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button 
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                    disabled={currentPage === 1}
+                    style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #cbd5e1', background: currentPage === 1 ? '#f8fafc' : 'white', color: currentPage === 1 ? '#94a3b8' : '#334155', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontSize: '0.85rem' }}
+                  >
+                    {language === 'zh' ? '上一页' : 'Previous'}
+                  </button>
+                  <button 
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                    disabled={currentPage === totalPages}
+                    style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #cbd5e1', background: currentPage === totalPages ? '#f8fafc' : 'white', color: currentPage === totalPages ? '#94a3b8' : '#334155', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', fontSize: '0.85rem' }}
+                  >
+                    {language === 'zh' ? '下一页' : 'Next'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="dashboard-card">
@@ -469,7 +509,7 @@ export default function Home({ currentUser }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedSessions.map((session) => {
+                  {paginatedSessions.map((session) => {
                     const isActive = session.status === 'active';
                     const isCurrent = session.session_id === currentUser?.session_id;
                     return (
@@ -506,6 +546,30 @@ export default function Home({ currentUser }) {
                 </tbody>
               </table>
             </div>
+
+            {totalPages > 1 && (
+              <div className="pagination-controls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
+                <span style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                  {language === 'zh' ? `显示 ${Math.min(sortedSessions.length, (currentPage - 1) * itemsPerPage + 1)} - ${Math.min(sortedSessions.length, currentPage * itemsPerPage)} 条，共 ${sortedSessions.length} 条` : `Showing ${Math.min(sortedSessions.length, (currentPage - 1) * itemsPerPage + 1)} - ${Math.min(sortedSessions.length, currentPage * itemsPerPage)} of ${sortedSessions.length} sessions`}
+                </span>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button 
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                    disabled={currentPage === 1}
+                    style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #cbd5e1', background: currentPage === 1 ? '#f8fafc' : 'white', color: currentPage === 1 ? '#94a3b8' : '#334155', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontSize: '0.85rem' }}
+                  >
+                    {language === 'zh' ? '上一页' : 'Previous'}
+                  </button>
+                  <button 
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                    disabled={currentPage === totalPages}
+                    style={{ padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #cbd5e1', background: currentPage === totalPages ? '#f8fafc' : 'white', color: currentPage === totalPages ? '#94a3b8' : '#334155', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', fontSize: '0.85rem' }}
+                  >
+                    {language === 'zh' ? '下一页' : 'Next'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
