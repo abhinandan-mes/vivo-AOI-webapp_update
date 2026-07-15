@@ -397,6 +397,14 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     *   **Micro-Interaction Hover States**: Added smooth hover transitions with soft background and border color shifts (e.g. orange background `#fff8f1` on edit hover).
 *   **IIS Reverse Proxy URL Rewrite Rule**: Added the missing `API Proxy` rewrite rule to both the active deployment **[client/build/web.config](file:///d:/AOi_check_sheet/client/build/web.config#L6-L9)** and the template source **[client/public/web.config](file:///d:/AOi_check_sheet/client/public/web.config#L6-L9)**. This rule correctly forwards all requests matching `^api/(.*)` to the Node backend on `http://localhost:5001/api/{R:1}` on port 5001, resolving the HTTP 500 / 404 login error on IIS port 3000.
 
+### Resolved: Line Management Module & Status Filtering (July 2026)
+*   **Database Schema Migration**: Added `LineStatus` model to track physical line installation statuses (e.g. Lines 409, 414, 416-420 are marked "Not Installed" by default).
+*   **Line Management Page**: Created a dedicated `LineManagement.js` panel available exclusively to `super_admin` and `admin` roles, displaying interactive toggle cards for all 25 lines.
+*   **Form Integration**: Refactored the `Daily Function Checks` and `Technician Checklists` line dropdowns to only display lines that are actively marked as "Installed".
+*   **Reports Status Filtering & Dummy Rows**: Integrated a "Status" filter in `Reports.js` allowing operators to sort by *Production*, *Line Stop*, *Not Filled*, and *Line Not Installed*. Enhanced the Reports engine to inject logical "dummy rows" dynamically for unsubmitted lines based on their actual installation status.
+*   **Activity Logs Tracking**: Bound the Line Management backend toggles to the central Activity Logger. Toggling a line dynamically pushes a `LINE_STATUS_UPDATE` action to the system audit logs, ensuring complete traceability of line enable/disable events.
+*   **UI Bugfixes**: Fixed the Reports table so that dummy rows correctly render their literal status ("Not Filled" or "Not Installed" pills) rather than mistakenly rendering as "Production". Re-aligned the Home page header tags and Reports filter flex-grid to perfectly wrap and accommodate the new fields gracefully on all devices.
+
 ----
 
 ## 🚀 Getting Started & Configuration

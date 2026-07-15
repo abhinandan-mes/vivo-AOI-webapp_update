@@ -768,9 +768,12 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
       <td className="sticky-group">{text(row.group_name)}</td>
       <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : text(row.shift))}</td>
       <td>
-        <span className={`status-mark ${row.status === 'Line Stop' ? 'not-checked' : 'checked'}`} style={{ minWidth: '76px' }}>
-          {row.status === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
-        </span>
+        {(() => {
+          if (row.status === 'Line Stop') return <span className="status-mark not-checked" style={{ minWidth: '76px' }}>{t('cl_status_linestop')}</span>;
+          if (row.status === 'Not Filled') return <span className="status-mark not-checked" style={{ minWidth: '76px', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fecaca' }}>{language === 'zh' ? '未提交' : 'Not Filled'}</span>;
+          if (row.status === 'Line Not Installed') return <span className="status-mark" style={{ minWidth: '76px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>{language === 'zh' ? '未安装' : 'Not Installed'}</span>;
+          return <span className="status-mark checked" style={{ minWidth: '76px' }}>{t('cl_status_production')}</span>;
+        })()}
       </td>
       <td>{text(row.responsible_person)}</td>
       <td>{text(row.time)}</td>
@@ -808,11 +811,10 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
     
     // Localize status display
     if (key === 'status') {
-      return (
-        <span className={`status-mark ${value === 'Line Stop' ? 'not-checked' : 'checked'}`} style={{ minWidth: '76px' }}>
-          {value === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
-        </span>
-      );
+      if (value === 'Line Stop') return <span className="status-mark not-checked" style={{ minWidth: '76px' }}>{t('cl_status_linestop')}</span>;
+      if (value === 'Not Filled') return <span className="status-mark not-checked" style={{ minWidth: '76px', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fecaca' }}>{language === 'zh' ? '未提交' : 'Not Filled'}</span>;
+      if (value === 'Line Not Installed') return <span className="status-mark" style={{ minWidth: '76px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>{language === 'zh' ? '未安装' : 'Not Installed'}</span>;
+      return <span className="status-mark checked" style={{ minWidth: '76px' }}>{t('cl_status_production')}</span>;
     }
     // Localize shift display
     if (key === 'shift') {
