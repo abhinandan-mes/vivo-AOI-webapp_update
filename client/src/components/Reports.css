@@ -275,6 +275,19 @@ thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; backgr
   border: 1px solid #fecaca;
 }
 
+/* Not Installed lines in reports */
+.line-chip.not-installed-chip {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  opacity: 0.75;
+  font-style: italic;
+}
+
+.breakdown-label.not-installed-label {
+  color: #64748b;
+}
+
 .empty-chips-label {
   font-size: 0.78rem;
   color: #94a3b8;

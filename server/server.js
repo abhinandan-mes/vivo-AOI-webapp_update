@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const functionCheckpointRoutes = require('./routes/functionCheckpoint');
 const technicianChecklistRoutes = require('./routes/technicianChecklist');
 const activityLogRoutes = require('./routes/activityLog');
+const lineStatusRoutes = require('./routes/lineStatus');
 const { authenticateToken } = require('./middleware/auth');
 
 const app = express();
@@ -42,6 +43,7 @@ app.use('/api/auth/login', loginLimiter);
 app.use('/api', authRoutes);
 app.use('/api', authenticateToken, functionCheckpointRoutes);
 app.use('/api', authenticateToken, technicianChecklistRoutes);
+app.use('/api', authenticateToken, lineStatusRoutes);
 app.use('/api', activityLogRoutes);
 
 // Health check

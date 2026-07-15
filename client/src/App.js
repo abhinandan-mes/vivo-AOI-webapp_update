@@ -7,6 +7,7 @@ import LoginPage from './components/LoginPage';
 import UserManagement from './components/UserManagement';
 import ActivityLog from './components/ActivityLog';
 import Home from './components/Home';
+import LineManagement from './components/LineManagement';
 import apiService, { authStorage } from './services/api';
 import vivoLogo from './assets/vivo-logo.svg';
 import './App.css';
@@ -276,6 +277,14 @@ function App() {
                 {t('nav_users')}
               </NavLink>
             )}
+            {(user.role === 'super_admin' || user.role === 'admin') && (
+              <NavLink
+                to="/lines"
+                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+              >
+                {language === 'zh' ? '产线管理' : 'Line Management'}
+              </NavLink>
+            )}
             <NavLink
               to="/logs"
               className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
@@ -324,6 +333,9 @@ function App() {
           <Route path="/reports" element={<Reports currentUser={user} />} />
           {(user.role === 'super_admin' || user.role === 'admin') ? (
             <Route path="/users" element={<UserManagement currentUser={user} />} />
+          ) : null}
+          {(user.role === 'super_admin' || user.role === 'admin') ? (
+            <Route path="/lines" element={<LineManagement currentUser={user} />} />
           ) : null}
           <Route path="/logs" element={<ActivityLog currentUser={user} />} />
           <Route path="*" element={<Navigate to="/" replace />} />

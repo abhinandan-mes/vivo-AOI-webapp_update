@@ -65,7 +65,12 @@ export const apiService = {
   getChecklistById: (id) => API.get(`/checklist/${id}`),
   getChecklistsByDate: (date) => API.get(`/checklist/date/${date}`),
   getChecklistsByLine: (line) => API.get(`/checklist/line/${line}`),
-  deleteChecklist: (id) => API.delete(`/checklist/${id}`)
+  deleteChecklist: (id) => API.delete(`/checklist/${id}`),
+
+  // Line Status APIs
+  getAllLines: () => API.get('/lines'),
+  getInstalledLines: () => API.get('/lines/installed'),
+  updateLineStatus: (line, data) => API.patch(`/lines/${line}`, data)
 };
 
 export default apiService;

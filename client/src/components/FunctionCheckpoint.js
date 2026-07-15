@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiService from '../services/api';
 import './FunctionCheckpoint.css';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const lineOptions = Array.from({ length: 25 }, (_, index) => String(401 + index));
+// Fallback — all 25 lines if API fails
+const ALL_LINE_OPTIONS = Array.from({ length: 25 }, (_, index) => String(401 + index));
 const groupOptions = ['A', 'B', 'C'];
 
 export default function FunctionCheckpoint({ currentUser }) {
@@ -54,6 +55,19 @@ export default function FunctionCheckpoint({ currentUser }) {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [installedLines, setInstalledLines] = useState(ALL_LINE_OPTIONS);
+  const [linesLoading, setLinesLoading] = useState(true);
+
+  // Fetch installed lines from backend
+  useEffect(() => {
+    apiService.getInstalledLines()
+      .then(res => {
+        const data = res.data.data || [];
+        setInstalledLines(data.length > 0 ? data : ALL_LINE_OPTIONS);
+      })
+      .catch(() => setInstalledLines(ALL_LINE_OPTIONS))
+      .finally(() => setLinesLoading(false));
+  }, []);
 
   const checkpointGroups = [
     { label: 'Laser Barcode Detection', prefix: 'laser_barcode', positions: ['before_bot', 'before_top', 'after_bot', 'after_top'] },
@@ -157,7 +171,10 @@ export default function FunctionCheckpoint({ currentUser }) {
                 required
               >
                 <option value="">{t('cp_line_placeholder')}</option>
-                {lineOptions.map(line => <option key={line} value={line}>{line}</option>)}
+                {linesLoading
+                  ? <option disabled>Loading...</option>
+                  : installedLines.map(line => <option key={line} value={line}>{line}</option>)
+                }
               </select>
             </div>
             <div className="form-group">

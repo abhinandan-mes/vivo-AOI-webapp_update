@@ -132,7 +132,28 @@ export default function Reports({ currentUser }) {
 
   const shiftOptions = ['Day', 'Night'];
   const groupOptions = ['A', 'B', 'C'];
-  const lineOptions = useMemo(() => Array.from({ length: 25 }, (_, index) => String(401 + index)), []);
+  // All 25 lines — used as fallback and for the full list
+  const allLineOptions = useMemo(() => Array.from({ length: 25 }, (_, index) => String(401 + index)), []);
+
+  // Line installation statuses fetched from backend
+  const [lineStatuses, setLineStatuses] = useState([]);
+  useEffect(() => {
+    apiService.getAllLines()
+      .then(res => setLineStatuses(res.data.data || []))
+      .catch(() => setLineStatuses([]));
+  }, []);
+
+  // Derived: installed lines for pending/submitted counts
+  const lineOptions = useMemo(() => {
+    if (lineStatuses.length === 0) return allLineOptions;
+    return lineStatuses.filter(l => l.is_installed).map(l => l.line);
+  }, [lineStatuses, allLineOptions]);
+
+  // Lines marked as Not Installed
+  const notInstalledLines = useMemo(() => {
+    if (lineStatuses.length === 0) return [];
+    return lineStatuses.filter(l => !l.is_installed).map(l => l.line);
+  }, [lineStatuses]);
 
   const formatDate = value => {
     if (!value) return '—';
@@ -387,7 +408,7 @@ export default function Reports({ currentUser }) {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, colorThemeClass, dateValue, onDateChange) => {
+  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, notInstLines, colorThemeClass, dateValue, onDateChange) => {
     const totalLines = lineOptions.length;
     const submittedCount = productionLines.length + lineStopLines.length;
     const progressPercent = totalLines > 0 ? Math.round((submittedCount / totalLines) * 100) : 0;
@@ -480,6 +501,19 @@ export default function Reports({ currentUser }) {
                 )}
               </div>
             </div>
+
+            {notInstLines && notInstLines.length > 0 && (
+              <div className="line-breakdown-group">
+                <span className="breakdown-label not-installed-label">
+                  {language === 'zh' ? '未安装:' : 'Not Installed:'}
+                </span>
+                <div className="line-chips-container">
+                  {notInstLines.map(line => (
+                    <span key={line} className="line-chip not-installed-chip">{line}</span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -530,8 +564,8 @@ export default function Reports({ currentUser }) {
 
       {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard">
-        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, 'tech-theme', techSummaryDate, setTechSummaryDate)}
-        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, 'func-theme', funcSummaryDate, setFuncSummaryDate)}
+        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate)}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate)}
       </div>
 
       <div className="report-segmented-toggle">
