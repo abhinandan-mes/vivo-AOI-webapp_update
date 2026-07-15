@@ -258,7 +258,7 @@ function App() {
                   to="/checklist"
                   className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
                 >
-                  {t('nav_checkpoint')}
+                  {t('nav_checklist')}
                 </NavLink>
                 <NavLink
                   to="/checkpoint"
