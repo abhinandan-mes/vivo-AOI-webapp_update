@@ -170,6 +170,7 @@ export default function ActivityLog({ currentUser }) {
       case 'USER_DELETE': return language === 'zh' ? '删除' : 'Delete';
       case 'CHECKLIST_SUBMIT': return language === 'zh' ? '提交' : 'Submit';
       case 'CHECKPOINT_SUBMIT': return language === 'zh' ? '提交' : 'Submit';
+      case 'LINE_STATUS_UPDATE': return language === 'zh' ? '管理' : 'Manage';
       default: return type;
     }
   };
@@ -184,6 +185,7 @@ export default function ActivityLog({ currentUser }) {
       case 'USER_DELETE': return 'badge-delete';
       case 'CHECKLIST_SUBMIT': return 'badge-submit';
       case 'CHECKPOINT_SUBMIT': return 'badge-submit';
+      case 'LINE_STATUS_UPDATE': return 'badge-system';
       default: return 'badge-default';
     }
   };
@@ -193,6 +195,7 @@ export default function ActivityLog({ currentUser }) {
     if (['USER_CREATE', 'USER_UPDATE', 'USER_DELETE'].includes(type)) return 'User Management';
     if (type === 'CHECKLIST_SUBMIT') return 'Checklist';
     if (type === 'CHECKPOINT_SUBMIT') return 'Checkpoint';
+    if (type === 'LINE_STATUS_UPDATE') return 'Line Management';
     return 'System';
   };
 
@@ -400,6 +403,7 @@ export default function ActivityLog({ currentUser }) {
               <option value="USER_DELETE">{language === 'zh' ? '删除用户' : 'Delete User'}</option>
               <option value="CHECKLIST_SUBMIT">{language === 'zh' ? '提交安全表' : 'Submit Checklist'}</option>
               <option value="CHECKPOINT_SUBMIT">{language === 'zh' ? '提交功能表' : 'Submit Checksheet'}</option>
+              <option value="LINE_STATUS_UPDATE">{language === 'zh' ? '产线管理更新' : 'Line Mgmt Update'}</option>
             </select>
           </div>
 
