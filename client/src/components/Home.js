@@ -300,9 +300,15 @@ export default function Home({ currentUser }) {
                 const isCheckpoint = log.activity_type === 'CHECKPOINT_SUBMIT';
                 const detailsStr = log.details || '';
                 
-                // Parse line and status from details string
+                // Parse line, status, shift, and group from details string
                 const lineMatch = detailsStr.match(/Line:\s*([^,]+)/);
                 const lineLabel = lineMatch ? lineMatch[1] : '-';
+                
+                const shiftMatch = detailsStr.match(/Shift:\s*([^,]+)/);
+                const shiftLabel = shiftMatch ? (shiftMatch[1] === 'Day' ? t('day') : (shiftMatch[1] === 'Night' ? t('night') : shiftMatch[1])) : '-';
+                
+                const groupMatch = detailsStr.match(/Group:\s*([^,]+)/);
+                const groupLabel = groupMatch ? groupMatch[1] : '-';
                 
                 const statusMatch = detailsStr.match(/Status:\s*([^,]+)/);
                 const statusLabel = statusMatch ? statusMatch[1] : '-';
@@ -327,6 +333,16 @@ export default function Home({ currentUser }) {
                     <div className="rs-col">
                       <span className="rs-label">{language === 'zh' ? '产线' : 'Line'}</span>
                       <span className="rs-value">{lineLabel}</span>
+                    </div>
+
+                    <div className="rs-col">
+                      <span className="rs-label">{language === 'zh' ? '班次' : 'Shift'}</span>
+                      <span className="rs-value">{shiftLabel}</span>
+                    </div>
+
+                    <div className="rs-col">
+                      <span className="rs-label">{language === 'zh' ? '班组' : 'Group'}</span>
+                      <span className="rs-value">{groupLabel}</span>
                     </div>
 
                     <div className="rs-col">

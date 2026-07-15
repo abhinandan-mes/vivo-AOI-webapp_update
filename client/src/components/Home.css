@@ -335,7 +335,7 @@
 
 .recent-submission-item.detailed-layout {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 2fr 1.5fr;
+  grid-template-columns: 2.2fr 0.75fr 0.75fr 0.75fr 1.25fr 1.75fr 1.5fr;
   align-items: center;
   gap: 1.5rem;
   padding: 1.25rem 1rem;
