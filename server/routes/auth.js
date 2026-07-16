@@ -52,8 +52,16 @@ router.post('/auth/login', async (req, res) => {
 
     const sessionId = crypto.randomUUID();
     let publicIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
-    if (publicIp && publicIp.startsWith('::ffff:')) {
-      publicIp = publicIp.substring(7);
+    if (publicIp) {
+      if (publicIp.startsWith('::ffff:')) {
+        publicIp = publicIp.substring(7);
+      }
+      if (publicIp.includes('.') && publicIp.includes(':')) {
+        publicIp = publicIp.split(':')[0];
+      }
+      if (publicIp.startsWith('[') && publicIp.includes(']')) {
+        publicIp = publicIp.substring(1, publicIp.indexOf(']'));
+      }
     }
 
     await prisma.appSession.create({
@@ -86,8 +94,8 @@ router.post('/auth/create-user', authenticateToken, requireRoles(['super_admin',
     const normalizedRole = role.trim();
 
     const allowedRoles = req.user.role === 'super_admin'
-      ? ['super_admin', 'admin', 'inspector', 'technician', 'operator']
-      : ['inspector', 'technician'];
+      ? ['super_admin', 'admin', 'inspector', 'technician', 'engineer']
+      : ['inspector', 'technician', 'engineer'];
 
     if (!allowedRoles.includes(normalizedRole)) {
       return res.status(403).json({ success: false, error: 'You are not allowed to assign that role' });
@@ -139,6 +147,21 @@ router.get('/auth/me', authenticateToken, async (req, res) => {
     res.json({ success: true, user: { ...user, session_id: req.user.session_id } });
   } catch (error) {
     console.error('Error fetching current user:', error);
+    res.status(500).json({ success: false, error: 'An unexpected error occurred' });
+  }
+});
+
+// Get all engineers (Open to all authenticated users for form selection)
+router.get('/auth/engineers', authenticateToken, async (req, res) => {
+  try {
+    const engineers = await prisma.appUser.findMany({
+      where: { role: 'engineer' },
+      select: { username: true, full_name: true },
+      orderBy: { full_name: 'asc' }
+    });
+    res.json({ success: true, data: engineers });
+  } catch (error) {
+    console.error('Error fetching engineers list:', error);
     res.status(500).json({ success: false, error: 'An unexpected error occurred' });
   }
 });
@@ -227,8 +250,8 @@ router.put('/auth/users/:id', authenticateToken, validateUpdateUser, async (req,
         return res.status(403).json({ success: false, error: 'You cannot change your own role' });
       }
       const allowedRoles = req.user.role === 'super_admin'
-        ? ['super_admin', 'admin', 'inspector', 'technician', 'operator']
-        : ['inspector', 'technician'];
+        ? ['super_admin', 'admin', 'inspector', 'technician', 'engineer']
+        : ['inspector', 'technician', 'engineer'];
       if (!allowedRoles.includes(role)) {
         return res.status(403).json({ success: false, error: 'You are not allowed to assign that role' });
       }

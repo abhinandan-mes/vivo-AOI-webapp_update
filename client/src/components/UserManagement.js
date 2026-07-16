@@ -42,7 +42,8 @@ export default function UserManagement({ currentUser }) {
 
   const baseRoleOptions = useMemo(() => [
     { value: 'inspector', label: t('um_role_inspector') },
-    { value: 'technician', label: t('um_role_technician') }
+    { value: 'technician', label: t('um_role_technician') },
+    { value: 'engineer', label: t('um_role_engineer') }
   ], [t]);
 
   const roleOptions = useMemo(() => isSuperAdmin
@@ -369,7 +370,9 @@ export default function UserManagement({ currentUser }) {
         </div>
       </div>
 
-      {error && <div className="login-error um-message-alert">{error}</div>}
+      {!showCreateModal && !showEditModal && !showPasswordModal && error && (
+        <div className="login-error um-message-alert">{error}</div>
+      )}
       {message && <div className="login-success um-message-alert">{message}</div>}
 
       {/* ── Stat Cards Panel ── */}
@@ -638,6 +641,7 @@ export default function UserManagement({ currentUser }) {
             </div>
 
             <form onSubmit={handleCreateSubmit} className="modal-form-fields-wrapper">
+              {error && <div className="login-error um-message-alert" style={{ marginBottom: '1.2rem', width: '100%', boxSizing: 'border-box' }}>{error}</div>}
               <div className="form-field-group-modal">
                 <label htmlFor="modal-create-fullname">{t('profile_fullname')} *</label>
                 <input 
@@ -766,6 +770,7 @@ export default function UserManagement({ currentUser }) {
             </div>
 
             <form onSubmit={handleEditSubmit} className="modal-form-fields-wrapper">
+              {error && <div className="login-error um-message-alert" style={{ marginBottom: '1.2rem', width: '100%', boxSizing: 'border-box' }}>{error}</div>}
               <div className="form-field-group-modal">
                 <label htmlFor="modal-edit-fullname">{t('profile_fullname')} *</label>
                 <input 
@@ -868,6 +873,7 @@ export default function UserManagement({ currentUser }) {
             </div>
 
             <form onSubmit={handlePasswordSubmit} className="modal-form-fields-wrapper">
+              {error && <div className="login-error um-message-alert" style={{ marginBottom: '1.2rem', width: '100%', boxSizing: 'border-box' }}>{error}</div>}
               <div className="form-field-group-modal">
                 <label htmlFor="modal-reset-password">{language === 'zh' ? '新密码 *' : 'New Password *'}</label>
                 <div className="modal-password-input-row">

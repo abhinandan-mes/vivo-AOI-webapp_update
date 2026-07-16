@@ -40,7 +40,7 @@ const validateCreateUser = (req, res, next) => {
 
   const roleErr = validateString(role, 50, true);
   if (roleErr) errors.role = roleErr;
-  else if (!['super_admin', 'admin', 'inspector', 'technician', 'operator'].includes(role.trim())) {
+  else if (!['super_admin', 'admin', 'inspector', 'technician', 'engineer', 'operator'].includes(role.trim())) {
     errors.role = 'is invalid';
   }
 
@@ -85,7 +85,7 @@ const validateUpdateUser = (req, res, next) => {
   if (role !== undefined) {
     const err = validateString(role, 50, true);
     if (err) errors.role = err;
-    else if (!['super_admin', 'admin', 'inspector', 'technician', 'operator'].includes(role.trim())) {
+    else if (!['super_admin', 'admin', 'inspector', 'technician', 'engineer', 'operator'].includes(role.trim())) {
       errors.role = 'is invalid';
     }
   }

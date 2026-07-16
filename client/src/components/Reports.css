@@ -51,13 +51,28 @@
 .report-table tbody tr:hover td { background-color: #f8fafc; }
 .report-table tbody tr:last-child td { border-bottom: none; }
 
-.detailed-checkpoint-report { min-width: 3400px; }
-.detailed-checkpoint-report thead tr:first-child th { top: 0; height: 42px; }
-.detailed-checkpoint-report thead tr:nth-child(2) th { top: 42px; }
+.detailed-checkpoint-report { min-width: 1000px; }
+.detailed-checklist-report { min-width: 1200px; }
 
-.detailed-checklist-report { min-width: 2600px; }
-.detailed-checklist-report thead tr:first-child th { top: 0; height: 42px; }
-.detailed-checklist-report thead tr:nth-child(2) th { top: 42px; }
+.mini-check-badge {
+  padding: 0.15rem 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 4px;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.2;
+}
+.mini-check-badge.yes {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.mini-check-badge.no {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
 
 .function-heading { text-align: center !important; color: #0f172a !important; border-left: 2px solid rgba(65, 95, 255, 0.2); }
 .check-status-cell { text-align: center !important; padding: 0.65rem 0.5rem !important; }
@@ -65,11 +80,8 @@
 .status-mark.checked { color: #027a48; background: #ecfdf3; border: 1px solid #abf1c6; }
 .status-mark.not-checked { color: #b42318; background: #fef3f2; border: 1px solid #fecdca; }
 
-.sticky-date, .sticky-line, .sticky-group { position: sticky; z-index: 2; background: #fff; }
-.sticky-date { left: 0; width: 108px; min-width: 108px; }
-.sticky-line { left: 108px; width: 72px; min-width: 72px; }
-.sticky-group { left: 180px; width: 110px; min-width: 110px; box-shadow: 4px 0 8px rgba(15, 23, 42, 0.03); border-right: 1.5px solid #e2e8f0 !important; }
-thead .sticky-date, thead .sticky-line, thead .sticky-group { z-index: 5; background: #f8fafc; }
+.sticky-date { position: sticky; left: 0; z-index: 2; background: #fff; min-width: 140px; box-shadow: 4px 0 8px rgba(15, 23, 42, 0.03); border-right: 1.5px solid #e2e8f0 !important; }
+thead .sticky-date { z-index: 5; background: #f8fafc; }
 
 .report-state { padding: 4rem 2rem; text-align: center; color: #64748b; background: #fff; border-radius: 20px; border: 1px dashed #e2e8f0; font-size: 0.95rem; }
 .report-state.error { color: #b42318; background: #fef3f2; border: 1px solid #fecdca; }

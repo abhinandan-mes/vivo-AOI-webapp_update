@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import apiService from '../services/api';
 import './FunctionCheckpoint.css';
 import { useLanguage } from '../contexts/LanguageContext';
+import ConfirmModal from './ConfirmModal';
 
 // Fallback — all 25 lines if API fails
 const ALL_LINE_OPTIONS = Array.from({ length: 25 }, (_, index) => String(401 + index));
@@ -40,13 +40,14 @@ const getShiftAndDate = (now = new Date()) => {
 
 export default function FunctionCheckpoint({ currentUser }) {
   const { t, language } = useLanguage();
-  const navigate = useNavigate();
   const initialShiftAndDate = getShiftAndDate();
   const [formData, setFormData] = useState({
     line: '',
     group_name: '',
     date: initialShiftAndDate.date,
     shift: initialShiftAndDate.shift,
+    designated_engineer_id: '',
+    remarks: '',
     responsible_person: '',
     time: '',
     laser_barcode_before_bot: false,
@@ -88,8 +89,9 @@ export default function FunctionCheckpoint({ currentUser }) {
   const [message, setMessage] = useState('');
   const [installedLines, setInstalledLines] = useState(ALL_LINE_OPTIONS);
   const [linesLoading, setLinesLoading] = useState(true);
+  const [engineers, setEngineers] = useState([]);
 
-  // Fetch installed lines from backend
+  // Fetch installed lines & active engineers from backend
   useEffect(() => {
     apiService.getInstalledLines()
       .then(res => {
@@ -98,6 +100,12 @@ export default function FunctionCheckpoint({ currentUser }) {
       })
       .catch(() => setInstalledLines(ALL_LINE_OPTIONS))
       .finally(() => setLinesLoading(false));
+
+    apiService.getEngineers()
+      .then(res => {
+        setEngineers(res.data.data || []);
+      })
+      .catch(err => console.error('Error loading engineers:', err));
   }, []);
 
   const checkpointGroups = [
@@ -123,10 +131,11 @@ export default function FunctionCheckpoint({ currentUser }) {
   };
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isFormValid = formData.line && formData.group_name && formData.shift && formData.date;
+    const isFormValid = formData.line && formData.group_name && formData.shift && formData.date && formData.designated_engineer_id;
     if (!isFormValid) return;
     setShowConfirmModal(true);
   };
@@ -143,11 +152,7 @@ export default function FunctionCheckpoint({ currentUser }) {
     setLoading(true);
     try {
       await apiService.createCheckpoint(payload);
-      setMessage(t('cp_msg_success'));
-      setTimeout(() => {
-        setMessage('');
-        navigate('/reports');
-      }, 1500);
+      setShowSuccessModal(true);
       const currentShiftAndDate = getShiftAndDate();
       setFormData({
         ...formData,
@@ -157,6 +162,8 @@ export default function FunctionCheckpoint({ currentUser }) {
         shift: currentShiftAndDate.shift,
         responsible_person: '',
         time: '',
+        designated_engineer_id: '',
+        remarks: '',
         status: 'Production'
       });
     } catch (error) {
@@ -268,6 +275,40 @@ export default function FunctionCheckpoint({ currentUser }) {
                 name="time"
                 value={formData.time}
                 onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="engineer-select">
+                {currentUser?.language === 'zh' || language === 'zh' ? '指定工程师 *' : 'Designated Engineer *'}
+              </label>
+              <select 
+                id="engineer-select" 
+                name="designated_engineer_id" 
+                value={formData.designated_engineer_id} 
+                onChange={handleInputChange} 
+                required
+              >
+                <option value="">
+                  {currentUser?.language === 'zh' || language === 'zh' ? '选择工程师' : 'Select Engineer'}
+                </option>
+                {engineers.map(eng => (
+                  <option key={eng.username} value={eng.username}>
+                    {eng.full_name} ({eng.username})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="remarks-input">
+                {currentUser?.language === 'zh' || language === 'zh' ? '备注' : 'Remarks'}
+              </label>
+              <input
+                id="remarks-input"
+                type="text"
+                name="remarks"
+                value={formData.remarks || ''}
+                onChange={handleInputChange}
+                placeholder={currentUser?.language === 'zh' || language === 'zh' ? '输入备注信息' : 'Enter remarks'}
               />
             </div>
           </div>
@@ -461,6 +502,21 @@ export default function FunctionCheckpoint({ currentUser }) {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showSuccessModal}
+        title={language === 'zh' ? '提交成功' : 'Submission Successful'}
+        message={
+          language === 'zh'
+            ? '您的点检表已成功提交，并已送达指定的工程师处进行审核。'
+            : 'Your checksheet has been successfully submitted and is pending review by the designated engineer.'
+        }
+        onConfirm={() => setShowSuccessModal(false)}
+        onCancel={() => setShowSuccessModal(false)}
+        confirmText={language === 'zh' ? '确定' : 'OK'}
+        cancelText=""
+        type="info"
+      />
     </div>
   );
 }

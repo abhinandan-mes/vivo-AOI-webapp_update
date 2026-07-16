@@ -45,16 +45,35 @@ router.get('/activity-logs/recent-submissions', authenticateToken, async (req, r
 // Get logs (descending by created_at)
 router.get('/activity-logs', authenticateToken, async (req, res) => {
   try {
-    const isAdmin = req.user.role === 'super_admin' || req.user.role === 'admin';
+    const { role, username } = req.user;
+    const isAdmin = role === 'super_admin' || role === 'admin';
+    const isEngineer = role === 'engineer';
     const queryOptions = {
       orderBy: { created_at: 'desc' },
       take: 500 // Cap for performance and responsiveness
     };
 
-    if (!isAdmin) {
-      // Non-admins can only see their own logs
+    if (isAdmin) {
+      // Admins see all logs
+    } else if (isEngineer) {
+      // Engineers see activity logs of other engineers, technicians, and themselves
+      const targetUsers = await prisma.appUser.findMany({
+        where: {
+          role: { in: ['engineer', 'technician'] }
+        },
+        select: { username: true }
+      });
+      const allowedUsernames = targetUsers.map(u => u.username);
+      if (!allowedUsernames.includes(username)) {
+        allowedUsernames.push(username);
+      }
       queryOptions.where = {
-        username: req.user.username
+        username: { in: allowedUsernames }
+      };
+    } else {
+      // Others can only see their own logs
+      queryOptions.where = {
+        username: username
       };
     }
 

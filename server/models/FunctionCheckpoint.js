@@ -25,6 +25,12 @@ const functionCheckpointModel = {
       time: data.time || null,
       submitted_by: data.submitted_by || null,
       status: data.status || 'Production',
+      approval_status: data.approval_status || 'ENG_PENDING',
+      designated_engineer_id: data.designated_engineer_id || null,
+      remarks: data.remarks || null,
+      engineer_remarks: data.engineer_remarks || null,
+      engineer_modified_fields: data.engineer_modified_fields || null,
+      original_technician_data: data.original_technician_data || null
     };
 
     checkpointFields.forEach(field => {
@@ -38,10 +44,39 @@ const functionCheckpointModel = {
     });
   },
 
+  update: async (id, data) => {
+    const updateData = {
+      line: data.line !== undefined ? data.line : undefined,
+      group_name: data.group_name !== undefined ? data.group_name : undefined,
+      date: data.date !== undefined ? new Date(data.date) : undefined,
+      shift: data.shift !== undefined ? data.shift : undefined,
+      responsible_person: data.responsible_person !== undefined ? data.responsible_person : undefined,
+      time: data.time !== undefined ? data.time : undefined,
+      status: data.status !== undefined ? data.status : undefined,
+      approval_status: data.approval_status !== undefined ? data.approval_status : undefined,
+      designated_engineer_id: data.designated_engineer_id !== undefined ? data.designated_engineer_id : undefined,
+      remarks: data.remarks !== undefined ? data.remarks : undefined,
+      engineer_remarks: data.engineer_remarks !== undefined ? data.engineer_remarks : undefined,
+      engineer_modified_fields: data.engineer_modified_fields !== undefined ? data.engineer_modified_fields : undefined,
+      original_technician_data: data.original_technician_data !== undefined ? data.original_technician_data : undefined
+    };
+
+    checkpointFields.forEach(field => {
+      if (data[field] !== undefined) {
+        updateData[field] = data[field];
+      }
+    });
+
+    return await prisma.aoiFunctionCheckpoint.update({
+      where: { id: parseInt(id) },
+      data: updateData
+    });
+  },
+
   getAll: async () => {
     return await prisma.aoiFunctionCheckpoint.findMany({
       orderBy: { created_at: 'desc' },
-      take: 100
+      take: 200
     });
   },
 
@@ -57,12 +92,48 @@ const functionCheckpointModel = {
     });
   },
 
+  getPendingForEngineer: async (username) => {
+    return await prisma.aoiFunctionCheckpoint.findMany({
+      where: {
+        approval_status: 'ENG_PENDING',
+        designated_engineer_id: username
+      },
+      orderBy: { created_at: 'desc' }
+    });
+  },
+
+  getPendingForTechnician: async (username) => {
+    return await prisma.aoiFunctionCheckpoint.findMany({
+      where: {
+        approval_status: 'DISAPPROVED',
+        submitted_by: {
+          endsWith: `(${username})`
+        }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+  },
+
+  getAllPending: async () => {
+    return await prisma.aoiFunctionCheckpoint.findMany({
+      where: {
+        approval_status: {
+          in: ['ENG_PENDING', 'DISAPPROVED']
+        }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+  },
+
   checkDuplicate: async (date, line, shift) => {
     return await prisma.aoiFunctionCheckpoint.findFirst({
       where: {
         date: new Date(date),
         line: line,
-        shift: shift
+        shift: shift,
+        approval_status: {
+          not: 'DISAPPROVED'
+        }
       }
     });
   },

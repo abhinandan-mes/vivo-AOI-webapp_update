@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import apiService from '../services/api';
 import './TechnicianChecklist.css';
 import { useLanguage } from '../contexts/LanguageContext';
+import ConfirmModal from './ConfirmModal';
 
 // Fallback — all 25 lines if API fails
 const ALL_LINE_OPTIONS = Array.from({ length: 25 }, (_, index) => String(401 + index));
@@ -13,6 +13,7 @@ const requiredFields = [
   'group_name',
   'date',
   'shift',
+  'designated_engineer_id',
   'pre_aoi_program_full_name',
   'stencil_serial_no_b_side',
   'stencil_serial_no_a_side',
@@ -61,7 +62,6 @@ const getShiftAndDate = (now = new Date()) => {
 
 export default function TechnicianChecklist({ currentUser }) {
   const { t, language } = useLanguage();
-  const navigate = useNavigate();
   const defaultConfirmedBy = currentUser ? `${currentUser.full_name} (${currentUser.username})` : '';
   const initialShiftAndDate = getShiftAndDate();
   const [formData, setFormData] = useState({
@@ -69,6 +69,8 @@ export default function TechnicianChecklist({ currentUser }) {
     group_name: '',
     date: initialShiftAndDate.date,
     shift: initialShiftAndDate.shift,
+    designated_engineer_id: '',
+    remarks: '',
     pre_aoi_program_full_name: '',
     stencil_serial_no_b_side: '',
     stencil_serial_no_a_side: '',
@@ -99,8 +101,9 @@ export default function TechnicianChecklist({ currentUser }) {
   const [message, setMessage] = useState('');
   const [installedLines, setInstalledLines] = useState(ALL_LINE_OPTIONS);
   const [linesLoading, setLinesLoading] = useState(true);
+  const [engineers, setEngineers] = useState([]);
 
-  // Fetch installed lines from backend
+  // Fetch installed lines & active engineers from backend
   useEffect(() => {
     apiService.getInstalledLines()
       .then(res => {
@@ -109,10 +112,16 @@ export default function TechnicianChecklist({ currentUser }) {
       })
       .catch(() => setInstalledLines(ALL_LINE_OPTIONS))
       .finally(() => setLinesLoading(false));
+
+    apiService.getEngineers()
+      .then(res => {
+        setEngineers(res.data.data || []);
+      })
+      .catch(err => console.error('Error loading engineers:', err));
   }, []);
 
   const isFormComplete = React.useMemo(() => {
-    const basicFields = ['line', 'group_name', 'date', 'shift', 'submitted_by'];
+    const basicFields = ['line', 'group_name', 'date', 'shift', 'submitted_by', 'designated_engineer_id'];
     if (formData.status === 'Line Stop') {
       return basicFields.every(field => String(formData[field] || '').trim() !== '');
     }
@@ -128,6 +137,7 @@ export default function TechnicianChecklist({ currentUser }) {
   };
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -143,17 +153,15 @@ export default function TechnicianChecklist({ currentUser }) {
     setLoading(true);
     try {
       await apiService.createChecklist(formData);
-      setMessage(t('cl_msg_success'));
-      setTimeout(() => {
-        setMessage('');
-        navigate('/reports');
-      }, 1500);
+      setShowSuccessModal(true);
       const currentShiftAndDate = getShiftAndDate();
       setFormData({
         line: '',
         group_name: '',
         date: currentShiftAndDate.date,
         shift: currentShiftAndDate.shift,
+        designated_engineer_id: '',
+        remarks: '',
         pre_aoi_program_full_name: '',
         stencil_serial_no_b_side: '',
         stencil_serial_no_a_side: '',
@@ -201,7 +209,7 @@ export default function TechnicianChecklist({ currentUser }) {
         <fieldset disabled={isInspector} style={{ border: 'none', padding: 0, margin: 0, display: 'contents' }}>
           <div className="form-section">
             <h2>{language === 'zh' ? '班次信息' : 'Shift Information'}</h2>
-          <div className="form-grid-4">
+          <div className="form-grid-6">
             <div className="form-group">
               <label htmlFor="line-select">{t('cp_line_req')}</label>
               <select
@@ -244,20 +252,54 @@ export default function TechnicianChecklist({ currentUser }) {
                />
              </div>
              <div className="form-group">
-               <label htmlFor="shift-select">{t('cp_shift_req')} ({language === 'zh' ? '自动' : 'Auto'})</label>
-               <select 
-                 id="shift-select" 
-                 name="shift" 
-                 value={formData.shift} 
-                 onChange={handleInputChange} 
-                 required
-                 disabled
-               >
-                 <option value="" disabled>{t('cp_shift_placeholder')}</option>
-                 <option value="Day">{t('day')}</option>
-                 <option value="Night">{t('night')}</option>
-               </select>
-             </div>
+              <label htmlFor="shift-select">{t('cp_shift_req')} ({language === 'zh' ? '自动' : 'Auto'})</label>
+              <select 
+                id="shift-select" 
+                name="shift" 
+                value={formData.shift} 
+                onChange={handleInputChange} 
+                required
+                disabled
+              >
+                <option value="" disabled>{t('cp_shift_placeholder')}</option>
+                <option value="Day">{t('day')}</option>
+                <option value="Night">{t('night')}</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="engineer-select">
+                {language === 'zh' ? '指定工程师 *' : 'Designated Engineer *'}
+              </label>
+              <select 
+                id="engineer-select" 
+                name="designated_engineer_id" 
+                value={formData.designated_engineer_id} 
+                onChange={handleInputChange} 
+                required
+              >
+                <option value="">
+                  {language === 'zh' ? '选择工程师' : 'Select Engineer'}
+                </option>
+                {engineers.map(eng => (
+                  <option key={eng.username} value={eng.username}>
+                    {eng.full_name} ({eng.username})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="remarks-input">
+                {language === 'zh' ? '备注' : 'Remarks'}
+              </label>
+              <input
+                id="remarks-input"
+                type="text"
+                name="remarks"
+                value={formData.remarks || ''}
+                onChange={handleInputChange}
+                placeholder={language === 'zh' ? '输入备注信息' : 'Enter remarks'}
+              />
+            </div>
           </div>
           {formData.line && (
             <div className="form-group" style={{ marginTop: '1.5rem' }}>
@@ -609,6 +651,21 @@ export default function TechnicianChecklist({ currentUser }) {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showSuccessModal}
+        title={language === 'zh' ? '提交成功' : 'Submission Successful'}
+        message={
+          language === 'zh'
+            ? '您的点检表已成功提交，并已送达指定的工程师处进行审核。'
+            : 'Your checksheet has been successfully submitted and is pending review by the designated engineer.'
+        }
+        onConfirm={() => setShowSuccessModal(false)}
+        onCancel={() => setShowSuccessModal(false)}
+        confirmText={language === 'zh' ? '确定' : 'OK'}
+        cancelText=""
+        type="info"
+      />
     </div>
   );
 }

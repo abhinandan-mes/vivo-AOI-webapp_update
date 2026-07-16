@@ -426,7 +426,23 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     *   *Night Shift*: `09:00 PM` to `08:59 AM` of the next day (maps to calendar date `D` if submitted before midnight, and `D - 1` if submitted after midnight).
 *   **UI Input Locking**: Disabled the date and shift input controls on the UI to lock them to the auto-calculated values, preventing manual entry mistakes by operators.
 *   **Day and Night Shifts Separation in Reports Table**: Refactored the `rows` useMemo in **[Reports.js](file:///d:/AOi_check_sheet/client/src/components/Reports.js)** to yield separate Day and Night shift entries for every line and date. Missing shifts are now correctly exposed as `"Not Filled"` dummy rows rather than being hidden.
-*   **Dynamic Shift Selector in Summary Cards**: Integrated a Shift dropdown in both Checklist and Checkpoint status summary cards on the Reports page, defaulting to the current shift and filtering all metrics and line breakdowns dynamically.
+* * **Dynamic Shift Selector in Summary Cards**: Integrated a Shift dropdown in both Checklist and Checkpoint status summary cards on the Reports page, defaulting to the current shift and filtering all metrics and line breakdowns dynamically.
+
+### Resolved: Engineer Approval Flow, Pending Tasks & Reports UX Overhaul (July 2026)
+* **Designated Engineer Flow**: Added a `Designated Engineer` select dropdown and `Remarks` text box on checklist and checkpoint submission forms. Technicians must select a designated engineer when submitting checksheets.
+* **Pending Tasks Workspace (`PendingModule.js`)**:
+  * Engineers log in to see a prioritized list of checklists/checkpoints designated to them.
+  * Engineers can approve (remarks optional) or disapprove (remarks mandatory) submissions.
+  * Technicians see disapproved tasks returned to their pending queue with the engineer's rejection remarks, allowing inline corrections and resubmission.
+  * **Full-Screen Workspace Focus**: Redesigned the review drawer overlay to a beautiful full-screen modal container matching high-end dashboard design principles.
+* **Modification Audit Trail**: When an engineer edits checksheet parameters during review, the backend automatically compares the values against the original submission and stores a detailed modification audit trail.
+* **Compact High-Density Reports UX**:
+  * Consolidated 20+ columns into a clean 6-column layout on the Reports page. Sticky left column displays Line, Date, Group, and Shift badge.
+  * Barcode verifications display green checks (`✓ LASER`, `✓ SPI`, `✓ PRE-AOI`) or red crosses (`✗ LASER`, `✗ SPI`, `✗ PRE-AOI`) instead of raw text.
+  * Pre-existing checklist/checkpoint submissions (where `designated_engineer_id` is blank) fallback to show as approved by `"System (Automatic)"`.
+* **Exclusion of Uninstalled Lines**: Reports logic omits generating missing shifts dummy rows for inactive, uninstalled lines.
+* **Dynamic Line Stop Hiding**: During engineer review of line stop checksheets, detailed input fields are collapsed by default. A status toggle allows promoting the checksheet to `"Production"`, which dynamically expands the edit panels.
+* **Technician Submission Modals**: Standard form submissions now trigger an interactive confirmation modal, and successful database writes display a success modal requiring user close acknowledgement before resetting the form.
 
 ----
 

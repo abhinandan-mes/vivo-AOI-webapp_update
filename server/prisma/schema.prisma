@@ -52,6 +52,13 @@ model AoiFunctionCheckpoint {
   pre_aoi_spc_before               Boolean?
   pre_aoi_spc_after                Boolean?
 
+  approval_status                  String?  @default("ENG_PENDING") @db.VarChar(50)
+  designated_engineer_id           String?  @db.VarChar(100)
+  remarks                          String?  @db.VarChar(1000)
+  engineer_remarks                 String?  @db.VarChar(1000)
+  engineer_modified_fields         String?  @db.Text
+  original_technician_data         String?  @db.Text
+
   created_at                       DateTime @default(now()) @db.Timestamp(6)
   updated_at                       DateTime @default(now()) @updatedAt @db.Timestamp(6)
 
@@ -82,6 +89,13 @@ model AoiTechnicianChecklist {
   confirmation                          String?  @db.VarChar(50)
   submitted_by                          String?  @db.VarChar(150)
   status                                String?  @default("Production") @db.VarChar(50)
+
+  approval_status                      String?  @default("ENG_PENDING") @db.VarChar(50)
+  designated_engineer_id               String?  @db.VarChar(100)
+  remarks                              String?  @db.VarChar(1000)
+  engineer_remarks                     String?  @db.VarChar(1000)
+  engineer_modified_fields             String?  @db.Text
+  original_technician_data             String?  @db.Text
 
   created_at                            DateTime @default(now()) @db.Timestamp(6)
   updated_at                            DateTime @default(now()) @updatedAt @db.Timestamp(6)

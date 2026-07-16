@@ -59,6 +59,8 @@ export const apiService = {
   getCheckpointById: (id) => API.get(`/checkpoint/${id}`),
   getCheckpointsByDate: (date) => API.get(`/checkpoint/date/${date}`),
   deleteCheckpoint: (id) => API.delete(`/checkpoint/${id}`),
+  getPendingCheckpoints: () => API.get('/checkpoint/pending'),
+  updateCheckpoint: (id, payload) => API.put(`/checkpoint/${id}`, payload),
 
   // Technician Checklist APIs
   createChecklist: (data) => API.post('/checklist', data),
@@ -67,6 +69,11 @@ export const apiService = {
   getChecklistsByDate: (date) => API.get(`/checklist/date/${date}`),
   getChecklistsByLine: (line) => API.get(`/checklist/line/${line}`),
   deleteChecklist: (id) => API.delete(`/checklist/${id}`),
+  getPendingChecklists: () => API.get('/checklist/pending'),
+  updateChecklist: (id, payload) => API.put(`/checklist/${id}`, payload),
+
+  // Engineers API
+  getEngineers: () => API.get('/auth/engineers'),
 
   // Line Status APIs
   getAllLines: () => API.get('/lines'),

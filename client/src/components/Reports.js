@@ -88,6 +88,20 @@ const escapeHtml = value => String(value ?? '')
   .replace(/'/g, '&#039;');
 
 const shiftOptions = ['Day', 'Night'];
+const hasShiftStarted = (dateStr, shift) => {
+  const now = new Date();
+  const todayStr = dateKey(now);
+  
+  if (dateStr < todayStr) return true;
+  if (dateStr > todayStr) return false;
+  
+  const currentHour = now.getHours();
+  if (shift === 'Day') {
+    return currentHour >= 9;
+  } else {
+    return currentHour >= 21;
+  }
+};
 const groupOptions = ['A', 'B', 'C'];
 
 export default function Reports({ currentUser }) {
@@ -95,6 +109,7 @@ export default function Reports({ currentUser }) {
   const [reportType, setReportType] = useState('checklist');
   const [checklists, setChecklists] = useState([]);
   const [checkpoints, setCheckpoints] = useState([]);
+  const [engineers, setEngineers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState(() => {
@@ -168,6 +183,13 @@ export default function Reports({ currentUser }) {
     return new Date(value).toLocaleString(language === 'zh' ? 'zh-CN' : undefined);
   };
 
+  const getEngineerDisplay = (id) => {
+    if (!id) return language === 'zh' ? '系统自动' : 'System (Automatic)';
+    if (id === 'System (Automatic)') return language === 'zh' ? '系统自动' : 'System (Automatic)';
+    const eng = engineers.find(e => e.username === id);
+    return eng ? `${eng.full_name} (${eng.username})` : id;
+  };
+
   const reportTitle = reportType => reportType === 'checkpoint' ? t('rep_toggle_checkpoint') : t('rep_toggle_checklist');
   const reportFileName = reportType => reportType === 'checkpoint' ? 'daily-function-checks' : 'technician-checklists';
   
@@ -219,11 +241,13 @@ export default function Reports({ currentUser }) {
     setError('');
     Promise.all([
       apiService.getAllChecklists(),
-      apiService.getAllCheckpoints()
+      apiService.getAllCheckpoints(),
+      apiService.getEngineers()
     ])
-      .then(([checklistRes, checkpointRes]) => {
+      .then(([checklistRes, checkpointRes, engineersRes]) => {
         setChecklists(checklistRes.data.data || []);
         setCheckpoints(checkpointRes.data.data || []);
+        setEngineers(engineersRes.data.data || []);
       })
       .catch(err => {
         setError(err.message);
@@ -277,22 +301,25 @@ export default function Reports({ currentUser }) {
       
       allLineOptions.forEach(line => {
         const isInstalled = !notInstalledLines.includes(line);
+        if (!isInstalled) return;
         
         shiftOptions.forEach(shift => {
           const actualRecord = recordsForDate.find(r => String(r.line) === line && r.shift === shift);
           if (actualRecord) {
             completeRows.push(actualRecord);
           } else {
-            completeRows.push({
-              id: `dummy-${dateStr}-${line}-${shift}`,
-              date: dateStr,
-              line: line,
-              shift: shift,
-              group_name: '—',
-              status: isInstalled ? 'Not Filled' : 'Line Not Installed',
-              submitted_by: '—',
-              created_at: null,
-            });
+            if (hasShiftStarted(dateStr, shift)) {
+              completeRows.push({
+                id: `dummy-${dateStr}-${line}-${shift}`,
+                date: dateStr,
+                line: line,
+                shift: shift,
+                group_name: '—',
+                status: 'Not Filled',
+                submitted_by: '—',
+                created_at: null,
+              });
+            }
           }
         });
       });
@@ -319,7 +346,11 @@ export default function Reports({ currentUser }) {
       && (!filters.line || row.line === filters.line)
       && (!filters.shift || row.shift === filters.shift)
       && (!filters.group || row.group_name === filters.group)
-      && (!filters.status || row.status === filters.status);
+      && (!filters.status || (
+        filters.status === 'Pending Review' ? row.approval_status === 'ENG_PENDING' :
+        filters.status === 'Disapproved' ? row.approval_status === 'DISAPPROVED' :
+        row.status === filters.status
+      ));
   }), [rows, filters]);
 
   // Summary metrics date & shift selection states
@@ -355,6 +386,11 @@ export default function Reports({ currentUser }) {
     return techTodayDoneLines.filter(l => !techLineStopLines.includes(l));
   }, [techTodayDoneLines, techLineStopLines]);
 
+  const techApprovedLines = useMemo(() => {
+    const approved = techTodaySubmissions.filter(r => r.approval_status === 'APPROVED');
+    return Array.from(new Set(approved.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [techTodaySubmissions, lineOptions]);
+
   // Daily Function Check Today / Selected Date
   const funcTodaySubmissions = useMemo(() => {
     return checkpoints.filter(r => dateKey(r.date) === funcSummaryDate && r.shift === funcSummaryShift);
@@ -376,6 +412,11 @@ export default function Reports({ currentUser }) {
   const funcProductionLines = useMemo(() => {
     return funcTodayDoneLines.filter(l => !funcLineStopLines.includes(l));
   }, [funcTodayDoneLines, funcLineStopLines]);
+
+  const funcApprovedLines = useMemo(() => {
+    const approved = funcTodaySubmissions.filter(r => r.approval_status === 'APPROVED');
+    return Array.from(new Set(approved.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [funcTodaySubmissions, lineOptions]);
 
   const updateFilter = event => {
     const { name, value } = event.target;
@@ -464,7 +505,7 @@ export default function Reports({ currentUser }) {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange) => {
+  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, approvedLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange) => {
     const totalLines = lineOptions.length;
     const submittedCount = productionLines.length + lineStopLines.length;
     const progressPercent = totalLines > 0 ? Math.round((submittedCount / totalLines) * 100) : 0;
@@ -506,7 +547,7 @@ export default function Reports({ currentUser }) {
         </div>
         
         <div className="summary-card-body">
-          <div className="summary-metric-row">
+          <div className="summary-metric-row" style={{ gap: '1rem' }}>
             <div className="summary-metric-item">
               <span className="metric-label submitted">{t('rep_summary_submitted')}</span>
               <span className="metric-value production">{productionLines.length} <small>/ {totalLines}</small></span>
@@ -514,6 +555,10 @@ export default function Reports({ currentUser }) {
             <div className="summary-metric-item">
               <span className="metric-label linestop">{t('rep_summary_linestop')}</span>
               <span className="metric-value linestop">{lineStopLines.length} <small>/ {totalLines}</small></span>
+            </div>
+            <div className="summary-metric-item">
+              <span className="metric-label" style={{ color: '#10b981' }}>{language === 'zh' ? '已批准' : 'Approved'}</span>
+              <span className="metric-value done">{approvedLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-metric-item">
               <span className="metric-label notfilled">{t('rep_summary_notfilled')}</span>
@@ -560,6 +605,19 @@ export default function Reports({ currentUser }) {
                 {lineStopLines.length > 0 ? (
                   lineStopLines.map(line => (
                      <span key={line} className="line-chip linestop">{line}</span>
+                  ))
+                ) : (
+                  <span className="empty-chips-label">{t('rep_summary_empty')}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="line-breakdown-group">
+              <span className="breakdown-label" style={{ color: '#10b981' }}>{language === 'zh' ? '已批准:' : 'Approved:'}</span>
+              <div className="line-chips-container">
+                {approvedLines.length > 0 ? (
+                  approvedLines.map(line => (
+                     <span key={line} className="line-chip production" style={{ background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0' }}>{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
@@ -642,8 +700,8 @@ export default function Reports({ currentUser }) {
 
       {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard">
-        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
-        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
+        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, techApprovedLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, funcApprovedLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
       </div>
 
       <div className="report-segmented-toggle">
@@ -675,8 +733,9 @@ export default function Reports({ currentUser }) {
             <option value="">{language === 'zh' ? '全部状态' : 'All statuses'}</option>
             <option value="Production">{language === 'zh' ? '已提交(生产)' : 'Production'}</option>
             <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>
+            <option value="Pending Review">{language === 'zh' ? '待审核' : 'Pending Review'}</option>
+            <option value="Disapproved">{language === 'zh' ? '已驳回' : 'Disapproved'}</option>
             <option value="Not Filled">{language === 'zh' ? '未提交' : 'Not Filled'}</option>
-            <option value="Line Not Installed">{language === 'zh' ? '未安装' : 'Line Not Installed'}</option>
           </select>
         </label>
         {hasActiveFilters && (
@@ -703,8 +762,8 @@ export default function Reports({ currentUser }) {
       {!loading && !error && filteredRows.length > 0 && (
         <div className="report-table-wrap">
           {reportType === 'checkpoint' 
-            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} /> 
-            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} />
+            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} /> 
+            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} />
           }
         </div>
       )}
@@ -797,145 +856,502 @@ export default function Reports({ currentUser }) {
   );
 }
 
-function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete }) {
-  return <table className="report-table detailed-checkpoint-report">
+function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
+  const [expandedRowId, setExpandedRowId] = React.useState(null);
+  const totalColSpan = isSuperAdmin ? 6 : 5;
+
+  return <table className="report-table detailed-checkpoint-report" style={{ minWidth: '100%' }}>
     <thead>
       <tr>
-        <th rowSpan="2" className="sticky-date">{t('date')}</th>
-        <th rowSpan="2" className="sticky-line">{t('line')}</th>
-        <th rowSpan="2" className="sticky-group">{t('group')}</th>
-        <th rowSpan="2">{t('shift')}</th>
-        <th rowSpan="2">{t('rep_th_status')}</th>
-        <th rowSpan="2">{t('cp_resp_person')}</th>
-        <th rowSpan="2">{t('cp_time')}</th>
-        <th rowSpan="2">{t('rep_th_submitted_by')}</th>
-        <th rowSpan="2">{t('rep_th_submitted_at')}</th>
-        {checkpointGroups.map(group => <th key={group.prefix} colSpan={group.positions.length} className="function-heading">{t('label_' + group.prefix)}</th>)}
-        {isSuperAdmin && <th rowSpan="2" style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
+        <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
+        <th>{t('rep_th_status')}</th>
+        <th>{language === 'zh' ? '提交与审批记录' : 'Audit Timeline'}</th>
+        <th>{language === 'zh' ? '责任人与检测时间' : 'Responsible & Time'}</th>
+        <th>{language === 'zh' ? '功能检测通过率' : 'Function Checks'}</th>
+        {isSuperAdmin && <th style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
       </tr>
-      <tr>{checkpointGroups.flatMap(group => group.positions.map(position => <th key={`${group.prefix}_${position.key}`} title={t('label_' + group.prefix) + ' - ' + t('cp_th_' + position.key)}>{t('cp_th_' + position.key)}</th>))}</tr>
     </thead>
-    <tbody>{rows.map(row => <tr key={row.id}>
-      <td className="sticky-date">{formatDate(row.date)}</td>
-      <td className="sticky-line">{text(row.line)}</td>
-      <td className="sticky-group">{text(row.group_name)}</td>
-      <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : text(row.shift))}</td>
-      <td>
-        {(() => {
-          if (row.status === 'Line Stop') return <span className="status-mark not-checked" style={{ minWidth: '76px' }}>{t('cl_status_linestop')}</span>;
-          if (row.status === 'Not Filled') return <span className="status-mark not-checked" style={{ minWidth: '76px', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fecaca' }}>{language === 'zh' ? '未提交' : 'Not Filled'}</span>;
-          if (row.status === 'Line Not Installed') return <span className="status-mark" style={{ minWidth: '76px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>{language === 'zh' ? '未安装' : 'Not Installed'}</span>;
-          return <span className="status-mark checked" style={{ minWidth: '76px' }}>{t('cl_status_production')}</span>;
-        })()}
-      </td>
-      <td>{text(row.responsible_person)}</td>
-      <td>{text(row.time)}</td>
-      <td>{text(row.submitted_by)}</td>
-      <td>{formatDateTime(row.created_at)}</td>
-      {checkpointColumns.map(column => {
-        const isLineStop = row.status === 'Line Stop';
-        return (
-          <td key={column.key} className="check-status-cell">
-            <span className={`status-mark ${isLineStop ? 'not-checked' : (row[column.key] ? 'checked' : 'not-checked')}`} title={isLineStop ? t('cl_status_linestop') : (row[column.key] ? t('yes') : t('no'))}>
-              {isLineStop ? `—` : (row[column.key] ? `✓ ${t('yes')}` : `— ${t('no')}`)}
-            </span>
+    <tbody>{rows.flatMap(row => {
+      const isExpanded = expandedRowId === row.id;
+      
+      const totalChecks = checkpointColumns.length;
+      const passedChecks = checkpointColumns.reduce((count, col) => count + (row[col.key] ? 1 : 0), 0);
+
+      const mainRow = (
+        <tr 
+          key={row.id} 
+          onClick={() => {
+            if (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') {
+              setExpandedRowId(isExpanded ? null : row.id);
+            }
+          }}
+          style={{ cursor: (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') ? 'pointer' : 'default' }}
+          className={isExpanded ? 'expanded-parent-row' : ''}
+        >
+          <td className="sticky-date">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+              <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.92rem' }}>Line {row.line}</span>
+              <span style={{ color: '#64748b', fontSize: '0.78rem' }}>{formatDate(row.date)} {row.group_name && `| ${row.group_name}`}</span>
+              <span className={`shift-tag ${row.shift}`} style={{ fontSize: '0.72rem', alignSelf: 'flex-start', marginTop: '0.2rem', padding: '0.1rem 0.35rem', borderRadius: '4px', background: row.shift === 'Day' ? '#eff6ff' : '#f8fafc', color: row.shift === 'Day' ? '#1d4ed8' : '#334155', border: '1px solid', borderColor: row.shift === 'Day' ? '#bfdbfe' : '#e2e8f0', fontWeight: 700 }}>
+                {row.shift === 'Day' ? t('day') : t('night')}
+              </span>
+            </div>
           </td>
-        );
-      })}
-      {isSuperAdmin && (
-        <td style={{ textAlign: 'center' }}>
-          <button 
-            type="button"
-            className="btn-delete-report-row" 
-            onClick={() => onDelete(row.id, 'checkpoint')}
-            title={language === 'zh' ? '删除记录' : 'Delete Record'}
-          >
-            🗑️
-          </button>
-        </td>
-      )}
-    </tr>) }</tbody>
+          <td>
+            {(() => {
+              if (row.status === 'Not Filled') {
+                return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                  {language === 'zh' ? '未提交' : 'Not Filled'}
+                </span>;
+              }
+              if (row.status === 'Line Not Installed') {
+                return <span className="status-mark" style={{ minWidth: '95px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>
+                  {language === 'zh' ? '未安装' : 'Not Installed'}
+                </span>;
+              }
+              
+              if (row.approval_status === 'ENG_PENDING') {
+                return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
+                  ⏳ {language === 'zh' ? '待审核' : 'Pending Review'}
+                </span>;
+              }
+              if (row.approval_status === 'DISAPPROVED') {
+                return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                  ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
+                </span>;
+              }
+              
+              // Approved
+              if (row.status === 'Line Stop') {
+                return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
+                  🟢 {language === 'zh' ? '已批准(停线)' : 'Approved (Stop)'}
+                </span>;
+              }
+              return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
+                🟢 {language === 'zh' ? '已批准(生产)' : 'Approved (Prod)'}
+              </span>;
+            })()}
+          </td>
+          <td>
+            {row.status === 'Not Filled' ? '—' : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
+                {row.submitted_by && (
+                  <span style={{ color: '#334155' }}>
+                    👤 <strong>{language === 'zh' ? '提交' : 'Sub'}:</strong> {row.submitted_by} 
+                    <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                      ({formatDateTime(row.created_at)})
+                    </span>
+                  </span>
+                )}
+                {row.approval_status === 'APPROVED' && (
+                  <span style={{ color: '#166534', fontWeight: 500 }}>
+                    ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                    <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                      ({formatDateTime(row.updated_at)})
+                    </span>
+                  </span>
+                )}
+                {row.approval_status === 'DISAPPROVED' && (
+                  <span style={{ color: '#b91c1c', fontWeight: 500 }}>
+                    ✗ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                    <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                      ({formatDateTime(row.updated_at)})
+                    </span>
+                  </span>
+                )}
+              </div>
+            )}
+          </td>
+          <td>
+            {row.status === 'Not Filled' ? '—' : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', fontSize: '0.82rem' }}>
+                <span style={{ color: '#334155', fontWeight: 600 }}>{text(row.responsible_person)}</span>
+                <span style={{ color: '#64748b', fontSize: '0.78rem' }}>🕒 {text(row.time)}</span>
+              </div>
+            )}
+          </td>
+          <td>
+            {row.status === 'Not Filled' ? '—' : (
+              row.status === 'Line Stop' ? (
+                <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                  🛑 {t('cl_status_linestop')}
+                </span>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <div style={{ flex: 1, height: '8px', minWidth: '80px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ width: `${(passedChecks / totalChecks) * 100}%`, height: '100%', background: passedChecks === totalChecks ? '#10b981' : '#f59e0b' }}></div>
+                  </div>
+                  <span style={{ fontSize: '0.82rem', fontWeight: 700, color: passedChecks === totalChecks ? '#059669' : '#d97706' }}>
+                    {passedChecks}/{totalChecks} {language === 'zh' ? '项通过' : 'Passed'}
+                  </span>
+                </div>
+              )
+            )}
+          </td>
+          {isSuperAdmin && (
+            <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+              <button 
+                type="button"
+                className="btn-delete-report-row" 
+                onClick={() => onDelete(row.id, 'checkpoint')}
+                title={language === 'zh' ? '删除记录' : 'Delete Record'}
+              >
+                🗑️
+              </button>
+            </td>
+          )}
+        </tr>
+      );
+
+      if (!isExpanded) return [mainRow];
+
+      const detailRow = (
+        <tr key={`${row.id}-details`} className="expanded-row-details">
+          <td colSpan={totalColSpan} style={{ background: '#f8fafc', padding: '1.5rem', borderBottom: '1px solid #e2e8f0' }}>
+            <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', textAlign: 'left' }}>
+              <div>
+                <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                  {language === 'zh' ? '指定工程师' : 'Designated Engineer'}
+                </strong>
+                <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
+                  {getEngineerDisplay(row.designated_engineer_id)}
+                </span>
+              </div>
+              <div>
+                <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                  {language === 'zh' ? '技术员备注' : 'Technician Remarks'}
+                </strong>
+                <span style={{ fontSize: '0.95rem', color: '#334155' }}>
+                  {row.remarks || '—'}
+                </span>
+              </div>
+              <div>
+                <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                  {language === 'zh' ? '工程师审核备注' : 'Engineer Remarks'}
+                </strong>
+                <span style={{ fontSize: '0.95rem', color: '#334155' }}>
+                  {row.engineer_remarks || '—'}
+                </span>
+              </div>
+              {row.engineer_modified_fields && (
+                <div style={{ gridColumn: 'span 3', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
+                  <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>
+                    {language === 'zh' ? '⚠️ 工程师修改内容记录' : '⚠️ Engineer Modification History'}
+                  </strong>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
+                    {(() => {
+                      try {
+                        const diffs = JSON.parse(row.engineer_modified_fields);
+                        return diffs.map((diff, index) => (
+                          <div key={index} style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.88rem', color: '#991b1b' }}>
+                            <strong>{diff.field}:</strong> changed from <span style={{ textDecoration: 'line-through', color: '#64748b' }}>"{diff.from}"</span> to <strong style={{ color: '#15803d' }}>"{diff.to}"</strong>
+                          </div>
+                        ));
+                      } catch(e) {
+                        return <span>{row.engineer_modified_fields}</span>;
+                      }
+                    })()}
+                  </div>
+                </div>
+              )}
+              {row.status !== 'Line Stop' && (
+                <div style={{ gridColumn: 'span 3', borderTop: '1px solid #e2e8f0', paddingTop: '1.2rem', marginTop: '0.5rem' }}>
+                  <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.8rem', letterSpacing: '0.05em' }}>
+                    {language === 'zh' ? '详细功能检测结果' : 'Detailed Function Check Results'}
+                  </strong>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                    {checkpointGroups.map(group => {
+                      return (
+                        <div key={group.prefix} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '0.85rem', boxShadow: '0 2px 8px rgba(0,0,0,0.01)' }}>
+                          <strong style={{ display: 'block', fontSize: '0.85rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.4rem', marginBottom: '0.5rem' }}>
+                            {t('label_' + group.prefix)}
+                          </strong>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                            {group.positions.map(pos => {
+                              const checkVal = row[`${group.prefix}_${pos.key}`];
+                              return (
+                                <div key={pos.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
+                                  <span style={{ color: '#64748b' }}>{t('cp_th_' + pos.key)}</span>
+                                  <span className={`status-mark ${checkVal ? 'checked' : 'not-checked'}`} style={{ minWidth: '40px', padding: '0.1rem 0.35rem', fontSize: '0.72rem', borderRadius: '4px' }}>
+                                    {checkVal ? '✓' : '✗'}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </td>
+        </tr>
+      );
+
+      return [mainRow, detailRow];
+    })}</tbody>
   </table>;
 }
 
-function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete }) {
-  const renderCell = (key, value) => {
-    const cleanVal = text(value);
-    
-    // Localize status display
-    if (key === 'status') {
-      if (value === 'Line Stop') return <span className="status-mark not-checked" style={{ minWidth: '76px' }}>{t('cl_status_linestop')}</span>;
-      if (value === 'Not Filled') return <span className="status-mark not-checked" style={{ minWidth: '76px', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fecaca' }}>{language === 'zh' ? '未提交' : 'Not Filled'}</span>;
-      if (value === 'Line Not Installed') return <span className="status-mark" style={{ minWidth: '76px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>{language === 'zh' ? '未安装' : 'Not Installed'}</span>;
-      return <span className="status-mark checked" style={{ minWidth: '76px' }}>{t('cl_status_production')}</span>;
-    }
-    // Localize shift display
-    if (key === 'shift') {
-      return value === 'Day' ? t('day') : (value === 'Night' ? t('night') : cleanVal);
-    }
-    // Localize confirmation/check values
-    if (cleanVal === 'Yes') {
-      return <span className="status-mark checked">✓ {t('yes')}</span>;
-    }
-    if (cleanVal === 'No') {
-      return <span className="status-mark not-checked">✗ {t('no')}</span>;
-    }
-    return cleanVal;
+function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
+  const [expandedRowId, setExpandedRowId] = React.useState(null);
+  const totalColSpan = isSuperAdmin ? 7 : 6;
+
+  const renderCheckBadge = (val, label) => {
+    const isYes = val === 'Yes';
+    return (
+      <span className={`mini-check-badge ${isYes ? 'yes' : 'no'}`} style={{ whiteSpace: 'nowrap' }}>
+        {isYes ? '✓' : '✗'} {label}
+      </span>
+    );
   };
 
   return (
-    <table className="report-table detailed-checklist-report">
+    <table className="report-table detailed-checklist-report" style={{ minWidth: '100%' }}>
       <thead>
         <tr>
-          <th rowSpan="2" className="sticky-date">{t('date')}</th>
-          <th rowSpan="2" className="sticky-line">{t('line')}</th>
-          <th rowSpan="2" className="sticky-group">{t('group')}</th>
-          <th rowSpan="2">{t('shift')}</th>
-          <th rowSpan="2">{t('rep_th_status')}</th>
-          <th rowSpan="2">{t('rep_th_submitted_at')}</th>
-          <th rowSpan="2">{t('rep_th_submitted_by')}</th>
-          <th className="function-heading">{language === 'zh' ? 'Pre-AOI 程序' : 'Pre-AOI Program'}</th>
-          <th colSpan="2" className="function-heading">{language === 'zh' ? '钢网编号' : 'Stencil Serial No'}</th>
-          <th colSpan="6" className="function-heading">{language === 'zh' ? '条码读取状态' : 'Barcode Read Information'}</th>
-          <th colSpan="3" className="function-heading">{language === 'zh' ? 'AOI 扫描工具' : 'AOI Scan Tools'}</th>
-          <th className="function-heading">{t('cl_confirmation')}</th>
-          {isSuperAdmin && <th rowSpan="2" style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
-        </tr>
-        <tr>
-          {checklistColumns.slice(7).map(([label]) => (
-            <th key={label}>{label}</th>
-          ))}
+          <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
+          <th>{t('rep_th_status')}</th>
+          <th>{language === 'zh' ? '提交与审批记录' : 'Audit Timeline'}</th>
+          <th>{language === 'zh' ? '程序与钢网信息' : 'Program & Tooling'}</th>
+          <th>{language === 'zh' ? '条码校验' : 'Barcode Verifications'}</th>
+          <th>{language === 'zh' ? '工单与追溯' : 'Workorders & Traceability'}</th>
+          {isSuperAdmin && <th style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
         </tr>
       </thead>
       <tbody>
-        {rows.map(row => (
-          <tr key={row.id}>
-            {checklistColumns.map(([label, key]) => (
-              <td
-                key={key}
-                className={key === 'date' ? 'sticky-date' : key === 'line' ? 'sticky-line' : key === 'group_name' ? 'sticky-group' : ''}
-              >
-                {key === 'date'
-                  ? formatDate(row[key])
-                  : key === 'created_at'
-                    ? formatDateTime(row[key])
-                    : renderCell(key, row[key])}
+        {rows.flatMap(row => {
+          const isExpanded = expandedRowId === row.id;
+          const isLineStop = row.status === 'Line Stop';
+
+          const mainRow = (
+            <tr 
+              key={row.id} 
+              onClick={() => {
+                if (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') {
+                  setExpandedRowId(isExpanded ? null : row.id);
+                }
+              }}
+              style={{ cursor: (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') ? 'pointer' : 'default' }}
+              className={isExpanded ? 'expanded-parent-row' : ''}
+            >
+              <td className="sticky-date">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                  <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.92rem' }}>Line {row.line}</span>
+                  <span style={{ color: '#64748b', fontSize: '0.78rem' }}>{formatDate(row.date)} {row.group_name && `| ${row.group_name}`}</span>
+                  <span className={`shift-tag ${row.shift}`} style={{ fontSize: '0.72rem', alignSelf: 'flex-start', marginTop: '0.2rem', padding: '0.1rem 0.35rem', borderRadius: '4px', background: row.shift === 'Day' ? '#eff6ff' : '#f8fafc', color: row.shift === 'Day' ? '#1d4ed8' : '#334155', border: '1px solid', borderColor: row.shift === 'Day' ? '#bfdbfe' : '#e2e8f0', fontWeight: 700 }}>
+                    {row.shift === 'Day' ? t('day') : t('night')}
+                  </span>
+                </div>
               </td>
-            ))}
-            {isSuperAdmin && (
-              <td style={{ textAlign: 'center' }}>
-                <button 
-                  type="button"
-                  className="btn-delete-report-row" 
-                  onClick={() => onDelete(row.id, 'checklist')}
-                  title={language === 'zh' ? '删除记录' : 'Delete Record'}
-                >
-                  🗑️
-                </button>
+              <td>
+                {(() => {
+                  if (row.status === 'Not Filled') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                      {language === 'zh' ? '未提交' : 'Not Filled'}
+                    </span>;
+                  }
+                  if (row.status === 'Line Not Installed') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>
+                      {language === 'zh' ? '未安装' : 'Not Installed'}
+                    </span>;
+                  }
+                  
+                  if (row.approval_status === 'ENG_PENDING') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
+                      ⏳ {language === 'zh' ? '待审核' : 'Pending Review'}
+                    </span>;
+                  }
+                  if (row.approval_status === 'DISAPPROVED') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                      ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
+                    </span>;
+                  }
+                  
+                  // Approved
+                  if (row.status === 'Line Stop') {
+                    return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
+                      🟢 {language === 'zh' ? '已批准(停线)' : 'Approved (Stop)'}
+                    </span>;
+                  }
+                  return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
+                    🟢 {language === 'zh' ? '已批准(生产)' : 'Approved (Prod)'}
+                  </span>;
+                })()}
               </td>
-            )}
-          </tr>
-        ))}
+              <td>
+                {row.status === 'Not Filled' ? '—' : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
+                    {row.submitted_by && (
+                      <span style={{ color: '#334155' }}>
+                        👤 <strong>{language === 'zh' ? '提交' : 'Sub'}:</strong> {row.submitted_by} 
+                        <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                          ({formatDateTime(row.created_at)})
+                        </span>
+                      </span>
+                    )}
+                    {row.approval_status === 'APPROVED' && (
+                      <span style={{ color: '#166534', fontWeight: 500 }}>
+                        ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                        <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                          ({formatDateTime(row.updated_at)})
+                        </span>
+                      </span>
+                    )}
+                    {row.approval_status === 'DISAPPROVED' && (
+                      <span style={{ color: '#b91c1c', fontWeight: 500 }}>
+                        ✗ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                        <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                          ({formatDateTime(row.updated_at)})
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                )}
+              </td>
+              <td>
+                {row.status === 'Not Filled' ? '—' : (
+                  isLineStop ? (
+                    <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                      🛑 {t('cl_status_linestop')}
+                    </span>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
+                      <span style={{ color: '#0f172a', fontWeight: 700 }} title={row.pre_aoi_program_full_name}>
+                        💻 {row.pre_aoi_program_full_name ? (row.pre_aoi_program_full_name.length > 22 ? `${row.pre_aoi_program_full_name.substring(0, 20)}...` : row.pre_aoi_program_full_name) : '—'}
+                      </span>
+                      <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
+                        🔧 A-Stencil: <strong>{row.stencil_serial_no_a_side || '—'}</strong> | B-Stencil: <strong>{row.stencil_serial_no_b_side || '—'}</strong>
+                      </span>
+                    </div>
+                  )
+                )}
+              </td>
+              <td>
+                {row.status === 'Not Filled' ? '—' : (
+                  isLineStop ? (
+                    <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                      🛑 {t('cl_status_linestop')}
+                    </span>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', fontSize: '0.78rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ color: '#64748b', fontWeight: 700, minWidth: '42px' }}>A-Side:</span>
+                        {renderCheckBadge(row.barcode_read_a_layer, 'LASER')}
+                        {renderCheckBadge(row.barcode_read_a_spi, 'SPI')}
+                        {renderCheckBadge(row.barcode_read_a_pre_aoi, 'PRE-AOI')}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ color: '#64748b', fontWeight: 700, minWidth: '42px' }}>B-Side:</span>
+                        {renderCheckBadge(row.barcode_read_b_layer, 'LASER')}
+                        {renderCheckBadge(row.barcode_read_b_spi, 'SPI')}
+                        {renderCheckBadge(row.barcode_read_b_pre_aoi, 'PRE-AOI')}
+                      </div>
+                    </div>
+                  )
+                )}
+              </td>
+              <td>
+                {row.status === 'Not Filled' ? '—' : (
+                  isLineStop ? (
+                    <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                      🛑 {t('cl_status_linestop')}
+                    </span>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
+                      <span style={{ color: '#334155' }}>
+                        Pre-WO: <strong>{row.workorder_info_pre_aoi || '—'}</strong> | Post-WO: <strong>{row.workorder_info_post_aoi || '—'}</strong>
+                      </span>
+                      <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
+                        Traceability: <strong>{row.aoi_scan_tools_workorder_traceability || '—'}</strong>
+                      </span>
+                    </div>
+                  )
+                )}
+              </td>
+              {isSuperAdmin && (
+                <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+                  <button 
+                    type="button"
+                    className="btn-delete-report-row" 
+                    onClick={() => onDelete(row.id, 'checklist')}
+                    title={language === 'zh' ? '删除记录' : 'Delete Record'}
+                  >
+                    🗑️
+                  </button>
+                </td>
+              )}
+            </tr>
+          );
+
+          if (!isExpanded) return [mainRow];
+
+          const detailRow = (
+            <tr key={`${row.id}-details`} className="expanded-row-details">
+              <td colSpan={totalColSpan} style={{ background: '#f8fafc', padding: '1.5rem', borderBottom: '1px solid #e2e8f0' }}>
+                <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', textAlign: 'left' }}>
+                  <div>
+                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '确认人签名' : 'Confirmation Signature'}
+                    </strong>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
+                      {row.confirmation || '—'}
+                    </span>
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '指定工程师' : 'Designated Engineer'}
+                    </strong>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
+                      {getEngineerDisplay(row.designated_engineer_id)}
+                    </span>
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '技术员备注' : 'Technician Remarks'}
+                    </strong>
+                    <span style={{ fontSize: '0.95rem', color: '#334155' }}>
+                      {row.remarks || '—'}
+                    </span>
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '工程师审核备注' : 'Engineer Remarks'}
+                    </strong>
+                    <span style={{ fontSize: '0.95rem', color: '#334155' }}>
+                      {row.engineer_remarks || '—'}
+                    </span>
+                  </div>
+                  {row.engineer_modified_fields && (
+                    <div style={{ gridColumn: 'span 4', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
+                      <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>
+                        {language === 'zh' ? '⚠️ 工程师修改内容记录' : '⚠️ Engineer Modification History'}
+                      </strong>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
+                        {(() => {
+                          try {
+                            const diffs = JSON.parse(row.engineer_modified_fields);
+                            return diffs.map((diff, index) => (
+                              <div key={index} style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.88rem', color: '#991b1b' }}>
+                                <strong>{diff.field}:</strong> changed from <span style={{ textDecoration: 'line-through', color: '#64748b' }}>"{diff.from}"</span> to <strong style={{ color: '#15803d' }}>"{diff.to}"</strong>
+                              </div>
+                            ));
+                          } catch(e) {
+                            return <span>{row.engineer_modified_fields}</span>;
+                          }
+                        })()}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          );
+
+          return [mainRow, detailRow];
+        })}
       </tbody>
     </table>
   );

@@ -13,6 +13,7 @@ import vivoLogo from './assets/vivo-logo.svg';
 import './App.css';
 import ProfileModal from './components/ProfileModal';
 import { useLanguage } from './contexts/LanguageContext';
+import PendingModule from './components/PendingModule';
 
 function App() {
   const { language, changeLanguage, t } = useLanguage();
@@ -253,6 +254,14 @@ function App() {
               {t('nav_home')}
             </NavLink>
             {user.role !== 'inspector' && (
+              <NavLink
+                to="/pending"
+                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+              >
+                {t('nav_pending')}
+              </NavLink>
+            )}
+            {user.role !== 'inspector' && (
               <>
                 <NavLink
                   to="/checklist"
@@ -337,6 +346,9 @@ function App() {
             </>
           )}
           <Route path="/reports" element={<Reports currentUser={user} />} />
+          {user.role !== 'inspector' && (
+            <Route path="/pending" element={<PendingModule currentUser={user} />} />
+          )}
           {(user.role === 'super_admin' || user.role === 'admin') ? (
             <Route path="/users" element={<UserManagement currentUser={user} />} />
           ) : null}
@@ -349,7 +361,7 @@ function App() {
       </main>
 
       <footer className="footer">
-        <p>AOI Digital Checksheet &copy; 2026 Vivo</p>
+        <p>AOI Digital Checksheet &copy; 2026 Vivo | V2.16.7.26</p>
         <p className="footer-credit">
           Designed, Developed &amp; Maintained by{" "}
           <a 
