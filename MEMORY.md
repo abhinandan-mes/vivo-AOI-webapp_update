@@ -464,6 +464,11 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     * **Admin & Super Admin** also load today's logs by default, but retain the option to clear filters entirely to view "All Data".
     * **Engineer User Filter Dropdown**: Unlocked the USER filter dropdown for the `engineer` role, allowing them to filter logs by other users. The dropdown options list for engineers excludes `admin` and `super_admin` accounts. Backend queries also strictly omit returning admin or super_admin activity logs to engineers.
   * **Engineer Checklist & Checksheet Form Submission**: Authorized the `engineer` role to fill and submit both the **Technician Checklist** (`/checklist` POST route) and the **Daily Function Check** (`/checkpoint` POST route) on both frontend layouts and backend endpoints.
+  * **Health Check & Reverse Proxy Compatibility**: Moved the anonymous `/api/health` check endpoint definition before any authenticated Express routes. This prevents IIS URL Rewrite reverse proxies and health probes from receiving 401 Unauthorized blocks, ensuring correct health status reporting.
+  * **Native Windows Service Migration**:
+    * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
+    * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
+    * Deleted the legacy startup shortcut (`AOI-Server.lnk`) from the Windows Startup folder to prevent double-execution port conflicts on user login.
 
 ----
 
