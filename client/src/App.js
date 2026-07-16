@@ -283,7 +283,7 @@ function App() {
             >
               {t('nav_reports')}
             </NavLink>
-            {(user.role === 'super_admin' || user.role === 'admin' || user.role === 'engineer') && (
+            {(user.role === 'super_admin' || user.role === 'admin') && (
               <NavLink
                 to="/lines"
                 className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
@@ -303,7 +303,7 @@ function App() {
               to="/logs"
               className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
             >
-              {t('nav_logs')}
+              {t('nav_activity_logs')}
             </NavLink>
           </div>
           <div className="user-menu">
@@ -352,7 +352,7 @@ function App() {
           {(user.role === 'super_admin' || user.role === 'admin' || user.role === 'engineer') ? (
             <Route path="/users" element={<UserManagement currentUser={user} />} />
           ) : null}
-          {(user.role === 'super_admin' || user.role === 'admin' || user.role === 'engineer') ? (
+          {(user.role === 'super_admin' || user.role === 'admin') ? (
             <Route path="/lines" element={<LineManagement currentUser={user} />} />
           ) : null}
           <Route path="/logs" element={<ActivityLog currentUser={user} />} />

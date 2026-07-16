@@ -457,10 +457,13 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     * Enabled the `engineer` role to view, create, edit, and delete users on the User Management page (both frontend routes and backend endpoint guards).
     * Restricted role assignability for engineers to only `inspector` and `technician` roles. They cannot create/edit administrators or engineers.
     * Expanded engineer visibility to include activity logs of technician, inspector, and other engineer accounts.
+    * **Line Management Access Exclusion**: Line Management access remains strictly restricted to only `admin` and `super_admin` roles (engineers do not have permission to view the tab or toggle line installation status).
   * **Default Today's Date Filters for Activity Logs**:
     * All user roles now view today's activity logs by default on page load (dates pre-filled to today's date).
     * **Inspector, Engineer, Technician** can check logs for other dates via date pickers, but they cannot clear the date filter entirely. If cleared, inputs fall back to today's date.
     * **Admin & Super Admin** also load today's logs by default, but retain the option to clear filters entirely to view "All Data".
+    * **Engineer User Filter Dropdown**: Unlocked the USER filter dropdown for the `engineer` role, allowing them to filter logs by other users. The dropdown options list for engineers excludes `admin` and `super_admin` accounts. Backend queries also strictly omit returning admin or super_admin activity logs to engineers.
+  * **Engineer Checklist & Checksheet Form Submission**: Authorized the `engineer` role to fill and submit both the **Technician Checklist** (`/checklist` POST route) and the **Daily Function Check** (`/checkpoint` POST route) on both frontend layouts and backend endpoints.
 
 ----
 

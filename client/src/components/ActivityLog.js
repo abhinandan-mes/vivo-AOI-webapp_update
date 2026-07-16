@@ -70,6 +70,7 @@ const ClearIcon = () => (
 export default function ActivityLog({ currentUser }) {
   const { t, language } = useLanguage();
   const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
+  const isEngineer = currentUser?.role === 'engineer';
   
   const [logs, setLogs] = useState([]);
   const [usersList, setUsersList] = useState([]);
@@ -103,10 +104,18 @@ export default function ActivityLog({ currentUser }) {
   useEffect(() => {
     fetchLogs();
     fetchDashboardStats();
-    if (isAdmin) {
+    if (isAdmin || isEngineer) {
       fetchUsers();
     }
-  }, [isAdmin]);
+  }, [isAdmin, isEngineer]);
+
+  const filteredUsersList = useMemo(() => {
+    if (isAdmin) return usersList;
+    if (isEngineer) {
+      return usersList.filter(u => ['engineer', 'technician', 'inspector'].includes(u.role));
+    }
+    return [];
+  }, [usersList, isAdmin, isEngineer]);
 
   const fetchDashboardStats = async () => {
     try {
@@ -394,7 +403,7 @@ export default function ActivityLog({ currentUser }) {
           <h3>{language === 'zh' ? '筛选条件' : 'Filter Logs'}</h3>
         </div>
         <div className="filters-grid">
-          {isAdmin ? (
+          {isAdmin || isEngineer ? (
             <div className="filter-item">
               <label htmlFor="user-select">{language === 'zh' ? '用户' : 'USER'}</label>
               <select 
@@ -403,7 +412,7 @@ export default function ActivityLog({ currentUser }) {
                 onChange={e => setSelectedUser(e.target.value)}
               >
                 <option value="ALL">{language === 'zh' ? '所有用户' : 'All Users'}</option>
-                {usersList.map(u => (
+                {filteredUsersList.map(u => (
                   <option key={u.id} value={u.username}>{u.full_name} ({u.username})</option>
                 ))}
               </select>
