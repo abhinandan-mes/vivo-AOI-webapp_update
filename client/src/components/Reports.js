@@ -858,7 +858,23 @@ export default function Reports({ currentUser }) {
 
 function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
   const [expandedRowId, setExpandedRowId] = React.useState(null);
-  const totalColSpan = isSuperAdmin ? 6 : 5;
+  const totalColSpan = isSuperAdmin ? 7 : 6;
+
+  const renderLineStatus = (status) => {
+    if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
+    if (status === 'Line Stop') {
+      return (
+        <span className="status-mark" style={{ minWidth: '85px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+          🛑 {language === 'zh' ? '停线' : 'Stop'}
+        </span>
+      );
+    }
+    return (
+      <span className="status-mark checked" style={{ minWidth: '85px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
+        🟢 {language === 'zh' ? '生产' : 'Production'}
+      </span>
+    );
+  };
 
   const getFieldLabel = (field) => {
     const zhLabels = {
@@ -920,7 +936,8 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
     <thead>
       <tr>
         <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
-        <th>{t('rep_th_status')}</th>
+        <th>{language === 'zh' ? '线别状态' : 'Line Status'}</th>
+        <th>{language === 'zh' ? '文档状态' : 'Doc Status'}</th>
         <th>{language === 'zh' ? '提交与审批记录' : 'Audit Timeline'}</th>
         <th>{language === 'zh' ? '责任人与检测时间' : 'Responsible & Time'}</th>
         <th>{language === 'zh' ? '功能检测通过率' : 'Function Checks'}</th>
@@ -987,21 +1004,23 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             </div>
           </td>
           <td>
+            {renderLineStatus(row.status)}
+          </td>
+          <td>
             {(() => {
-              if (row.status === 'Not Filled') {
-                return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                  {language === 'zh' ? '未提交' : 'Not Filled'}
-                </span>;
-              }
               if (row.status === 'Line Not Installed') {
                 return <span className="status-mark" style={{ minWidth: '95px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>
                   {language === 'zh' ? '未安装' : 'Not Installed'}
                 </span>;
               }
-              
+              if (row.status === 'Not Filled') {
+                return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                  {language === 'zh' ? '未提交' : 'Not Filled'}
+                </span>;
+              }
               if (row.approval_status === 'ENG_PENDING') {
                 return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
-                  ⏳ {language === 'zh' ? '待审核' : 'Pending Review'}
+                  ⏳ {language === 'zh' ? '待审核' : 'Review'}
                 </span>;
               }
               if (row.approval_status === 'DISAPPROVED') {
@@ -1009,15 +1028,8 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                   ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
                 </span>;
               }
-              
-              // Approved
-              if (row.status === 'Line Stop') {
-                return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
-                  🟢 {language === 'zh' ? '已批准(停线)' : 'Approved (Stop)'}
-                </span>;
-              }
-              return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
-                🟢 {language === 'zh' ? '已批准(生产)' : 'Approved (Prod)'}
+              return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
+                🟢 {language === 'zh' ? '已批准' : 'Approved'}
               </span>;
             })()}
             {renderModifyIndicator(['status'])}
@@ -1197,7 +1209,23 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
 
 function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
   const [expandedRowId, setExpandedRowId] = React.useState(null);
-  const totalColSpan = isSuperAdmin ? 7 : 6;
+  const totalColSpan = isSuperAdmin ? 8 : 7;
+
+  const renderLineStatus = (status) => {
+    if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
+    if (status === 'Line Stop') {
+      return (
+        <span className="status-mark" style={{ minWidth: '85px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+          🛑 {language === 'zh' ? '停线' : 'Stop'}
+        </span>
+      );
+    }
+    return (
+      <span className="status-mark checked" style={{ minWidth: '85px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
+        🟢 {language === 'zh' ? '生产' : 'Production'}
+      </span>
+    );
+  };
 
   const getFieldLabel = (field) => {
     const zhLabels = {
@@ -1269,7 +1297,8 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
       <thead>
         <tr>
           <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
-          <th>{t('rep_th_status')}</th>
+          <th>{language === 'zh' ? '线别状态' : 'Line Status'}</th>
+          <th>{language === 'zh' ? '文档状态' : 'Doc Status'}</th>
           <th>{language === 'zh' ? '提交与审批记录' : 'Audit Timeline'}</th>
           <th>{language === 'zh' ? '程序与钢网信息' : 'Program & Tooling'}</th>
           <th>{language === 'zh' ? '条码校验' : 'Barcode Verifications'}</th>
@@ -1336,21 +1365,23 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 </div>
               </td>
               <td>
+                {renderLineStatus(row.status)}
+              </td>
+              <td>
                 {(() => {
-                  if (row.status === 'Not Filled') {
-                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                      {language === 'zh' ? '未提交' : 'Not Filled'}
-                    </span>;
-                  }
                   if (row.status === 'Line Not Installed') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>
                       {language === 'zh' ? '未安装' : 'Not Installed'}
                     </span>;
                   }
-                  
+                  if (row.status === 'Not Filled') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                      {language === 'zh' ? '未提交' : 'Not Filled'}
+                    </span>;
+                  }
                   if (row.approval_status === 'ENG_PENDING') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
-                      ⏳ {language === 'zh' ? '待审核' : 'Pending Review'}
+                      ⏳ {language === 'zh' ? '待审核' : 'Review'}
                     </span>;
                   }
                   if (row.approval_status === 'DISAPPROVED') {
@@ -1358,15 +1389,8 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                       ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
                     </span>;
                   }
-                  
-                  // Approved
-                  if (row.status === 'Line Stop') {
-                    return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
-                      🟢 {language === 'zh' ? '已批准(停线)' : 'Approved (Stop)'}
-                    </span>;
-                  }
-                  return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
-                    🟢 {language === 'zh' ? '已批准(生产)' : 'Approved (Prod)'}
+                  return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
+                    🟢 {language === 'zh' ? '已批准' : 'Approved'}
                   </span>;
                 })()}
                 {renderModifyIndicator(['status'])}

@@ -447,6 +447,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
   * Renamed barcode labels from `Barcode Read A/B Layer` to `Barcode Read A/B Laser` in the engineer review forms.
   * Added visual pencil indicators (`✏️ Edited` badges) on individual table cells (Line Status, Program & Tooling, Barcode Verifications, Workorders & Traceability, Function Checks, etc.) when the engineer has modified any technician-submitted values.
   * Overhauled the Change History drawer card design, mapping database raw keys to localized human-readable labels (e.g. `pre_aoi_program_full_name` -> `Pre-AOI Program Name`) and displaying modifications as stylized clean gray items with colored strike-throughs and status tags.
+* **Line Status & Doc Status Column Separation**:
+  * Split the unified reports status pill into two separate columns: **Line Status** and **Doc Status**.
+  * **Line Status** displays only `Stop` in red (`#fff5f5` background, `#e53e3e` text, `#fed7d7` border) or `Production` in green (`#f0fdf4` background, `#166534` text, `#bbf7d0` border) for active/filled submissions, and `—` for empty rows.
+  * **Doc Status** renders the document approval state: `Not Filled` (crimson), `Review` (warning yellow/amber), `Disapproved` (crimson), and `Approved` (green).
 
 ----
 
