@@ -283,15 +283,7 @@ function App() {
             >
               {t('nav_reports')}
             </NavLink>
-            {(user.role === 'super_admin' || user.role === 'admin') && (
-              <NavLink
-                to="/users"
-                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-              >
-                {t('nav_users')}
-              </NavLink>
-            )}
-            {(user.role === 'super_admin' || user.role === 'admin') && (
+            {(user.role === 'super_admin' || user.role === 'admin' || user.role === 'engineer') && (
               <NavLink
                 to="/lines"
                 className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
@@ -299,11 +291,19 @@ function App() {
                 {language === 'zh' ? '产线管理' : 'Line Management'}
               </NavLink>
             )}
+            {(user.role === 'super_admin' || user.role === 'admin' || user.role === 'engineer') && (
+              <NavLink
+                to="/users"
+                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+              >
+                {t('nav_users')}
+              </NavLink>
+            )}
             <NavLink
               to="/logs"
               className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
             >
-              {t('nav_activity_logs')}
+              {t('nav_logs')}
             </NavLink>
           </div>
           <div className="user-menu">
@@ -349,10 +349,10 @@ function App() {
           {user.role !== 'inspector' && (
             <Route path="/pending" element={<PendingModule currentUser={user} />} />
           )}
-          {(user.role === 'super_admin' || user.role === 'admin') ? (
+          {(user.role === 'super_admin' || user.role === 'admin' || user.role === 'engineer') ? (
             <Route path="/users" element={<UserManagement currentUser={user} />} />
           ) : null}
-          {(user.role === 'super_admin' || user.role === 'admin') ? (
+          {(user.role === 'super_admin' || user.role === 'admin' || user.role === 'engineer') ? (
             <Route path="/lines" element={<LineManagement currentUser={user} />} />
           ) : null}
           <Route path="/logs" element={<ActivityLog currentUser={user} />} />

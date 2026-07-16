@@ -85,17 +85,22 @@ router.post('/auth/login', async (req, res) => {
   }
 });
 
-// Create User (Restricted to Super Admin & Admin)
-router.post('/auth/create-user', authenticateToken, requireRoles(['super_admin', 'admin']), validateCreateUser, async (req, res) => {
+// Create User (Restricted to Super Admin, Admin & Engineer)
+router.post('/auth/create-user', authenticateToken, requireRoles(['super_admin', 'admin', 'engineer']), validateCreateUser, async (req, res) => {
   try {
     const { username, password, fullName, role, email, phone } = req.body;
     const normalizedUsername = username.trim();
     const normalizedFullName = fullName.trim();
     const normalizedRole = role.trim();
 
-    const allowedRoles = req.user.role === 'super_admin'
-      ? ['super_admin', 'admin', 'inspector', 'technician', 'engineer']
-      : ['inspector', 'technician', 'engineer'];
+    let allowedRoles = [];
+    if (req.user.role === 'super_admin') {
+      allowedRoles = ['super_admin', 'admin', 'inspector', 'technician', 'engineer'];
+    } else if (req.user.role === 'admin') {
+      allowedRoles = ['inspector', 'technician', 'engineer'];
+    } else if (req.user.role === 'engineer') {
+      allowedRoles = ['inspector', 'technician'];
+    }
 
     if (!allowedRoles.includes(normalizedRole)) {
       return res.status(403).json({ success: false, error: 'You are not allowed to assign that role' });
@@ -166,8 +171,8 @@ router.get('/auth/engineers', authenticateToken, async (req, res) => {
   }
 });
 
-// Get all users (Restricted to Super Admin & Admin)
-router.get('/auth/users', authenticateToken, requireRoles(['super_admin', 'admin']), async (req, res) => {
+// Get all users (Restricted to Super Admin, Admin & Engineer)
+router.get('/auth/users', authenticateToken, requireRoles(['super_admin', 'admin', 'engineer']), async (req, res) => {
   try {
     const users = await prisma.appUser.findMany({
       orderBy: { id: 'asc' },

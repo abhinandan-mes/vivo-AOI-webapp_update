@@ -38,6 +38,7 @@ export default function UserManagement({ currentUser }) {
 
   const isSuperAdmin = currentUser?.role === 'super_admin';
   const isAdmin = currentUser?.role === 'admin';
+  const isEngineer = currentUser?.role === 'engineer';
   const currentUserId = currentUser?.id;
 
   const baseRoleOptions = useMemo(() => [
@@ -46,13 +47,23 @@ export default function UserManagement({ currentUser }) {
     { value: 'engineer', label: t('um_role_engineer') }
   ], [t]);
 
-  const roleOptions = useMemo(() => isSuperAdmin
-    ? [
+  const roleOptions = useMemo(() => {
+    if (isSuperAdmin) {
+      return [
         { value: 'super_admin', label: t('um_role_super_admin') },
         { value: 'admin', label: t('um_role_admin') },
         ...baseRoleOptions
-      ]
-    : baseRoleOptions, [isSuperAdmin, baseRoleOptions, t]);
+      ];
+    } else if (isAdmin) {
+      return baseRoleOptions;
+    } else if (isEngineer) {
+      return [
+        { value: 'inspector', label: t('um_role_inspector') },
+        { value: 'technician', label: t('um_role_technician') }
+      ];
+    }
+    return [];
+  }, [isSuperAdmin, isAdmin, isEngineer, baseRoleOptions, t]);
 
   // Fetch all users on mount
   useEffect(() => {
@@ -71,14 +82,16 @@ export default function UserManagement({ currentUser }) {
   const canEditUser = (target) => {
     if (target.id === currentUserId) return true; // Can edit yourself
     if (isSuperAdmin) return true;
-    if (isAdmin && ['inspector', 'technician'].includes(target.role)) return true;
+    if (isAdmin && ['inspector', 'technician', 'engineer'].includes(target.role)) return true;
+    if (isEngineer && ['inspector', 'technician'].includes(target.role)) return true;
     return false;
   };
 
   const canDeleteUser = (target) => {
     if (target.id === currentUserId) return false; // Can't delete yourself
     if (isSuperAdmin) return true;
-    if (isAdmin && ['inspector', 'technician'].includes(target.role)) return true;
+    if (isAdmin && ['inspector', 'technician', 'engineer'].includes(target.role)) return true;
+    if (isEngineer && ['inspector', 'technician'].includes(target.role)) return true;
     return false;
   };
 

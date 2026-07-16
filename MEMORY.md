@@ -451,6 +451,16 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
   * Split the unified reports status pill into two separate columns: **Line Status** and **Doc Status**.
   * **Line Status** displays only `Stop` in red (`#fff5f5` background, `#e53e3e` text, `#fed7d7` border) or `Production` in green (`#f0fdf4` background, `#166534` text, `#bbf7d0` border) for active/filled submissions, and `—` for empty rows.
   * **Doc Status** renders the document approval state: `Not Filled` (crimson), `Review` (warning yellow/amber), `Disapproved` (crimson), and `Approved` (green).
+* **Navigation & Authorization Refinements (July 2026)**:
+  * **Tab Order Redesign**: Swapped header nav order so that **User Management** is placed immediately *after* **Line Management** and *before* **Activity Logs** (Home ➔ Pending Tasks ➔ Technician Checklist ➔ Daily Function Check ➔ Reports ➔ Line Management ➔ User Management ➔ Activity Logs).
+  * **Engineer User Management Capabilities**:
+    * Enabled the `engineer` role to view, create, edit, and delete users on the User Management page (both frontend routes and backend endpoint guards).
+    * Restricted role assignability for engineers to only `inspector` and `technician` roles. They cannot create/edit administrators or engineers.
+    * Expanded engineer visibility to include activity logs of technician, inspector, and other engineer accounts.
+  * **Default Today's Date Filters for Activity Logs**:
+    * All user roles now view today's activity logs by default on page load (dates pre-filled to today's date).
+    * **Inspector, Engineer, Technician** can check logs for other dates via date pickers, but they cannot clear the date filter entirely. If cleared, inputs fall back to today's date.
+    * **Admin & Super Admin** also load today's logs by default, but retain the option to clear filters entirely to view "All Data".
 
 ----
 

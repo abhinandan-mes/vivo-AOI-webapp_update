@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/lines/installed', lineStatusController.getInstalledLines);
 router.get('/lines', lineStatusController.getAllLines);
 
-// PATCH update a line's installation status (admin / super_admin only)
-router.patch('/lines/:line', requireRoles(['admin', 'super_admin']), lineStatusController.updateLine);
+// PATCH update a line's installation status (admin / super_admin / engineer only)
+router.patch('/lines/:line', requireRoles(['admin', 'super_admin', 'engineer']), lineStatusController.updateLine);
 
 module.exports = router;

@@ -59,7 +59,7 @@ router.get('/activity-logs', authenticateToken, async (req, res) => {
       // Engineers see activity logs of other engineers, technicians, and themselves
       const targetUsers = await prisma.appUser.findMany({
         where: {
-          role: { in: ['engineer', 'technician'] }
+          role: { in: ['engineer', 'technician', 'inspector'] }
         },
         select: { username: true }
       });

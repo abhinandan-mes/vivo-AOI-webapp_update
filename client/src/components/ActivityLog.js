@@ -80,18 +80,20 @@ export default function ActivityLog({ currentUser }) {
   // Modal State
   const [selectedLog, setSelectedLog] = useState(null);
 
+  const todayStr = useMemo(() => new Date().toLocaleDateString('en-CA'), []);
+
   // Filter Selection States
   const [selectedUser, setSelectedUser] = useState('ALL');
   const [selectedType, setSelectedType] = useState('ALL');
-  const [selectedStartDate, setSelectedStartDate] = useState('');
-  const [selectedEndDate, setSelectedEndDate] = useState('');
+  const [selectedStartDate, setSelectedStartDate] = useState(todayStr);
+  const [selectedEndDate, setSelectedEndDate] = useState(todayStr);
 
   // Active Applied Filters
   const [activeFilters, setActiveFilters] = useState({
     user: 'ALL',
     type: 'ALL',
-    startDate: '',
-    endDate: ''
+    startDate: todayStr,
+    endDate: todayStr
   });
 
   // Pagination
@@ -244,11 +246,19 @@ export default function ActivityLog({ currentUser }) {
 
   // Filter Action Handlers
   const handleApplyFilters = () => {
+    let start = selectedStartDate;
+    let end = selectedEndDate;
+    if (!isAdmin) {
+      if (!start) start = todayStr;
+      if (!end) end = todayStr;
+      setSelectedStartDate(start);
+      setSelectedEndDate(end);
+    }
     setActiveFilters({
       user: selectedUser,
       type: selectedType,
-      startDate: selectedStartDate,
-      endDate: selectedEndDate
+      startDate: start,
+      endDate: end
     });
     setCurrentPage(1);
   };
@@ -256,14 +266,25 @@ export default function ActivityLog({ currentUser }) {
   const handleClearFilters = () => {
     setSelectedUser('ALL');
     setSelectedType('ALL');
-    setSelectedStartDate('');
-    setSelectedEndDate('');
-    setActiveFilters({
-      user: 'ALL',
-      type: 'ALL',
-      startDate: '',
-      endDate: ''
-    });
+    if (isAdmin) {
+      setSelectedStartDate('');
+      setSelectedEndDate('');
+      setActiveFilters({
+        user: 'ALL',
+        type: 'ALL',
+        startDate: '',
+        endDate: ''
+      });
+    } else {
+      setSelectedStartDate(todayStr);
+      setSelectedEndDate(todayStr);
+      setActiveFilters({
+        user: 'ALL',
+        type: 'ALL',
+        startDate: todayStr,
+        endDate: todayStr
+      });
+    }
     setCurrentPage(1);
   };
 
@@ -420,7 +441,14 @@ export default function ActivityLog({ currentUser }) {
               id="start-date-input"
               type="date" 
               value={selectedStartDate} 
-              onChange={e => setSelectedStartDate(e.target.value)} 
+              onChange={e => {
+                const val = e.target.value;
+                if (!isAdmin && !val) {
+                  setSelectedStartDate(todayStr);
+                } else {
+                  setSelectedStartDate(val);
+                }
+              }} 
             />
           </div>
 
@@ -430,7 +458,14 @@ export default function ActivityLog({ currentUser }) {
               id="end-date-input"
               type="date" 
               value={selectedEndDate} 
-              onChange={e => setSelectedEndDate(e.target.value)} 
+              onChange={e => {
+                const val = e.target.value;
+                if (!isAdmin && !val) {
+                  setSelectedEndDate(todayStr);
+                } else {
+                  setSelectedEndDate(val);
+                }
+              }} 
             />
           </div>
 
