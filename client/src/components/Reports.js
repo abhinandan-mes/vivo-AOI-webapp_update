@@ -87,6 +87,9 @@ const escapeHtml = value => String(value ?? '')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;');
 
+const shiftOptions = ['Day', 'Night'];
+const groupOptions = ['A', 'B', 'C'];
+
 export default function Reports({ currentUser }) {
   const { t, language } = useLanguage();
   const [reportType, setReportType] = useState('checklist');
@@ -132,8 +135,6 @@ export default function Reports({ currentUser }) {
     [t('rep_th_confirmed'), 'confirmation']
   ], [t]);
 
-  const shiftOptions = ['Day', 'Night'];
-  const groupOptions = ['A', 'B', 'C'];
   // All 25 lines — used as fallback and for the full list
   const allLineOptions = useMemo(() => Array.from({ length: 25 }, (_, index) => String(401 + index)), []);
 
@@ -273,26 +274,27 @@ export default function Reports({ currentUser }) {
     
     uniqueDates.forEach(dateStr => {
       const recordsForDate = data.filter(d => dateKey(d.date) === dateStr);
-      const linesWithRecords = Array.from(new Set(recordsForDate.map(r => String(r.line))));
       
-      // 1. Add existing records
-      completeRows.push(...recordsForDate);
-      
-      // 2. Add missing lines as dummy rows
       allLineOptions.forEach(line => {
-        if (!linesWithRecords.includes(line)) {
-          const isInstalled = !notInstalledLines.includes(line);
-          completeRows.push({
-            id: `dummy-${dateStr}-${line}`,
-            date: dateStr,
-            line: line,
-            shift: '—',
-            group_name: '—',
-            status: isInstalled ? 'Not Filled' : 'Line Not Installed',
-            submitted_by: '—',
-            created_at: null,
-          });
-        }
+        const isInstalled = !notInstalledLines.includes(line);
+        
+        shiftOptions.forEach(shift => {
+          const actualRecord = recordsForDate.find(r => String(r.line) === line && r.shift === shift);
+          if (actualRecord) {
+            completeRows.push(actualRecord);
+          } else {
+            completeRows.push({
+              id: `dummy-${dateStr}-${line}-${shift}`,
+              date: dateStr,
+              line: line,
+              shift: shift,
+              group_name: '—',
+              status: isInstalled ? 'Not Filled' : 'Line Not Installed',
+              submitted_by: '—',
+              created_at: null,
+            });
+          }
+        });
       });
     });
 
@@ -300,8 +302,13 @@ export default function Reports({ currentUser }) {
       const timeA = new Date(a.date).getTime();
       const timeB = new Date(b.date).getTime();
       if (timeB !== timeA) return timeB - timeA;
+      
       // then by line ascending
-      return String(a.line).localeCompare(String(b.line));
+      const lineCompare = String(a.line).localeCompare(String(b.line));
+      if (lineCompare !== 0) return lineCompare;
+      
+      // then by shift ascending (Day, then Night)
+      return String(a.shift).localeCompare(String(b.shift));
     });
   }, [reportType, checklists, checkpoints, allLineOptions, notInstalledLines]);
 
@@ -315,14 +322,21 @@ export default function Reports({ currentUser }) {
       && (!filters.status || row.status === filters.status);
   }), [rows, filters]);
 
-  // Summary metrics date selection states
+  // Summary metrics date & shift selection states
+  const getCurrentShift = (now = new Date()) => {
+    const hours = now.getHours();
+    return (hours >= 9 && hours < 21) ? 'Day' : 'Night';
+  };
+
   const [techSummaryDate, setTechSummaryDate] = useState(() => dateKey(new Date()));
+  const [techSummaryShift, setTechSummaryShift] = useState(() => getCurrentShift());
   const [funcSummaryDate, setFuncSummaryDate] = useState(() => dateKey(new Date()));
+  const [funcSummaryShift, setFuncSummaryShift] = useState(() => getCurrentShift());
 
   // Technician Checklist Today / Selected Date
   const techTodaySubmissions = useMemo(() => {
-    return checklists.filter(r => dateKey(r.date) === techSummaryDate);
-  }, [checklists, techSummaryDate]);
+    return checklists.filter(r => dateKey(r.date) === techSummaryDate && r.shift === techSummaryShift);
+  }, [checklists, techSummaryDate, techSummaryShift]);
 
   const techTodayDoneLines = useMemo(() => {
     return Array.from(new Set(techTodaySubmissions.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
@@ -343,8 +357,8 @@ export default function Reports({ currentUser }) {
 
   // Daily Function Check Today / Selected Date
   const funcTodaySubmissions = useMemo(() => {
-    return checkpoints.filter(r => dateKey(r.date) === funcSummaryDate);
-  }, [checkpoints, funcSummaryDate]);
+    return checkpoints.filter(r => dateKey(r.date) === funcSummaryDate && r.shift === funcSummaryShift);
+  }, [checkpoints, funcSummaryDate, funcSummaryShift]);
 
   const funcTodayDoneLines = useMemo(() => {
     return Array.from(new Set(funcTodaySubmissions.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
@@ -450,7 +464,7 @@ export default function Reports({ currentUser }) {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, notInstLines, colorThemeClass, dateValue, onDateChange) => {
+  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange) => {
     const totalLines = lineOptions.length;
     const submittedCount = productionLines.length + lineStopLines.length;
     const progressPercent = totalLines > 0 ? Math.round((submittedCount / totalLines) * 100) : 0;
@@ -459,14 +473,36 @@ export default function Reports({ currentUser }) {
       <div className={`summary-card ${colorThemeClass}`}>
         <div className="summary-card-header">
           <h3>{title}</h3>
-          <input 
-            type="date"
-            className="summary-date-picker"
-            value={dateValue}
-            onChange={(e) => onDateChange(e.target.value)}
-            max={dateKey(new Date())}
-            aria-label={`${title} date`}
-          />
+          <div className="summary-controls" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <input 
+              type="date"
+              className="summary-date-picker"
+              value={dateValue}
+              onChange={(e) => onDateChange(e.target.value)}
+              max={dateKey(new Date())}
+              aria-label={`${title} date`}
+            />
+            <select
+              className="summary-shift-select"
+              value={shiftValue}
+              onChange={(e) => onShiftChange(e.target.value)}
+              aria-label={`${title} shift`}
+              style={{
+                padding: '0.4rem 0.6rem',
+                borderRadius: '8px',
+                border: '1px solid #cbd5e1',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                background: '#fff',
+                cursor: 'pointer',
+                outline: 'none',
+                color: '#334155'
+              }}
+            >
+              <option value="Day">{t('day')}</option>
+              <option value="Night">{t('night')}</option>
+            </select>
+          </div>
         </div>
         
         <div className="summary-card-body">
@@ -510,20 +546,20 @@ export default function Reports({ currentUser }) {
               <div className="line-chips-container">
                 {productionLines.length > 0 ? (
                   productionLines.map(line => (
-                    <span key={line} className="line-chip production">{line}</span>
+                     <span key={line} className="line-chip production">{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
                 )}
               </div>
             </div>
-
+ 
             <div className="line-breakdown-group">
               <span className="breakdown-label linestop">{t('rep_summary_linestop')}:</span>
               <div className="line-chips-container">
                 {lineStopLines.length > 0 ? (
                   lineStopLines.map(line => (
-                    <span key={line} className="line-chip linestop">{line}</span>
+                     <span key={line} className="line-chip linestop">{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
@@ -536,14 +572,14 @@ export default function Reports({ currentUser }) {
               <div className="line-chips-container">
                 {pendingLines.length > 0 ? (
                   pendingLines.map(line => (
-                    <span key={line} className="line-chip pending">{line}</span>
+                     <span key={line} className="line-chip pending">{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
                 )}
               </div>
             </div>
-
+ 
             {notInstLines && notInstLines.length > 0 && (
               <div className="line-breakdown-group">
                 <span className="breakdown-label not-installed-label">
@@ -606,8 +642,8 @@ export default function Reports({ currentUser }) {
 
       {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard">
-        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate)}
-        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate)}
+        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
       </div>
 
       <div className="report-segmented-toggle">

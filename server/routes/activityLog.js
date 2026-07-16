@@ -9,7 +9,7 @@ router.get('/activity-logs/recent-submissions', authenticateToken, async (req, r
   try {
     const logs = await prisma.appActivityLog.findMany({
       where: {
-        action: {
+        activity_type: {
           in: ['CHECKLIST_SUBMIT', 'CHECKPOINT_SUBMIT']
         }
       },

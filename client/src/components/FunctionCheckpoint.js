@@ -8,14 +8,45 @@ import { useLanguage } from '../contexts/LanguageContext';
 const ALL_LINE_OPTIONS = Array.from({ length: 25 }, (_, index) => String(401 + index));
 const groupOptions = ['A', 'B', 'C'];
 
+const getShiftAndDate = (now = new Date()) => {
+  const hours = now.getHours();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const day = now.getDate();
+  
+  const pad = num => String(num).padStart(2, '0');
+  
+  if (hours >= 9 && hours < 21) {
+    // Day Shift: 9 AM to 8:59 PM
+    return {
+      shift: 'Day',
+      date: `${year}-${pad(month + 1)}-${pad(day)}`
+    };
+  } else if (hours >= 21) {
+    // Night Shift: 9 PM to 11:59 PM
+    return {
+      shift: 'Night',
+      date: `${year}-${pad(month + 1)}-${pad(day)}`
+    };
+  } else {
+    // Night Shift: 12 AM to 8:59 AM (belongs to previous calendar day)
+    const prevDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    return {
+      shift: 'Night',
+      date: `${prevDate.getFullYear()}-${pad(prevDate.getMonth() + 1)}-${pad(prevDate.getDate())}`
+    };
+  }
+};
+
 export default function FunctionCheckpoint({ currentUser }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const initialShiftAndDate = getShiftAndDate();
   const [formData, setFormData] = useState({
     line: '',
     group_name: '',
-    date: new Date().toISOString().split('T')[0],
-    shift: '',
+    date: initialShiftAndDate.date,
+    shift: initialShiftAndDate.shift,
     responsible_person: '',
     time: '',
     laser_barcode_before_bot: false,
@@ -117,12 +148,13 @@ export default function FunctionCheckpoint({ currentUser }) {
         setMessage('');
         navigate('/reports');
       }, 1500);
+      const currentShiftAndDate = getShiftAndDate();
       setFormData({
         ...formData,
         line: '',
         group_name: '',
-        date: new Date().toISOString().split('T')[0],
-        shift: '',
+        date: currentShiftAndDate.date,
+        shift: currentShiftAndDate.shift,
         responsible_person: '',
         time: '',
         status: 'Production'
@@ -191,30 +223,32 @@ export default function FunctionCheckpoint({ currentUser }) {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="date-input">{t('cp_date_req')}</label>
-              <input
-                id="date-input"
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="shift-select">{t('cp_shift_req')}</label>
-              <select 
-                id="shift-select" 
-                name="shift" 
-                value={formData.shift} 
-                onChange={handleInputChange} 
-                required
-              >
-                <option value="" disabled>{t('cp_shift_placeholder')}</option>
-                <option value="Day">{t('day')}</option>
-                <option value="Night">{t('night')}</option>
-              </select>
-            </div>
+               <label htmlFor="date-input">{t('cp_date_req')} ({currentUser?.language === 'zh' || language === 'zh' ? '自动' : 'Auto'})</label>
+               <input
+                 id="date-input"
+                 type="date"
+                 name="date"
+                 value={formData.date}
+                 onChange={handleInputChange}
+                 required
+                 disabled
+               />
+             </div>
+             <div className="form-group">
+               <label htmlFor="shift-select">{t('cp_shift_req')} ({currentUser?.language === 'zh' || language === 'zh' ? '自动' : 'Auto'})</label>
+               <select 
+                 id="shift-select" 
+                 name="shift" 
+                 value={formData.shift} 
+                 onChange={handleInputChange} 
+                 required
+                 disabled
+               >
+                 <option value="" disabled>{t('cp_shift_placeholder')}</option>
+                 <option value="Day">{t('day')}</option>
+                 <option value="Night">{t('night')}</option>
+               </select>
+             </div>
             <div className="form-group">
               <label htmlFor="resp-person-input">{t('cp_resp_person')}</label>
               <input

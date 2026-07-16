@@ -420,6 +420,14 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Component Refactors**: Integrated the `<ConfirmModal />` into `Home.js` (for revoking active sessions), `Reports.js` (for Super Admins deleting historical Checkpoints/Checklists), and `UserManagement.js` (for deleting users).
 *   **Activity Logs Stats Fix**: Fixed a bug where the "Daily Checklists" and "Daily Checksheets" summary cards on the Activity Logs page were erroneously displaying high numbers after a Super Admin deleted a record from the database. The issue was caused by the UI counting immutable `SUBMIT` logs instead of actual database records. Fixed by syncing `ActivityLog.js` to securely query the true `apiService.getDashboardStats()` endpoint just like the Home and Reports pages.
 
+### Resolved: Day/Night Shift Separation & Automatic Time Reference (July 2026)
+*   **Automatic Shift & Work Date Pre-filling**: Added a utility `getShiftAndDate()` in both **[Technician Checklist](file:///d:/AOi_check_sheet/client/src/components/TechnicianChecklist.js)** and **[Daily Function Check](file:///d:/AOi_check_sheet/client/src/components/FunctionCheckpoint.js)** forms to dynamically calculate the correct shift and business work date based on the system local time:
+    *   *Day Shift*: `09:00 AM` to `08:59 PM` local time (calendar date `D`).
+    *   *Night Shift*: `09:00 PM` to `08:59 AM` of the next day (maps to calendar date `D` if submitted before midnight, and `D - 1` if submitted after midnight).
+*   **UI Input Locking**: Disabled the date and shift input controls on the UI to lock them to the auto-calculated values, preventing manual entry mistakes by operators.
+*   **Day and Night Shifts Separation in Reports Table**: Refactored the `rows` useMemo in **[Reports.js](file:///d:/AOi_check_sheet/client/src/components/Reports.js)** to yield separate Day and Night shift entries for every line and date. Missing shifts are now correctly exposed as `"Not Filled"` dummy rows rather than being hidden.
+*   **Dynamic Shift Selector in Summary Cards**: Integrated a Shift dropdown in both Checklist and Checkpoint status summary cards on the Reports page, defaulting to the current shift and filtering all metrics and line breakdowns dynamically.
+
 ----
 
 ## 🚀 Getting Started & Configuration
