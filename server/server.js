@@ -36,6 +36,11 @@ const loginLimiter = rateLimit({
   skip: () => process.env.NODE_ENV !== 'production', // disabled in dev
 });
 
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date() });
+});
+
 // Apply rate limiter to login route
 app.use('/api/auth/login', loginLimiter);
 
@@ -45,11 +50,6 @@ app.use('/api', authenticateToken, functionCheckpointRoutes);
 app.use('/api', authenticateToken, technicianChecklistRoutes);
 app.use('/api', authenticateToken, lineStatusRoutes);
 app.use('/api', activityLogRoutes);
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date() });
-});
 
 async function startServer() {
   await initializeDatabase();
