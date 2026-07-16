@@ -443,6 +443,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 * **Exclusion of Uninstalled Lines**: Reports logic omits generating missing shifts dummy rows for inactive, uninstalled lines.
 * **Dynamic Line Stop Hiding**: During engineer review of line stop checksheets, detailed input fields are collapsed by default. A status toggle allows promoting the checksheet to `"Production"`, which dynamically expands the edit panels.
 * **Technician Submission Modals**: Standard form submissions now trigger an interactive confirmation modal, and successful database writes display a success modal requiring user close acknowledgement before resetting the form.
+* **Modification Diffs Styling & Indicators**:
+  * Renamed barcode labels from `Barcode Read A/B Layer` to `Barcode Read A/B Laser` in the engineer review forms.
+  * Added visual pencil indicators (`✏️ Edited` badges) on individual table cells (Line Status, Program & Tooling, Barcode Verifications, Workorders & Traceability, Function Checks, etc.) when the engineer has modified any technician-submitted values.
+  * Overhauled the Change History drawer card design, mapping database raw keys to localized human-readable labels (e.g. `pre_aoi_program_full_name` -> `Pre-AOI Program Name`) and displaying modifications as stylized clean gray items with colored strike-throughs and status tags.
 
 ----
 

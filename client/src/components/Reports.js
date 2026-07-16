@@ -860,6 +860,62 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
   const [expandedRowId, setExpandedRowId] = React.useState(null);
   const totalColSpan = isSuperAdmin ? 6 : 5;
 
+  const getFieldLabel = (field) => {
+    const zhLabels = {
+      pre_aoi_program_full_name: 'Pre-AOI 完整程序名',
+      stencil_serial_no_b_side: '钢网编号 B面',
+      stencil_serial_no_a_side: '钢网编号 A面',
+      barcode_read_a_layer: 'A面 Laser 条码读取',
+      barcode_read_a_spi: 'A面 SPI 条码读取',
+      barcode_read_a_pre_aoi: 'A面 Pre-AOI 条码读取',
+      barcode_read_b_layer: 'B面 Laser 条码读取',
+      barcode_read_b_spi: 'B面 SPI 条码读取',
+      barcode_read_b_pre_aoi: 'B面 Pre-AOI 条码读取',
+      workorder_info_pre_aoi: 'Pre-AOI 工单信息',
+      workorder_info_post_aoi: 'Post-AOI 工单信息',
+      aoi_scan_tools_workorder_traceability: '扫码工具工单追溯',
+      status: '线别状态',
+      responsible_person: '责任人',
+      time: '检测时间',
+      remarks: '技术员备注',
+      designated_engineer_id: '指定工程师'
+    };
+
+    const enLabels = {
+      pre_aoi_program_full_name: 'Pre-AOI Program Name',
+      stencil_serial_no_b_side: 'Stencil No. B-Side',
+      stencil_serial_no_a_side: 'Stencil No. A-Side',
+      barcode_read_a_layer: 'A-Side Laser Barcode',
+      barcode_read_a_spi: 'A-Side SPI Barcode',
+      barcode_read_a_pre_aoi: 'A-Side Pre-AOI Barcode',
+      barcode_read_b_layer: 'B-Side Laser Barcode',
+      barcode_read_b_spi: 'B-Side SPI Barcode',
+      barcode_read_b_pre_aoi: 'B-Side Pre-AOI Barcode',
+      workorder_info_pre_aoi: 'Pre-AOI Workorder',
+      workorder_info_post_aoi: 'Post-AOI Workorder',
+      aoi_scan_tools_workorder_traceability: 'Scan Tool Traceability',
+      status: 'Line Status',
+      responsible_person: 'Responsible Person',
+      time: 'Check Time',
+      remarks: 'Technician Remarks',
+      designated_engineer_id: 'Designated Engineer'
+    };
+
+    if (field.includes('_')) {
+      const parts = field.split('_');
+      return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    }
+
+    return language === 'zh' ? (zhLabels[field] || field) : (enLabels[field] || field);
+  };
+
+  const formatValue = (val) => {
+    if (val === '' || val === null || val === undefined) return '—';
+    if (val === 'Line Stop') return language === 'zh' ? '停线' : 'Line Stop';
+    if (val === 'Production') return language === 'zh' ? '生产' : 'Production';
+    return String(val);
+  };
+
   return <table className="report-table detailed-checkpoint-report" style={{ minWidth: '100%' }}>
     <thead>
       <tr>
@@ -873,6 +929,39 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
     </thead>
     <tbody>{rows.flatMap(row => {
       const isExpanded = expandedRowId === row.id;
+
+      const renderModifyIndicator = (fieldsList) => {
+        if (!row.engineer_modified_fields) return null;
+        try {
+          const mods = JSON.parse(row.engineer_modified_fields);
+          const isMod = mods.some(m => fieldsList.includes(m.field));
+          if (!isMod) return null;
+          return (
+            <span 
+              title={language === 'zh' ? '工程师修改过此项' : 'Modified by Engineer'} 
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                background: '#eff6ff', 
+                color: '#2563eb', 
+                border: '1px solid #bfdbfe', 
+                padding: '0.15rem 0.35rem', 
+                borderRadius: '6px', 
+                fontSize: '0.68rem', 
+                fontWeight: 700,
+                marginLeft: '0.4rem',
+                lineHeight: 1,
+                verticalAlign: 'middle',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              ✏️ {language === 'zh' ? '已修改' : 'Edited'}
+            </span>
+          );
+        } catch(e) {
+          return null;
+        }
+      };
       
       const totalChecks = checkpointColumns.length;
       const passedChecks = checkpointColumns.reduce((count, col) => count + (row[col.key] ? 1 : 0), 0);
@@ -931,6 +1020,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                 🟢 {language === 'zh' ? '已批准(生产)' : 'Approved (Prod)'}
               </span>;
             })()}
+            {renderModifyIndicator(['status'])}
           </td>
           <td>
             {row.status === 'Not Filled' ? '—' : (
@@ -965,8 +1055,14 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
           <td>
             {row.status === 'Not Filled' ? '—' : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', fontSize: '0.82rem' }}>
-                <span style={{ color: '#334155', fontWeight: 600 }}>{text(row.responsible_person)}</span>
-                <span style={{ color: '#64748b', fontSize: '0.78rem' }}>🕒 {text(row.time)}</span>
+                <span style={{ color: '#334155', fontWeight: 600 }}>
+                  {text(row.responsible_person)}
+                  {renderModifyIndicator(['responsible_person'])}
+                </span>
+                <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
+                  🕒 {text(row.time)}
+                  {renderModifyIndicator(['time'])}
+                </span>
               </div>
             )}
           </td>
@@ -984,6 +1080,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                   <span style={{ fontSize: '0.82rem', fontWeight: 700, color: passedChecks === totalChecks ? '#059669' : '#d97706' }}>
                     {passedChecks}/{totalChecks} {language === 'zh' ? '项通过' : 'Passed'}
                   </span>
+                  {renderModifyIndicator(checkpointColumns.map(c => c.key))}
                 </div>
               )
             )}
@@ -1043,8 +1140,11 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                       try {
                         const diffs = JSON.parse(row.engineer_modified_fields);
                         return diffs.map((diff, index) => (
-                          <div key={index} style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.88rem', color: '#991b1b' }}>
-                            <strong>{diff.field}:</strong> changed from <span style={{ textDecoration: 'line-through', color: '#64748b' }}>"{diff.from}"</span> to <strong style={{ color: '#15803d' }}>"{diff.to}"</strong>
+                          <div key={index} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.6rem 1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 2px 8px rgba(15,23,42,0.02)' }}>
+                            <span style={{ fontWeight: 700, color: '#0f172a' }}>{getFieldLabel(diff.field)}:</span>
+                            <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontStyle: 'italic' }}>{formatValue(diff.from)}</span>
+                            <span style={{ color: '#3b82f6', fontWeight: 900 }}>→</span>
+                            <strong style={{ color: '#16a34a', background: '#f0fdf4', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{formatValue(diff.to)}</strong>
                           </div>
                         ));
                       } catch(e) {
@@ -1099,6 +1199,62 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
   const [expandedRowId, setExpandedRowId] = React.useState(null);
   const totalColSpan = isSuperAdmin ? 7 : 6;
 
+  const getFieldLabel = (field) => {
+    const zhLabels = {
+      pre_aoi_program_full_name: 'Pre-AOI 完整程序名',
+      stencil_serial_no_b_side: '钢网编号 B面',
+      stencil_serial_no_a_side: '钢网编号 A面',
+      barcode_read_a_layer: 'A面 Laser 条码读取',
+      barcode_read_a_spi: 'A面 SPI 条码读取',
+      barcode_read_a_pre_aoi: 'A面 Pre-AOI 条码读取',
+      barcode_read_b_layer: 'B面 Laser 条码读取',
+      barcode_read_b_spi: 'B面 SPI 条码读取',
+      barcode_read_b_pre_aoi: 'B面 Pre-AOI 条码读取',
+      workorder_info_pre_aoi: 'Pre-AOI 工单信息',
+      workorder_info_post_aoi: 'Post-AOI 工单信息',
+      aoi_scan_tools_workorder_traceability: '扫码工具工单追溯',
+      status: '线别状态',
+      responsible_person: '责任人',
+      time: '检测时间',
+      remarks: '技术员备注',
+      designated_engineer_id: '指定工程师'
+    };
+
+    const enLabels = {
+      pre_aoi_program_full_name: 'Pre-AOI Program Name',
+      stencil_serial_no_b_side: 'Stencil No. B-Side',
+      stencil_serial_no_a_side: 'Stencil No. A-Side',
+      barcode_read_a_layer: 'A-Side Laser Barcode',
+      barcode_read_a_spi: 'A-Side SPI Barcode',
+      barcode_read_a_pre_aoi: 'A-Side Pre-AOI Barcode',
+      barcode_read_b_layer: 'B-Side Laser Barcode',
+      barcode_read_b_spi: 'B-Side SPI Barcode',
+      barcode_read_b_pre_aoi: 'B-Side Pre-AOI Barcode',
+      workorder_info_pre_aoi: 'Pre-AOI Workorder',
+      workorder_info_post_aoi: 'Post-AOI Workorder',
+      aoi_scan_tools_workorder_traceability: 'Scan Tool Traceability',
+      status: 'Line Status',
+      responsible_person: 'Responsible Person',
+      time: 'Check Time',
+      remarks: 'Technician Remarks',
+      designated_engineer_id: 'Designated Engineer'
+    };
+
+    if (field.includes('_')) {
+      const parts = field.split('_');
+      return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    }
+
+    return language === 'zh' ? (zhLabels[field] || field) : (enLabels[field] || field);
+  };
+
+  const formatValue = (val) => {
+    if (val === '' || val === null || val === undefined) return '—';
+    if (val === 'Line Stop') return language === 'zh' ? '停线' : 'Line Stop';
+    if (val === 'Production') return language === 'zh' ? '生产' : 'Production';
+    return String(val);
+  };
+
   const renderCheckBadge = (val, label) => {
     const isYes = val === 'Yes';
     return (
@@ -1125,6 +1281,39 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
         {rows.flatMap(row => {
           const isExpanded = expandedRowId === row.id;
           const isLineStop = row.status === 'Line Stop';
+
+          const renderModifyIndicator = (fieldsList) => {
+            if (!row.engineer_modified_fields) return null;
+            try {
+              const mods = JSON.parse(row.engineer_modified_fields);
+              const isMod = mods.some(m => fieldsList.includes(m.field));
+              if (!isMod) return null;
+              return (
+                <span 
+                  title={language === 'zh' ? '工程师修改过此项' : 'Modified by Engineer'} 
+                  style={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    background: '#eff6ff', 
+                    color: '#2563eb', 
+                    border: '1px solid #bfdbfe', 
+                    padding: '0.15rem 0.35rem', 
+                    borderRadius: '6px', 
+                    fontSize: '0.68rem', 
+                    fontWeight: 700,
+                    marginLeft: '0.4rem',
+                    lineHeight: 1,
+                    verticalAlign: 'middle',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  ✏️ {language === 'zh' ? '已修改' : 'Edited'}
+                </span>
+              );
+            } catch(e) {
+              return null;
+            }
+          };
 
           const mainRow = (
             <tr 
@@ -1180,6 +1369,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     🟢 {language === 'zh' ? '已批准(生产)' : 'Approved (Prod)'}
                   </span>;
                 })()}
+                {renderModifyIndicator(['status'])}
               </td>
               <td>
                 {row.status === 'Not Filled' ? '—' : (
@@ -1221,9 +1411,11 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
                       <span style={{ color: '#0f172a', fontWeight: 700 }} title={row.pre_aoi_program_full_name}>
                         💻 {row.pre_aoi_program_full_name ? (row.pre_aoi_program_full_name.length > 22 ? `${row.pre_aoi_program_full_name.substring(0, 20)}...` : row.pre_aoi_program_full_name) : '—'}
+                        {renderModifyIndicator(['pre_aoi_program_full_name'])}
                       </span>
                       <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
                         🔧 A-Stencil: <strong>{row.stencil_serial_no_a_side || '—'}</strong> | B-Stencil: <strong>{row.stencil_serial_no_b_side || '—'}</strong>
+                        {renderModifyIndicator(['stencil_serial_no_a_side', 'stencil_serial_no_b_side'])}
                       </span>
                     </div>
                   )
@@ -1242,12 +1434,14 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                         {renderCheckBadge(row.barcode_read_a_layer, 'LASER')}
                         {renderCheckBadge(row.barcode_read_a_spi, 'SPI')}
                         {renderCheckBadge(row.barcode_read_a_pre_aoi, 'PRE-AOI')}
+                        {renderModifyIndicator(['barcode_read_a_layer', 'barcode_read_a_spi', 'barcode_read_a_pre_aoi'])}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                         <span style={{ color: '#64748b', fontWeight: 700, minWidth: '42px' }}>B-Side:</span>
                         {renderCheckBadge(row.barcode_read_b_layer, 'LASER')}
                         {renderCheckBadge(row.barcode_read_b_spi, 'SPI')}
                         {renderCheckBadge(row.barcode_read_b_pre_aoi, 'PRE-AOI')}
+                        {renderModifyIndicator(['barcode_read_b_layer', 'barcode_read_b_spi', 'barcode_read_b_pre_aoi'])}
                       </div>
                     </div>
                   )
@@ -1263,9 +1457,11 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
                       <span style={{ color: '#334155' }}>
                         Pre-WO: <strong>{row.workorder_info_pre_aoi || '—'}</strong> | Post-WO: <strong>{row.workorder_info_post_aoi || '—'}</strong>
+                        {renderModifyIndicator(['workorder_info_pre_aoi', 'workorder_info_post_aoi'])}
                       </span>
                       <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
                         Traceability: <strong>{row.aoi_scan_tools_workorder_traceability || '—'}</strong>
+                        {renderModifyIndicator(['aoi_scan_tools_workorder_traceability'])}
                       </span>
                     </div>
                   )
@@ -1334,8 +1530,11 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                           try {
                             const diffs = JSON.parse(row.engineer_modified_fields);
                             return diffs.map((diff, index) => (
-                              <div key={index} style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.88rem', color: '#991b1b' }}>
-                                <strong>{diff.field}:</strong> changed from <span style={{ textDecoration: 'line-through', color: '#64748b' }}>"{diff.from}"</span> to <strong style={{ color: '#15803d' }}>"{diff.to}"</strong>
+                              <div key={index} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.6rem 1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 2px 8px rgba(15,23,42,0.02)' }}>
+                                <span style={{ fontWeight: 700, color: '#0f172a' }}>{getFieldLabel(diff.field)}:</span>
+                                <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontStyle: 'italic' }}>{formatValue(diff.from)}</span>
+                                <span style={{ color: '#3b82f6', fontWeight: 900 }}>→</span>
+                                <strong style={{ color: '#16a34a', background: '#f0fdf4', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{formatValue(diff.to)}</strong>
                               </div>
                             ));
                           } catch(e) {

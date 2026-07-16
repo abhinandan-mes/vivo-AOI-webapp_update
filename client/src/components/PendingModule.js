@@ -434,7 +434,7 @@ export default function PendingModule({ currentUser }) {
                       />
                     </div>
                     <div className="form-group-third">
-                      <label>Barcode Read A Layer</label>
+                      <label>Barcode Read A Laser</label>
                       <select name="barcode_read_a_layer" value={reviewData.barcode_read_a_layer || ''} onChange={handleInputChange}>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -455,7 +455,7 @@ export default function PendingModule({ currentUser }) {
                       </select>
                     </div>
                     <div className="form-group-third">
-                      <label>Barcode Read B Layer</label>
+                      <label>Barcode Read B Laser</label>
                       <select name="barcode_read_b_layer" value={reviewData.barcode_read_b_layer || ''} onChange={handleInputChange}>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
