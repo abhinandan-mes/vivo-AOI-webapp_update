@@ -1004,29 +1004,23 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                     </span>
                   )}
                   {row.status !== 'Not Filled' && (
-                    <>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
                       {row.approval_status === 'ENG_PENDING' && (
-                        <span style={{ color: '#d97706', fontWeight: 500 }}>
-                          ⌛ <strong>{language === 'zh' ? '审批中' : 'Pending'}:</strong> {getEngineerDisplay(row.designated_engineer_id)}
+                        <span className="status-pill pending" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
+                          ⌛ {language === 'zh' ? '审批中' : 'Pending'}
                         </span>
                       )}
                       {row.approval_status === 'APPROVED' && (
-                        <span style={{ color: '#166534', fontWeight: 500 }}>
-                          ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
-                          <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
-                            ({formatDateTime(row.updated_at)})
-                          </span>
+                        <span className="status-pill approved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
+                          ✓ {language === 'zh' ? '审批' : 'App'}
                         </span>
                       )}
                       {row.approval_status === 'DISAPPROVED' && (
-                        <span style={{ color: '#b91c1c', fontWeight: 500 }}>
-                          ✗ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
-                          <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
-                            ({formatDateTime(row.updated_at)})
-                          </span>
+                        <span className="status-pill disapproved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
+                          ✗ {language === 'zh' ? '驳回' : 'Rej'}
                         </span>
                       )}
-                    </>
+                    </div>
                   )}
                 </div>
               </td>
@@ -1075,18 +1069,18 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
 
           const detailRow = (
             <tr key={`${row.id}-details`} className="expanded-row-details">
-              <td colSpan={totalColSpan} style={{ background: '#f8fafc', padding: '1.5rem', borderBottom: '1px solid #e2e8f0' }}>
-                <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', textAlign: 'left' }}>
+              <td colSpan={totalColSpan} style={{ background: '#f8fafc', padding: '2rem', borderBottom: '1px solid #e2e8f0', boxShadow: 'inset 0 4px 6px -4px rgba(0,0,0,0.05)' }}>
+                <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', textAlign: 'left', background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
                   <div>
-                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                    <strong style={{ display: 'block', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
                       {language === 'zh' ? '指定工程师' : 'Designated Engineer'}
                     </strong>
-                    <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
+                    <span style={{ fontSize: '1rem', fontWeight: 600, color: '#0f172a' }}>
                       {getEngineerDisplay(row.designated_engineer_id)}
                     </span>
                   </div>
                   <div>
-                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                    <strong style={{ display: 'block', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
                       {language === 'zh' ? '技术员备注' : 'Technician Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
@@ -1094,7 +1088,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                     </span>
                   </div>
                   <div>
-                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                    <strong style={{ display: 'block', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
                       {language === 'zh' ? '工程师审核备注' : 'Engineer Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
@@ -1103,12 +1097,12 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                   </div>
                   
                   {/* Show the 24 Changeover Check Items */}
-                  <div style={{ gridColumn: 'span 4', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
-                    <strong style={{ display: 'block', color: '#334155', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? '📋 换线检查项目记录' : '📋 Changeover Check Items Details'}
+                  <div style={{ gridColumn: 'span 3', borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
+                    <strong style={{ display: 'block', color: '#0f172a', fontSize: '0.9rem', marginBottom: '1.25rem', fontWeight: 700 }}>
+                      {language === 'zh' ? '📋 换线检查项目明细' : '📋 Changeover Check Items Details'}
                     </strong>
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
                       {[
                         [language === 'zh' ? '1. SPI钢网后缀名匹配' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
                         [language === 'zh' ? '2. SPI程序连板流水号匹配' : '2. SPI Subpanel Match', 'spi_program_subpanel_serial_match'],
@@ -1136,9 +1130,9 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                         [language === 'zh' ? '23. 设备导轨宽度' : '23. Others Width Adjust', 'others_adjust_widths'],
                         [language === 'zh' ? '24. PCB扫码标准' : '24. Others PCB Barcode', 'others_add_test_standard_pcb_barcode']
                       ].map(([label, key]) => (
-                        <div key={key} style={{ display: 'flex', justifyContent: 'space-between', background: '#fff', padding: '0.4rem 0.6rem', borderRadius: '6px', border: '1px solid #f1f5f9', fontSize: '0.85rem' }}>
-                          <span style={{ color: '#64748b' }}>{label}</span>
-                          <span style={{ fontWeight: 600, color: ['✔️', 'Yes', 'True', '√'].includes(row[key]) ? '#16a34a' : ['❌', 'No', '\\'].includes(row[key]) ? '#dc2626' : '#475569' }}>
+                        <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #f1f5f9', fontSize: '0.85rem' }}>
+                          <span style={{ color: '#475569', fontWeight: 500 }}>{label}</span>
+                          <span style={{ fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '6px', background: ['✔️', 'Yes', 'True', '√'].includes(row[key]) ? '#d1fae5' : ['❌', 'No', '\\'].includes(row[key]) ? '#fee2e2' : 'transparent', color: ['✔️', 'Yes', 'True', '√'].includes(row[key]) ? '#047857' : ['❌', 'No', '\\'].includes(row[key]) ? '#b91c1c' : '#475569' }}>
                             {row[key] || '—'}
                           </span>
                         </div>
@@ -1147,7 +1141,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                   </div>
 
                   {row.engineer_modified_fields && (
-                    <div style={{ gridColumn: 'span 4', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
+                    <div style={{ gridColumn: 'span 3', borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
                       <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>
                         {language === 'zh' ? '⚠️ 工程师修改内容记录' : '⚠️ Engineer Modification History'}
                       </strong>
