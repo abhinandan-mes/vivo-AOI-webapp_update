@@ -199,35 +199,9 @@ export default function Reports({ currentUser }) {
     [t('rep_th_status'), 'status'],
     [language === 'zh' ? '机种名称' : 'Model Name', 'model_name'],
     [language === 'zh' ? '机种代码' : 'Model Code', 'model_code'],
+    [t('rep_designated_engineer'), 'designated_engineer_id'],
     [t('rep_th_submitted_at'), 'created_at'],
-    [t('rep_th_submitted_by'), 'submitted_by'],
-    // We can list all 24 items, but for brevity let's add the basic ones and let the export output everything or we define the full list
-    [language === 'zh' ? '1. SPI钢网后缀名匹配' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
-    [language === 'zh' ? '2. SPI程序连板流水号匹配' : '2. SPI Subpanel Match', 'spi_program_subpanel_serial_match'],
-    [language === 'zh' ? '3. SPI复测180度极性' : '3. SPI Recheck Polarity', 'spi_recheck_pcab_polarity'],
-    [language === 'zh' ? '4. SPI参数设置确认' : '4. SPI Parameter Check', 'spi_confirm_parameter_settings'],
-    [language === 'zh' ? '5. SPI扫码功能开启' : '5. SPI Read Barcode', 'spi_read_barcode_on'],
-    [language === 'zh' ? '6. 炉前ECO确认' : '6. Pre-AOI ECO', 'pre_aoi_eco_checklists'],
-    [language === 'zh' ? '7. 炉前程序机种确认' : '7. Pre-AOI Program Model', 'pre_aoi_program_model_modify'],
-    [language === 'zh' ? '8. 炉前新物料测试' : '8. Pre-AOI New Material', 'pre_aoi_vi_program_new_materia'],
-    [language === 'zh' ? '9. 炉前连流报警' : '9. Pre-AOI Alarm Limit', 'pre_aoi_limit_defective_alarm'],
-    [language === 'zh' ? '10. 炉前裸板测试' : '10. Pre-AOI Bare Board', 'pre_aoi_test_program_bare_pcba'],
-    [language === 'zh' ? '11. 炉前BOT连板流水号' : '11. Pre-AOI Bot Subpanel', 'pre_aoi_bot_program_serial_number'],
-    [language === 'zh' ? '12. 炉前扫码功能开启' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
-    [language === 'zh' ? '13a. 炉前物料确认' : '13a. Pre-AOI Mount Confirm', 'pre_aoi_confirm_materials_mounted'],
-    [language === 'zh' ? '13b. 炉前删除所有框' : '13b. Pre-AOI Delete Zones', 'pre_aoi_delete_all_zones'],
-    [language === 'zh' ? '14. 炉后设备型号' : '14. Post-AOI Equipment', 'post_aoi_equipment_model'],
-    [language === 'zh' ? '15. 炉后ECO确认' : '15. Post-AOI ECO', 'post_aoi_eco_checklists'],
-    [language === 'zh' ? '16. 炉后程序机种确认' : '16. Post-AOI Program Model', 'post_aoi_program_model_modify'],
-    [language === 'zh' ? '17. 炉后复测芯片/标准件' : '17. Post-AOI Recheck Chips', 'post_aoi_recheck_chips_standard_models'],
-    [language === 'zh' ? '18. 炉后扫描整板图片' : '18. Post-AOI Scan Board', 'post_aoi_scan_board_picture'],
-    [language === 'zh' ? '19. 炉后连流报警' : '19. Post-AOI Alarm Limit', 'post_aoi_limit_defective_alarm'],
-    [language === 'zh' ? '20. 炉后屏蔽罩极性' : '20. Post-AOI Shield Polarity', 'post_aoi_confirm_polarity_shield'],
-    [language === 'zh' ? '21. 炉后BOT连板流水号' : '21. Post-AOI Bot Subpanel', 'post_aoi_bot_program_serial_number'],
-    [language === 'zh' ? '22. 炉后标准件次数' : '22. Post-AOI Standard Times', 'post_aoi_registered_standard_models_times'],
-    [language === 'zh' ? '23. 设备导轨宽度' : '23. Others Width Adjust', 'others_adjust_widths'],
-    [language === 'zh' ? '24. PCB扫码标准' : '24. Others PCB Barcode', 'others_add_test_standard_pcb_barcode'],
-    [t('rep_designated_engineer'), 'designated_engineer_id']
+    [t('rep_th_submitted_by'), 'submitted_by']
   ], [language, t]);
 
   const reportTitle = reportType => 

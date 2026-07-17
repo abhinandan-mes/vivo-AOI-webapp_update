@@ -153,15 +153,17 @@ export default function Home({ currentUser }) {
 
   // Submission statistics computations
   const stats = dashboardStats;
-  const checklistTotal = stats.checklist.total;
-  const checkpointTotal = stats.checkpoint.total;
-  const combinedTotal = checklistTotal + checkpointTotal;
+  const checklistTotal = stats.checklist?.total || 0;
+  const checkpointTotal = stats.checkpoint?.total || 0;
+  const changeoverTotal = stats.changeover?.total || 0;
+  const combinedTotal = checklistTotal + checkpointTotal + changeoverTotal;
 
   // Extract unique active groups from both submissions
   const activeGroups = useMemo(() => {
     const groupsSet = new Set([
-      ...Object.keys(stats.checklist.groups),
-      ...Object.keys(stats.checkpoint.groups)
+      ...Object.keys(stats.checklist?.groups || {}),
+      ...Object.keys(stats.checkpoint?.groups || {}),
+      ...Object.keys(stats.changeover?.groups || {})
     ]);
     groupsSet.delete('Unknown');
     return Array.from(groupsSet);
@@ -173,15 +175,15 @@ export default function Home({ currentUser }) {
   const groupBreakdownStr = useMemo(() => {
     const combinedGroups = {};
     activeGroups.forEach(g => {
-      combinedGroups[g] = (stats.checklist.groups[g] || 0) + (stats.checkpoint.groups[g] || 0);
+      combinedGroups[g] = (stats.checklist?.groups?.[g] || 0) + (stats.checkpoint?.groups?.[g] || 0) + (stats.changeover?.groups?.[g] || 0);
     });
     const entries = Object.entries(combinedGroups);
     if (entries.length === 0) return language === 'zh' ? '无' : 'None';
     return entries.map(([g, count]) => `${g}: ${count}`).join(' | ');
   }, [activeGroups, stats, language]);
 
-  const totalDay = stats.checklist.shifts.day + stats.checkpoint.shifts.day;
-  const totalNight = stats.checklist.shifts.night + stats.checkpoint.shifts.night;
+  const totalDay = (stats.checklist?.shifts?.day || 0) + (stats.checkpoint?.shifts?.day || 0) + (stats.changeover?.shifts?.day || 0);
+  const totalNight = (stats.checklist?.shifts?.night || 0) + (stats.checkpoint?.shifts?.night || 0) + (stats.changeover?.shifts?.night || 0);
 
   if (loading && sessions.length === 0 && usersSummary.length === 0) {
     return <div className="home-loading">{t('home_loading')}</div>;
@@ -247,6 +249,18 @@ export default function Home({ currentUser }) {
             <span className="unified-stat-label">{language === 'zh' ? '今日检查点' : 'Checksheets'}</span>
             <span className="unified-stat-value">{checkpointTotal}</span>
             <span className="unified-stat-sub">{language === 'zh' ? `白班: ${stats.checkpoint.shifts.day} | 夜班: ${stats.checkpoint.shifts.night}` : `Day: ${stats.checkpoint.shifts.day} | Night: ${stats.checkpoint.shifts.night}`}</span>
+          </div>
+        </div>
+
+        {/* Card X (Teal): Changeovers */}
+        <div className="unified-stat-card accent-teal">
+          <div className="unified-icon-block icon-teal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"/></svg>
+          </div>
+          <div className="unified-stat-content">
+            <span className="unified-stat-label">{language === 'zh' ? '今日换线记录' : 'Changeovers'}</span>
+            <span className="unified-stat-value">{changeoverTotal}</span>
+            <span className="unified-stat-sub">{language === 'zh' ? `白班: ${stats.changeover?.shifts?.day || 0} | 夜班: ${stats.changeover?.shifts?.night || 0}` : `Day: ${stats.changeover?.shifts?.day || 0} | Night: ${stats.changeover?.shifts?.night || 0}`}</span>
           </div>
         </div>
 

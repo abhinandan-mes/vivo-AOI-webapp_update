@@ -508,9 +508,20 @@ router.get('/auth/dashboard-stats', authenticateToken, async (req, res) => {
       where: { date: targetDate }
     });
 
+    // 3. Fetch changeovers for targetDate
+    const changeovers = await prisma.aoiChangeoverChecksheet.findMany({
+      where: { date: targetDate }
+    });
+
+    // 2. Fetch checklists for targetDate
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+      where: { date: targetDate }
+    });
+
     // Calculate statistics
     const checkpointCount = checkpoints.length;
     const checklistCount = checklists.length;
+    const changeoverCount = changeovers.length;
 
     // Shift breakdown
     const checkpointDayShift = checkpoints.filter(c => c.shift === 'Day').length;
@@ -518,6 +529,9 @@ router.get('/auth/dashboard-stats', authenticateToken, async (req, res) => {
 
     const checklistDayShift = checklists.filter(c => c.shift === 'Day').length;
     const checklistNightShift = checklists.filter(c => c.shift === 'Night').length;
+
+    const changeoverDayShift = changeovers.filter(c => c.shift === 'Day').length;
+    const changeoverNightShift = changeovers.filter(c => c.shift === 'Night').length;
 
     // Group breakdown counts
     const checkpointGroups = {};
@@ -532,6 +546,12 @@ router.get('/auth/dashboard-stats', authenticateToken, async (req, res) => {
       checklistGroups[g] = (checklistGroups[g] || 0) + 1;
     });
 
+    const changeoverGroups = {};
+    changeovers.forEach(c => {
+      const g = c.group_name || 'Unknown';
+      changeoverGroups[g] = (changeoverGroups[g] || 0) + 1;
+    });
+
     res.json({
       success: true,
       date: targetDateStr,
@@ -544,6 +564,11 @@ router.get('/auth/dashboard-stats', authenticateToken, async (req, res) => {
         total: checklistCount,
         shifts: { day: checklistDayShift, night: checklistNightShift },
         groups: checklistGroups
+      },
+      changeover: {
+        total: changeoverCount,
+        shifts: { day: changeoverDayShift, night: changeoverNightShift },
+        groups: changeoverGroups
       }
     });
   } catch (error) {

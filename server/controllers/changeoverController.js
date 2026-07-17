@@ -4,14 +4,7 @@ const { logActivity } = require('../utils/activityLogger');
 const changeoverController = {
   createChecksheet: async (req, res) => {
     try {
-      // Check for duplicate submission (date, line, shift)
-      const existing = await changeoverChecksheetModel.checkDuplicate(req.body.date, req.body.line, req.body.shift);
-      if (existing) {
-        return res.status(400).json({
-          success: false,
-          error: `Duplicate Submission: Changeover Checksheet for Line ${req.body.line} during ${req.body.shift} shift has already been submitted for this date.`
-        });
-      }
+      // Note: Duplicate checks are disabled per user request, allowing multiple submissions for the same line/shift/day
 
       // Backup technician original data for engineer modifications diff tracking
       req.body.original_technician_data = JSON.stringify(req.body);
