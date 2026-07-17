@@ -30,10 +30,6 @@ export default function ChecksheetHub({ user }) {
   return (
     <div className="checksheet-hub-container">
       <div className="checksheet-tabs-wrapper">
-        <h2 className="checksheet-header-title">
-          {language === 'zh' ? '提交表单' : 'Submit Forms'}
-        </h2>
-        
         <div className="checksheet-tabs">
           <button 
             className={`checksheet-tab-btn ${activeTab === 'checklist' ? 'active' : ''}`}

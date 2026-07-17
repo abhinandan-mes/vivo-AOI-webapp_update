@@ -7,20 +7,18 @@
 }
 
 .checksheet-tabs-wrapper {
-  background: #ffffff;
-  padding: 1.5rem 2rem;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  margin-bottom: 2rem;
-  border: 1px solid #f1f5f9;
+  background: transparent;
+  padding: 0 0 1.5rem 0;
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .checksheet-header-title {
-  font-size: 1.5rem;
-  color: #1e293b;
-  font-weight: 700;
-  margin-bottom: 1.25rem;
-  margin-top: 0;
+  display: none;
 }
 
 .checksheet-tabs {

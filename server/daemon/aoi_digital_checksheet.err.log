@@ -1,0 +1,2 @@
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env

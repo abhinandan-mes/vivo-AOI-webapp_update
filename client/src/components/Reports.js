@@ -198,6 +198,7 @@ export default function Reports({ currentUser }) {
     [t('shift'), 'shift'],
     [t('rep_th_status'), 'status'],
     [language === 'zh' ? '机种名称' : 'Model Name', 'model_name'],
+    [language === 'zh' ? '机种代码' : 'Model Code', 'model_code'],
     [t('rep_th_submitted_at'), 'created_at'],
     [t('rep_th_submitted_by'), 'submitted_by'],
     // We can list all 24 items, but for brevity let's add the basic ones and let the export output everything or we define the full list
@@ -1050,7 +1051,8 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                   )}
                 </div>
               </td>
-              <td>{row.model_name || '—'}</td>
+              <td>{row.model_name || '-'}</td>
+              <td>{row.model_code || '-'}</td>
               <td>{formatDateTime(row.created_at)}</td>
               <td>{row.submitted_by || '—'}</td>
 

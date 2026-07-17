@@ -239,7 +239,7 @@ export default function PendingModule({ currentUser }) {
     }
   ];
 
-  const resultOptions = ['√', '/', '\\', 'N/A'];
+  const resultOptions = ['✔️', '❌', 'N/A'];
 
   return (
     <div className="pending-container">
@@ -405,6 +405,7 @@ export default function PendingModule({ currentUser }) {
                       <th>{t('line')}</th>
                       <th>{t('shift')}</th>
                       <th>{language === 'zh' ? '机种名称' : 'Model Name'}</th>
+                      <th>{language === 'zh' ? '机种代码' : 'Model Code'}</th>
                       <th>{language === 'zh' ? '提交人员' : 'Submitted By'}</th>
                       <th>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</th>
                       <th>{language === 'zh' ? '流程状态' : 'Approval Status'}</th>
@@ -418,6 +419,7 @@ export default function PendingModule({ currentUser }) {
                         <td><span className="line-tag">{item.line}</span></td>
                         <td>{item.shift}</td>
                         <td>{item.model_name}</td>
+                        <td>{item.model_code}</td>
                         <td>{item.submitted_by}</td>
                         <td>{getEngineerDisplay(item.designated_engineer_id)}</td>
                         <td>
@@ -692,9 +694,13 @@ export default function PendingModule({ currentUser }) {
                   </div>
                 ) : selectedItem?.type === 'changeover' ? (
                   <div className="changeover-editor">
-                    <div className="form-group-full">
+                    <div className="form-group-half">
                       <label>{language === 'zh' ? '机种名称' : 'Model Name'}</label>
                       <input type="text" name="model_name" value={reviewData.model_name || ''} onChange={handleInputChange} />
+                    </div>
+                    <div className="form-group-half">
+                      <label>{language === 'zh' ? '机种代码' : 'Model Code'}</label>
+                      <input type="number" name="model_code" value={reviewData.model_code || ''} onChange={handleInputChange} />
                     </div>
                     {changeoverGroups.map((group, gIndex) => (
                       <div key={gIndex} style={{ marginTop: '1.5rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem' }}>

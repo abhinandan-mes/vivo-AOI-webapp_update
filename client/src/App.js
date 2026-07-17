@@ -286,14 +286,6 @@ function App() {
             >
               {t('nav_home')}
             </NavLink>
-            {user.role !== 'inspector' && (
-              <NavLink 
-                to="/checksheets" 
-                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-              >
-                {language === 'zh' ? '提交表单' : 'Checksheets'}
-              </NavLink>
-            )}
             {user.role !== 'inspector' && pendingCount > 0 && (
               <NavLink
                 to="/pending"
@@ -313,6 +305,13 @@ function App() {
                 </span>
               </NavLink>
             )}
+            {user.role !== 'inspector' && (
+              <NavLink 
+                to="/checksheets" 
+                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+              >
+                {language === 'zh' ? '提交表单' : 'Checksheets'}
+              </NavLink>
             )}
             <NavLink
               to="/reports"
