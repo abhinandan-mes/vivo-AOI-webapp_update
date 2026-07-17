@@ -204,3 +204,25 @@ SyntaxError: Identifier 'checklists' has already been declared
     at Module._compile (node:internal/modules/cjs/loader:1944:14)
 
 Node.js v26.4.0
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.3 -> 7.8.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+ValidationError: An invalid 'request.ip' (10.172.130.189:12495) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}

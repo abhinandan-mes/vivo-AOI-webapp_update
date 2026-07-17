@@ -20,3 +20,23 @@ No pending migrations to apply.
 [AUTH] Login successful: User "95004181" (Role: technician)
 [AUTH] Login attempt received for username: "95002872"
 [AUTH] Login successful: User "95002872" (Role: engineer)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+11 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95004154"
+[AUTH] Login successful: User "95004154" (Role: technician)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)

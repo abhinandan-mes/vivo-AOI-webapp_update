@@ -135,22 +135,95 @@ const changeoverController = {
         return res.status(404).json({ success: false, error: 'Checksheet not found' });
       }
 
-      const updated = await changeoverChecksheetModel.update(targetId, req.body);
+      const { role, username } = req.user;
+      const { action, engineer_remarks, ...fields } = req.body;
 
-      // Log the update activity
-      let actionType = 'CHANGEOVER_UPDATE';
-      if (req.body.approval_status === 'APPROVED' || req.body.approval_status === 'DISAPPROVED') {
-        actionType = `CHANGEOVER_${req.body.approval_status}`;
+      if (role === 'engineer') {
+        if (action !== 'approve' && action !== 'disapprove') {
+          return res.status(400).json({ success: false, error: 'Invalid action. Must be approve or disapprove.' });
+        }
+
+        if (action === 'disapprove' && !engineer_remarks?.trim()) {
+          return res.status(400).json({ success: false, error: 'Remarks are mandatory for disapproval.' });
+        }
+
+        let original = {};
+        try {
+          original = JSON.parse(existing.original_technician_data || '{}');
+        } catch (e) {
+          original = existing;
+        }
+
+        const modified = [];
+        const changeoverKeys = [
+          'line', 'group_name', 'date', 'shift', 'model_name', 'model_code', 'changeover_type',
+          'spi_steel_stencil_suffix_match', 'spi_program_subpanel_serial_match', 'spi_recheck_pcab_polarity', 'spi_confirm_parameter_settings', 'spi_read_barcode_on',
+          'pre_aoi_eco_checklists', 'pre_aoi_program_model_modify', 'pre_aoi_vi_program_new_materia', 'pre_aoi_limit_defective_alarm', 'pre_aoi_test_program_bare_pcba', 'pre_aoi_bot_program_serial_number', 'pre_aoi_read_barcode_on', 'pre_aoi_confirm_materials_mounted', 'pre_aoi_delete_all_zones',
+          'post_aoi_equipment_model', 'post_aoi_eco_checklists', 'post_aoi_program_model_modify', 'post_aoi_recheck_chips_standard_models', 'post_aoi_scan_board_picture', 'post_aoi_limit_defective_alarm', 'post_aoi_confirm_polarity_shield', 'post_aoi_bot_program_serial_number', 'post_aoi_registered_standard_models_times',
+          'others_adjust_widths', 'others_add_test_standard_pcb_barcode',
+          'status', 'remarks'
+        ];
+
+        const getDisplayVal = val => {
+          if (val === true) return 'True';
+          if (val === false) return 'False';
+          return val !== null && val !== undefined ? String(val) : '—';
+        };
+
+        changeoverKeys.forEach(key => {
+          if (fields[key] !== undefined && fields[key] !== original[key]) {
+            modified.push({
+              field: key,
+              from: getDisplayVal(original[key]),
+              to: getDisplayVal(fields[key])
+            });
+          }
+        });
+
+        const updatePayload = {
+          ...fields,
+          approval_status: action === 'approve' ? 'APPROVED' : 'DISAPPROVED',
+          engineer_remarks: engineer_remarks || null,
+          engineer_modified_fields: modified.length > 0 ? JSON.stringify(modified) : null
+        };
+
+        const updated = await changeoverChecksheetModel.update(targetId, updatePayload);
+
+        await logActivity(
+          action === 'approve' ? 'CHANGEOVER_APPROVE' : 'CHANGEOVER_DISAPPROVE',
+          username,
+          req,
+          `Line: ${updated.line}, Shift: ${updated.shift}, Action: ${action.toUpperCase()}`
+        );
+
+        return res.status(200).json({ success: true, data: updated });
+      } else if (role === 'technician') {
+        const updatePayload = {
+          ...fields,
+          approval_status: 'ENG_PENDING',
+          engineer_remarks: null
+        };
+
+        const updated = await changeoverChecksheetModel.update(targetId, updatePayload);
+
+        await logActivity(
+          'CHANGEOVER_RESUBMIT',
+          username,
+          req,
+          `Line: ${updated.line}, Shift: ${updated.shift}, Resubmitted by Technician`
+        );
+
+        return res.status(200).json({ success: true, data: updated });
+      } else {
+        const updated = await changeoverChecksheetModel.update(targetId, fields);
+        await logActivity(
+          'CHANGEOVER_UPDATE',
+          username,
+          req,
+          `Line: ${updated.line}, Shift: ${updated.shift}, Admin Update`
+        );
+        return res.status(200).json({ success: true, data: updated });
       }
-      
-      await logActivity(
-        actionType,
-        req.user?.username,
-        req,
-        `Line: ${updated.line}, Shift: ${updated.shift}, Status: ${updated.approval_status}`
-      );
-
-      res.status(200).json({ success: true, data: updated });
     } catch (error) {
       console.error('Error updating checksheet:', error);
       res.status(500).json({ success: false, error: 'An unexpected error occurred' });
