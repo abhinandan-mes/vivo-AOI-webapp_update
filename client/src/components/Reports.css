@@ -86,7 +86,7 @@ thead .sticky-date { z-index: 5; background: #f8fafc; }
 .report-state { padding: 4rem 2rem; text-align: center; color: #64748b; background: #fff; border-radius: 20px; border: 1px dashed #e2e8f0; font-size: 0.95rem; }
 .report-state.error { color: #b42318; background: #fef3f2; border: 1px solid #fecdca; }
 
-@media (min-width: 1200px) { .report-filters { display: grid; grid-template-columns: repeat(6, 1fr) auto; } }
+@media (min-width: 1200px) { .report-filters { display: grid; grid-template-columns: repeat(4, 1fr); align-items: flex-end; gap: 1rem; } }
 @media (max-width: 1100px) { .report-filters label { min-width: 120px; } }
 @media (max-width: 768px) { .reports-container { padding: 1rem; } .reports-heading { align-items: flex-start; flex-direction: column; gap: 1rem; } .report-filters label { min-width: 48%; } }
 
