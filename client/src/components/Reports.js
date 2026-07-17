@@ -435,19 +435,17 @@ export default function Reports({ currentUser }) {
     return lineOptions.filter(l => !techTodayDoneLines.includes(l));
   }, [lineOptions, techTodayDoneLines]);
 
-  const techLineStopLines = useMemo(() => {
-    const lineStops = techTodaySubmissions.filter(r => r.status === 'Line Stop');
-    return Array.from(new Set(lineStops.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  const techPendingReviewLines = useMemo(() => {
+    const pending = techTodaySubmissions.filter(r => r.approval_status === 'ENG_PENDING');
+    return Array.from(new Set(pending.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
   }, [techTodaySubmissions, lineOptions]);
-
-  const techProductionLines = useMemo(() => {
-    return techTodayDoneLines.filter(l => !techLineStopLines.includes(l));
-  }, [techTodayDoneLines, techLineStopLines]);
 
   const techApprovedLines = useMemo(() => {
     const approved = techTodaySubmissions.filter(r => r.approval_status === 'APPROVED');
     return Array.from(new Set(approved.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
   }, [techTodaySubmissions, lineOptions]);
+
+
 
   // Daily Function Check Today / Selected Date
   const funcTodaySubmissions = useMemo(() => {
@@ -462,19 +460,17 @@ export default function Reports({ currentUser }) {
     return lineOptions.filter(l => !funcTodayDoneLines.includes(l));
   }, [lineOptions, funcTodayDoneLines]);
 
-  const funcLineStopLines = useMemo(() => {
-    const lineStops = funcTodaySubmissions.filter(r => r.status === 'Line Stop');
-    return Array.from(new Set(lineStops.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  const funcPendingReviewLines = useMemo(() => {
+    const pending = funcTodaySubmissions.filter(r => r.approval_status === 'ENG_PENDING');
+    return Array.from(new Set(pending.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
   }, [funcTodaySubmissions, lineOptions]);
-
-  const funcProductionLines = useMemo(() => {
-    return funcTodayDoneLines.filter(l => !funcLineStopLines.includes(l));
-  }, [funcTodayDoneLines, funcLineStopLines]);
 
   const funcApprovedLines = useMemo(() => {
     const approved = funcTodaySubmissions.filter(r => r.approval_status === 'APPROVED');
     return Array.from(new Set(approved.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
   }, [funcTodaySubmissions, lineOptions]);
+
+
 
   const updateFilter = event => {
     const { name, value } = event.target;
@@ -563,10 +559,9 @@ export default function Reports({ currentUser }) {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, productionLines, lineStopLines, pendingLines, approvedLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange) => {
+  const renderSummaryCard = (title, submittedLines, pendingReviewLines, approvedLines, notFilledLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange) => {
     const totalLines = lineOptions.length;
-    const submittedCount = productionLines.length + lineStopLines.length;
-    const progressPercent = totalLines > 0 ? Math.round((submittedCount / totalLines) * 100) : 0;
+    const progressPercent = totalLines > 0 ? Math.round((submittedLines.length / totalLines) * 100) : 0;
     
     return (
       <div className={`summary-card ${colorThemeClass}`}>
@@ -607,20 +602,20 @@ export default function Reports({ currentUser }) {
         <div className="summary-card-body">
           <div className="summary-metric-row" style={{ gap: '1rem' }}>
             <div className="summary-metric-item">
-              <span className="metric-label submitted">{t('rep_summary_submitted')}</span>
-              <span className="metric-value production">{productionLines.length} <small>/ {totalLines}</small></span>
+              <span className="metric-label submitted">{language === 'zh' ? '已提交' : 'Submitted'}</span>
+              <span className="metric-value submitted">{submittedLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label linestop">{t('rep_summary_linestop')}</span>
-              <span className="metric-value linestop">{lineStopLines.length} <small>/ {totalLines}</small></span>
+              <span className="metric-label pending-review">{language === 'zh' ? '待审核' : 'Pending Review'}</span>
+              <span className="metric-value pending-review">{pendingReviewLines.length} <small>/ {submittedLines.length}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label" style={{ color: '#10b981' }}>{language === 'zh' ? '已批准' : 'Approved'}</span>
-              <span className="metric-value done">{approvedLines.length} <small>/ {totalLines}</small></span>
+              <span className="metric-label approved">{language === 'zh' ? '已批准' : 'Approved'}</span>
+              <span className="metric-value approved">{approvedLines.length} <small>/ {submittedLines.length}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label notfilled">{t('rep_summary_notfilled')}</span>
-              <span className="metric-value pending">{pendingLines.length} <small>/ {totalLines}</small></span>
+              <span className="metric-label notfilled">{language === 'zh' ? '未提交' : 'Not Filled'}</span>
+              <span className="metric-value notfilled">{notFilledLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-progress-ring-container">
               <svg className="progress-ring" width="56" height="56">
@@ -645,24 +640,13 @@ export default function Reports({ currentUser }) {
           
           <div className="summary-line-breakdown">
             <div className="line-breakdown-group">
-              <span className="breakdown-label submitted">{t('rep_summary_submitted')}:</span>
+              <span className="breakdown-label submitted">
+                {language === 'zh' ? '已提交:' : 'Submitted:'}
+              </span>
               <div className="line-chips-container">
-                {productionLines.length > 0 ? (
-                  productionLines.map(line => (
-                     <span key={line} className="line-chip production">{line}</span>
-                  ))
-                ) : (
-                  <span className="empty-chips-label">{t('rep_summary_empty')}</span>
-                )}
-              </div>
-            </div>
- 
-            <div className="line-breakdown-group">
-              <span className="breakdown-label linestop">{t('rep_summary_linestop')}:</span>
-              <div className="line-chips-container">
-                {lineStopLines.length > 0 ? (
-                  lineStopLines.map(line => (
-                     <span key={line} className="line-chip linestop">{line}</span>
+                {submittedLines.length > 0 ? (
+                  submittedLines.map(line => (
+                    <span key={line} className="line-chip submitted">{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
@@ -671,24 +655,43 @@ export default function Reports({ currentUser }) {
             </div>
 
             <div className="line-breakdown-group">
-              <span className="breakdown-label" style={{ color: '#10b981' }}>{language === 'zh' ? '已批准:' : 'Approved:'}</span>
+              <span className="breakdown-label pending-review">
+                {language === 'zh' ? '待审核:' : 'Pending Review:'}
+              </span>
               <div className="line-chips-container">
-                {approvedLines.length > 0 ? (
-                  approvedLines.map(line => (
-                     <span key={line} className="line-chip production" style={{ background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0' }}>{line}</span>
+                {pendingReviewLines.length > 0 ? (
+                  pendingReviewLines.map(line => (
+                    <span key={line} className="line-chip pending-review">{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
                 )}
               </div>
             </div>
-            
+
             <div className="line-breakdown-group">
-              <span className="breakdown-label notfilled">{t('rep_summary_notfilled')}:</span>
+              <span className="breakdown-label approved">
+                {language === 'zh' ? '已批准:' : 'Approved:'}
+              </span>
               <div className="line-chips-container">
-                {pendingLines.length > 0 ? (
-                  pendingLines.map(line => (
-                     <span key={line} className="line-chip pending">{line}</span>
+                {approvedLines.length > 0 ? (
+                  approvedLines.map(line => (
+                    <span key={line} className="line-chip approved">{line}</span>
+                  ))
+                ) : (
+                  <span className="empty-chips-label">{t('rep_summary_empty')}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="line-breakdown-group">
+              <span className="breakdown-label notfilled">
+                {language === 'zh' ? '未提交:' : 'Not Filled:'}
+              </span>
+              <div className="line-chips-container">
+                {notFilledLines.length > 0 ? (
+                  notFilledLines.map(line => (
+                     <span key={line} className="line-chip notfilled">{line}</span>
                   ))
                 ) : (
                   <span className="empty-chips-label">{t('rep_summary_empty')}</span>
@@ -727,8 +730,8 @@ export default function Reports({ currentUser }) {
 
       {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard">
-        {renderSummaryCard(t('rep_summary_checklist'), techProductionLines, techLineStopLines, techTodayPendingLines, techApprovedLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
-        {renderSummaryCard(t('rep_summary_checkpoint'), funcProductionLines, funcLineStopLines, funcTodayPendingLines, funcApprovedLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
+        {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techPendingReviewLines, techApprovedLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcPendingReviewLines, funcApprovedLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
       </div>
 
       <div className="report-segmented-toggle">

@@ -195,22 +195,15 @@ thead .sticky-date { z-index: 5; background: #f8fafc; }
   line-height: 1.1;
 }
 
-.metric-label.submitted, .breakdown-label.submitted { color: #10b981; }
-.metric-label.linestop, .breakdown-label.linestop { color: #f59e0b; }
+.metric-label.submitted, .breakdown-label.submitted { color: #3b82f6; }
+.metric-label.pending-review, .breakdown-label.pending-review { color: #f59e0b; }
+.metric-label.approved, .breakdown-label.approved { color: #10b981; }
 .metric-label.notfilled, .breakdown-label.notfilled { color: #ef4444; }
 
-.metric-value.done,
-.metric-value.production {
-  color: #10b981;
-}
-
-.metric-value.linestop {
-  color: #f59e0b;
-}
-
-.metric-value.pending {
-  color: #ef4444;
-}
+.metric-value.submitted { color: #3b82f6; }
+.metric-value.pending-review { color: #f59e0b; }
+.metric-value.approved { color: #10b981; }
+.metric-value.notfilled { color: #ef4444; }
 
 .metric-value small {
   font-size: 0.95rem;
@@ -279,20 +272,25 @@ thead .sticky-date { z-index: 5; background: #f8fafc; }
   line-height: 1.2;
 }
 
-.line-chip.done,
-.line-chip.production {
-  background: #ecfdf3;
-  color: #027a48;
-  border: 1px solid #abf1c6;
+.line-chip.submitted {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
 
-.line-chip.linestop {
+.line-chip.pending-review {
   background: #fffbeb;
   color: #b45309;
   border: 1px solid #fcd34d;
 }
 
-.line-chip.pending {
+.line-chip.approved {
+  background: #ecfdf3;
+  color: #027a48;
+  border: 1px solid #abf1c6;
+}
+
+.line-chip.notfilled {
   background: #fef2f2;
   color: #b91c1c;
   border: 1px solid #fecaca;
