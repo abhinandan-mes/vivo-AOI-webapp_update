@@ -179,11 +179,6 @@ export default function FunctionCheckpoint({ currentUser }) {
 
   return (
     <div className="checkpoint-container">
-      <div className="checkpoint-header">
-        <h1>{t('cp_title')}</h1>
-        <p>{t('cp_desc')}</p>
-      </div>
-
       {isInspector && (
         <div className="readonly-banner" role="status">
           <span>⚠️</span>

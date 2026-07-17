@@ -253,11 +253,6 @@ export default function ChangeoverChecksheet({ currentUser }) {
 
   return (
     <div className="checkpoint-container">
-      <div className="checkpoint-header">
-        <h1>{language === 'zh' ? 'AOI 换线/换面记录表' : 'AOI Changeover / Change Side Records'}</h1>
-        <p>{language === 'zh' ? '在导入新程序时由设备应用组的技术员准确填写。' : 'The AOI changeover checklists are accurately filled by AOI technicians during transferring new programs.'}</p>
-      </div>
-
       {isInspector && (
         <div className="readonly-banner" role="status">
           <span>⚠️</span>

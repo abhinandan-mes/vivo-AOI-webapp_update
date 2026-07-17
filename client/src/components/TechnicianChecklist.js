@@ -189,11 +189,6 @@ export default function TechnicianChecklist({ currentUser }) {
 
   return (
     <div className="checklist-container">
-      <div className="checklist-header">
-        <h1>{t('cl_title')}</h1>
-        <p>{t('cl_desc')}</p>
-      </div>
-
       {isInspector && (
         <div className="readonly-banner" role="status">
           <span>⚠️</span>

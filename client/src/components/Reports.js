@@ -120,6 +120,26 @@ export default function Reports({ currentUser }) {
   const [showExport, setShowExport] = useState(false);
   const [exportConfirm, setExportConfirm] = useState({ show: false, format: '' });
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  useEffect(() => {
+    // Clear selection when filters change
+    setSelectedRows([]);
+  }, [filters, reportType]);
+
+  const handleSelectRow = (id) => {
+    setSelectedRows(prev => 
+      prev.includes(id) ? prev.filter(rowId => rowId !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedRows.length === filteredRows.length && filteredRows.length > 0) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(filteredRows.map(row => row.id));
+    }
+  };
 
   const checkpointColumns = useMemo(() => {
     return checkpointGroups.flatMap(group => group.positions.map(position => ({
@@ -490,7 +510,9 @@ export default function Reports({ currentUser }) {
     const columns = getExportColumns(reportType);
     const escape = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
     const csvRows = [columns.map(([label]) => escape(label)).join(',')];
-    filteredRows.forEach(row => {
+    const dataToExport = selectedRows.length > 0 ? filteredRows.filter(r => selectedRows.includes(r.id)) : filteredRows;
+    
+    dataToExport.forEach(row => {
       csvRows.push(columns.map(([, key]) => {
         return escape(exportValue(row, key, reportType));
       }).join(','));
@@ -511,7 +533,10 @@ export default function Reports({ currentUser }) {
 
     const title = reportTitle(reportType);
     const generatedDate = new Date().toLocaleString(language === 'zh' ? 'zh-CN' : undefined);
-    const tableRows = filteredRows.map(row => `
+    
+    const dataToExport = selectedRows.length > 0 ? filteredRows.filter(r => selectedRows.includes(r.id)) : filteredRows;
+    
+    const tableRows = dataToExport.map(row => `
       <tr>${columns.map(([, key]) => `<td>${escapeHtml(exportValue(row, key, reportType) || '—')}</td>`).join('')}</tr>
     `).join('');
 
@@ -816,13 +841,13 @@ export default function Reports({ currentUser }) {
                     <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
                       <path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
                     </svg>
-                    {t('rep_opt_csv')}
+                    {t('rep_opt_csv')} {selectedRows.length > 0 ? `(${selectedRows.length})` : ''}
                   </button>
                   <button type="button" className="export-menu-item" onClick={() => triggerExport('pdf')}>
                     <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
                       <path fill="currentColor" d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V8H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V8H15c.83 0 1.5.67 1.5 1.5v2zm4.5-3H19v1h1.5V11H19v2h-1.5V8H21v1.5zM9 9.5h1v-1H9v1zm5.5 2h1v-2h-1v2zM2 6v14c0 1.1.9 2 2 2h14v-1.5H4V6H2z"/>
                     </svg>
-                    {t('rep_opt_pdf')}
+                    {t('rep_opt_pdf')} {selectedRows.length > 0 ? `(${selectedRows.length})` : ''}
                   </button>
                 </div>
               )}
@@ -837,10 +862,10 @@ export default function Reports({ currentUser }) {
       {!loading && !error && filteredRows.length > 0 && (
         <div className="report-table-wrap">
           {reportType === 'checkpoint' 
-            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} /> 
+            ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} selectedRows={selectedRows} onSelectRow={handleSelectRow} onSelectAll={handleSelectAll} /> 
             : reportType === 'changeover'
-            ? <ChangeoverReport rows={filteredRows} changeoverColumns={changeoverColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} />
-            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} />
+            ? <ChangeoverReport rows={filteredRows} changeoverColumns={changeoverColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} selectedRows={selectedRows} onSelectRow={handleSelectRow} onSelectAll={handleSelectAll} />
+            : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} selectedRows={selectedRows} onSelectRow={handleSelectRow} onSelectAll={handleSelectAll} />
           }
         </div>
       )}
@@ -933,7 +958,7 @@ export default function Reports({ currentUser }) {
   );
 }
 
-function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
+function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay, selectedRows, onSelectRow, onSelectAll }) {
   const [expandedRow, setExpandedRow] = useState(null);
   
   const toggleRow = id => {
@@ -958,6 +983,15 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
     <table className="report-table" style={{ minWidth: '100%' }}>
       <thead>
         <tr>
+          <th style={{ width: '40px', textAlign: 'center' }}>
+            <input 
+              type="checkbox" 
+              className="row-checkbox"
+              onChange={onSelectAll}
+              checked={selectedRows.length === rows.length && rows.length > 0}
+              aria-label="Select all"
+            />
+          </th>
           {changeoverColumns.map(([label]) => <th key={label}>{label}</th>)}
           {isSuperAdmin && <th style={{ width: '60px', textAlign: 'center' }}>{t('actions')}</th>}
         </tr>
@@ -966,7 +1000,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
         {rows.map(row => {
           const isExpanded = expandedRow === row.id;
           const isLineStop = row.status === 'Line Stop';
-          const totalColSpan = changeoverColumns.length + (isSuperAdmin ? 1 : 0);
+          const totalColSpan = changeoverColumns.length + (isSuperAdmin ? 2 : 1);
 
           const renderModifyIndicator = (fields) => {
             if (!row.engineer_modified_fields) return null;
@@ -991,7 +1025,19 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
           };
 
           const mainRow = (
-            <tr key={row.id} className={isExpanded ? 'expanded' : ''} onClick={() => toggleRow(row.id)}>
+            <tr key={row.id} className={isExpanded ? 'expanded' : ''} onClick={(e) => {
+              if (e.target.type === 'checkbox') return;
+              toggleRow(row.id);
+            }}>
+              <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+                <input 
+                  type="checkbox" 
+                  className="row-checkbox"
+                  checked={selectedRows.includes(row.id)}
+                  onChange={() => onSelectRow(row.id)}
+                  aria-label="Select row"
+                />
+              </td>
               <td style={{ fontWeight: 600 }}>{formatDate(row.date)}</td>
               <td><span className="line-tag">{row.line}</span></td>
               <td><span className="shift-tag">{row.group_name}</span></td>
@@ -1180,9 +1226,9 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
   );
 }
 
-function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
+function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay, selectedRows, onSelectRow, onSelectAll }) {
   const [expandedRowId, setExpandedRowId] = React.useState(null);
-  const totalColSpan = isSuperAdmin ? 7 : 6;
+  const totalColSpan = isSuperAdmin ? 8 : 7;
 
   const renderLineStatus = (status) => {
     if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
@@ -1259,6 +1305,15 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
   return <table className="report-table detailed-checkpoint-report" style={{ minWidth: '100%' }}>
     <thead>
       <tr>
+        <th style={{ width: '40px', textAlign: 'center' }}>
+          <input 
+            type="checkbox" 
+            className="row-checkbox"
+            onChange={onSelectAll}
+            checked={selectedRows.length === rows.length && rows.length > 0}
+            aria-label="Select all"
+          />
+        </th>
         <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
         <th>{language === 'zh' ? '线别状态' : 'Line Status'}</th>
         <th>{language === 'zh' ? '文档状态' : 'Doc Status'}</th>
@@ -1310,7 +1365,8 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
       const mainRow = (
         <tr 
           key={row.id} 
-          onClick={() => {
+          onClick={(e) => {
+            if (e.target.type === 'checkbox') return;
             if (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') {
               setExpandedRowId(isExpanded ? null : row.id);
             }
@@ -1318,6 +1374,15 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
           style={{ cursor: (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') ? 'pointer' : 'default' }}
           className={isExpanded ? 'expanded-parent-row' : ''}
         >
+          <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+            <input 
+              type="checkbox" 
+              className="row-checkbox"
+              checked={selectedRows.includes(row.id)}
+              onChange={() => onSelectRow(row.id)}
+              aria-label="Select row"
+            />
+          </td>
           <td className="sticky-date">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
               <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.92rem' }}>Line {row.line}</span>
@@ -1392,11 +1457,11 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             {row.status === 'Not Filled' ? '—' : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', fontSize: '0.82rem' }}>
                 <span style={{ color: '#334155', fontWeight: 600 }}>
-                  {text(row.responsible_person)}
+                  {row.responsible_person}
                   {renderModifyIndicator(['responsible_person'])}
                 </span>
                 <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
-                  🕒 {text(row.time)}
+                  🕒 {row.time}
                   {renderModifyIndicator(['time'])}
                 </span>
               </div>
@@ -1531,9 +1596,9 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
   </table>;
 }
 
-function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
+function ChecklistReport({ rows, checklistColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay, selectedRows, onSelectRow, onSelectAll }) {
   const [expandedRowId, setExpandedRowId] = React.useState(null);
-  const totalColSpan = isSuperAdmin ? 8 : 7;
+  const totalColSpan = isSuperAdmin ? 10 : 9;
 
   const renderLineStatus = (status) => {
     if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
@@ -1620,6 +1685,15 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
     <table className="report-table detailed-checklist-report" style={{ minWidth: '100%' }}>
       <thead>
         <tr>
+          <th style={{ width: '40px', textAlign: 'center' }}>
+            <input 
+              type="checkbox" 
+              className="row-checkbox"
+              onChange={onSelectAll}
+              checked={selectedRows.length === rows.length && rows.length > 0}
+              aria-label="Select all"
+            />
+          </th>
           <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
           <th>{language === 'zh' ? '线别状态' : 'Line Status'}</th>
           <th>{language === 'zh' ? '文档状态' : 'Doc Status'}</th>
@@ -1671,7 +1745,8 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
           const mainRow = (
             <tr 
               key={row.id} 
-              onClick={() => {
+              onClick={(e) => {
+                if (e.target.type === 'checkbox') return;
                 if (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') {
                   setExpandedRowId(isExpanded ? null : row.id);
                 }
@@ -1679,6 +1754,15 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
               style={{ cursor: (row.status !== 'Not Filled' && row.status !== 'Line Not Installed') ? 'pointer' : 'default' }}
               className={isExpanded ? 'expanded-parent-row' : ''}
             >
+              <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+                <input 
+                  type="checkbox" 
+                  className="row-checkbox"
+                  checked={selectedRows.includes(row.id)}
+                  onChange={() => onSelectRow(row.id)}
+                  aria-label="Select row"
+                />
+              </td>
               <td className="sticky-date">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
                   <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.92rem' }}>Line {row.line}</span>

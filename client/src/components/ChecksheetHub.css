@@ -1,24 +1,42 @@
 .checksheet-hub-container {
-  width: 100%;
   max-width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 1rem 0 2rem 0;
+  min-height: calc(100vh - 120px);
   animation: fadeIn 0.4s ease-out;
+}
+
+.checksheet-header-section {
+  margin-bottom: 2rem;
+}
+
+.checksheet-title {
+  font-size: 2.25rem;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  color: #1e3a8a;
+  width: fit-content;
+  background: linear-gradient(135deg, #0b1a30 10%, #415fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.checksheet-subtitle {
+  color: #64748b;
+  font-size: 1.05rem;
+  margin: 0;
 }
 
 .checksheet-tabs-wrapper {
   background: transparent;
   padding: 0 0 1.5rem 0;
   margin-bottom: 0;
-  border: none;
-  box-shadow: none;
+  border-bottom: 2px solid #e2e8f0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
-}
-
-.checksheet-header-title {
-  display: none;
 }
 
 .checksheet-tabs {

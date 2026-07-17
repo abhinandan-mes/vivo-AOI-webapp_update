@@ -29,6 +29,11 @@ export default function ChecksheetHub({ user }) {
 
   return (
     <div className="checksheet-hub-container">
+      <div className="checksheet-header-section">
+        <h1 className="checksheet-title">{language === 'zh' ? '提交表单' : 'Checksheets'}</h1>
+        <p className="checksheet-subtitle">{language === 'zh' ? '提交及管理您的日常点检和保养表单。' : 'Submit and manage your daily checksheets and function checkpoints.'}</p>
+      </div>
+
       <div className="checksheet-tabs-wrapper">
         <div className="checksheet-tabs">
           <button 
