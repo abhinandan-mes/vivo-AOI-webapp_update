@@ -30,6 +30,13 @@ export default function PendingModule({ currentUser }) {
   const isEngineer = currentUser?.role === 'engineer';
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
 
+  const getEngineerDisplay = (id) => {
+    if (!id) return language === 'zh' ? '系统自动' : 'System (Automatic)';
+    if (id === 'System (Automatic)') return language === 'zh' ? '系统自动' : 'System (Automatic)';
+    const eng = engineers.find(e => e.username === id);
+    return eng ? `${eng.full_name} (${eng.username})` : id;
+  };
+
   // Fetch pending records & engineers list
   const fetchData = async () => {
     setLoading(true);
@@ -225,6 +232,7 @@ export default function PendingModule({ currentUser }) {
                       <th>{t('shift')}</th>
                       <th>{t('group')}</th>
                       <th>{language === 'zh' ? '提交人员' : 'Submitted By'}</th>
+                      <th>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</th>
                       <th>{language === 'zh' ? '流程状态' : 'Approval Status'}</th>
                       <th>{t('actions')}</th>
                     </tr>
@@ -237,16 +245,19 @@ export default function PendingModule({ currentUser }) {
                         <td>{item.shift}</td>
                         <td>{item.group_name}</td>
                         <td>{item.submitted_by}</td>
+                        <td>{getEngineerDisplay(item.designated_engineer_id)}</td>
                         <td>
                           <span className={`status-pill ${item.approval_status}`}>
                             {item.approval_status === 'ENG_PENDING' ? (language === 'zh' ? '等待工程师审批' : 'Pending Engineer') : (language === 'zh' ? '工程师已驳回' : 'Rejected')}
                           </span>
                         </td>
                         <td>
-                          {isEngineer || isAdmin ? (
+                          {isEngineer ? (
                             <button className="pending-action-btn review" onClick={() => handleOpenReview(item, 'checklist')}>
                               🔍 {language === 'zh' ? '审核' : 'Review'}
                             </button>
+                          ) : isAdmin ? (
+                            <span style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.8rem' }}>{language === 'zh' ? '仅供查看' : 'View Only'}</span>
                           ) : (
                             <button className="pending-action-btn edit" onClick={() => handleOpenReview(item, 'checklist')}>
                               ✏️ {language === 'zh' ? '修改重提' : 'Edit & Resubmit'}
@@ -275,6 +286,7 @@ export default function PendingModule({ currentUser }) {
                       <th>{t('shift')}</th>
                       <th>{t('group')}</th>
                       <th>{language === 'zh' ? '提交人员' : 'Submitted By'}</th>
+                      <th>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</th>
                       <th>{language === 'zh' ? '流程状态' : 'Approval Status'}</th>
                       <th>{t('actions')}</th>
                     </tr>
@@ -287,16 +299,19 @@ export default function PendingModule({ currentUser }) {
                         <td>{item.shift}</td>
                         <td>{item.group_name}</td>
                         <td>{item.submitted_by}</td>
+                        <td>{getEngineerDisplay(item.designated_engineer_id)}</td>
                         <td>
                           <span className={`status-pill ${item.approval_status}`}>
                             {item.approval_status === 'ENG_PENDING' ? (language === 'zh' ? '等待工程师审批' : 'Pending Engineer') : (language === 'zh' ? '工程师已驳回' : 'Rejected')}
                           </span>
                         </td>
                         <td>
-                          {isEngineer || isAdmin ? (
+                          {isEngineer ? (
                             <button className="pending-action-btn review" onClick={() => handleOpenReview(item, 'checkpoint')}>
                               🔍 {language === 'zh' ? '审核' : 'Review'}
                             </button>
+                          ) : isAdmin ? (
+                            <span style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.8rem' }}>{language === 'zh' ? '仅供查看' : 'View Only'}</span>
                           ) : (
                             <button className="pending-action-btn edit" onClick={() => handleOpenReview(item, 'checkpoint')}>
                               ✏️ {language === 'zh' ? '修改重提' : 'Edit & Resubmit'}
