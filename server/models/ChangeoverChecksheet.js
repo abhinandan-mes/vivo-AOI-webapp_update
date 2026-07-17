@@ -42,6 +42,7 @@ const changeoverChecksheetModel = {
       approval_status: data.approval_status || 'ENG_PENDING',
       designated_engineer_id: data.designated_engineer_id || null,
       remarks: data.remarks || null,
+      changeover_type: data.changeover_type || null,
       engineer_remarks: data.engineer_remarks || null,
       engineer_modified_fields: data.engineer_modified_fields || null,
       original_technician_data: data.original_technician_data || null
@@ -70,6 +71,7 @@ const changeoverChecksheetModel = {
       approval_status: data.approval_status !== undefined ? data.approval_status : undefined,
       designated_engineer_id: data.designated_engineer_id !== undefined ? data.designated_engineer_id : undefined,
       remarks: data.remarks !== undefined ? data.remarks : undefined,
+      changeover_type: data.changeover_type !== undefined ? data.changeover_type : undefined,
       engineer_remarks: data.engineer_remarks !== undefined ? data.engineer_remarks : undefined,
       engineer_modified_fields: data.engineer_modified_fields !== undefined ? data.engineer_modified_fields : undefined,
       original_technician_data: data.original_technician_data !== undefined ? data.original_technician_data : undefined

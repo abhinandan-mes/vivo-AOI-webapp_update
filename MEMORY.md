@@ -186,6 +186,9 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 * **Changeover Type Classification**: Expanded the Changeover checksheet schema and UI to include a "Changeover Type" dropdown containing: Model, Series, After Sale, Trial.
 * **Line Status Sync**: Line Management status was decoupled from the Changeover forms natively; Changeover sync functionality was rewritten to focus purely on the new *Changeover Type* rather than interfering with global line metrics.
 * **Engineer Approval Flow Fix**: Fixed an issue in `changeoverController.js` where Engineer "Disapprove" actions inadvertently marked submissions as "Approved".
+* **Changeover Type Database Sync**: Mapped the `changeover_type` field in `server/models/ChangeoverChecksheet.js` to ensure the value selected by the technician is correctly persisted to the PostgreSQL database and retrievable by the engineer.
+* **Review Modal UI Buttons**: Added missing CSS class styles for `.primary` and `.success` buttons in the `ConfirmModal`, and fixed logic to respect the `hideCancel` parameter.
+* **Auto-Scrolling Native Validation**: Modified the submit buttons on all three checksheet forms to not be `disabled` while required fields are empty, enabling the browser's native HTML5 validation to intercept submissions, automatically scroll to the missing field, and prompt the user.
 
 ### Resolved: Security & Access Control Enhancements (June 2026)
 * **Access Control Vulnerability**: Enforced role authorization on user directory endpoints (`GET /auth/users` and `POST /auth/create-user`) by applying `requireRoles(['super_admin', 'admin'])`. Standard operators can no longer access user records or create accounts directly.

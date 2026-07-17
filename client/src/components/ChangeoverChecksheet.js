@@ -475,7 +475,7 @@ export default function ChangeoverChecksheet({ currentUser }) {
         )}
 
         <div className="form-actions">
-          <button type="submit" className="btn-submit" disabled={loading || isInspector || !isFormValid}>
+          <button type="submit" className="btn-submit" disabled={loading || isInspector}>
             {loading ? t('loading') : t('submit')}
           </button>
         </div>

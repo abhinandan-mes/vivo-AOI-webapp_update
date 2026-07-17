@@ -572,7 +572,7 @@ export default function TechnicianChecklist({ currentUser }) {
         )}
 
         <div className="form-actions">
-          <button type="submit" disabled={loading || !isFormComplete || (formData.status === 'Production' && formData.confirmation !== 'Yes')} className="btn-submit">
+          <button type="submit" disabled={loading} className="btn-submit">
             {loading ? t('cl_btn_submitting') : t('cl_btn_submit')}
           </button>
           {message && <div className={`message ${message.startsWith('✓') ? 'success' : 'error'}`}>{message}</div>}
