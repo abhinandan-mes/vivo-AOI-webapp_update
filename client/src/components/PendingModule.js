@@ -257,7 +257,9 @@ export default function PendingModule({ currentUser }) {
                               🔍 {language === 'zh' ? '审核' : 'Review'}
                             </button>
                           ) : isAdmin ? (
-                            <span style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.8rem' }}>{language === 'zh' ? '仅供查看' : 'View Only'}</span>
+                            <button className="pending-action-btn view" style={{ background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }} onClick={() => handleOpenReview(item, 'checklist')}>
+                              👁️ {language === 'zh' ? '查看' : 'View'}
+                            </button>
                           ) : (
                             <button className="pending-action-btn edit" onClick={() => handleOpenReview(item, 'checklist')}>
                               ✏️ {language === 'zh' ? '修改重提' : 'Edit & Resubmit'}
@@ -311,7 +313,9 @@ export default function PendingModule({ currentUser }) {
                               🔍 {language === 'zh' ? '审核' : 'Review'}
                             </button>
                           ) : isAdmin ? (
-                            <span style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.8rem' }}>{language === 'zh' ? '仅供查看' : 'View Only'}</span>
+                            <button className="pending-action-btn view" style={{ background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }} onClick={() => handleOpenReview(item, 'checkpoint')}>
+                              👁️ {language === 'zh' ? '查看' : 'View'}
+                            </button>
                           ) : (
                             <button className="pending-action-btn edit" onClick={() => handleOpenReview(item, 'checkpoint')}>
                               ✏️ {language === 'zh' ? '修改重提' : 'Edit & Resubmit'}
@@ -584,6 +588,7 @@ export default function PendingModule({ currentUser }) {
                       placeholder={language === 'zh' ? '在此处输入审批 or 驳回备注（驳回为必选项）...' : 'Enter approval or rejection remarks (mandatory for disapproval)...'}
                       value={engineerRemarks}
                       onChange={(e) => setEngineerRemarks(e.target.value)}
+                      disabled={isAdmin && !isEngineer}
                       style={{
                         width: '100%',
                         minHeight: '80px',
@@ -592,7 +597,8 @@ export default function PendingModule({ currentUser }) {
                         border: '1px solid #cbd5e1',
                         fontSize: '0.9rem',
                         marginTop: '0.5rem',
-                        outline: 'none'
+                        outline: 'none',
+                        background: (isAdmin && !isEngineer) ? '#f8fafc' : '#fff'
                       }}
                     />
                   </div>
@@ -607,7 +613,7 @@ export default function PendingModule({ currentUser }) {
                   {t('cancel')}
                 </button>
                 
-                {isEngineer || isAdmin ? (
+                {isEngineer ? (
                   <div className="engineer-action-buttons">
                     <button className="drawer-btn disapprove" onClick={() => handleApprovalAction('disapprove')}>
                       ❌ {language === 'zh' ? '驳回 (Disapprove)' : 'Disapprove'}
@@ -615,6 +621,12 @@ export default function PendingModule({ currentUser }) {
                     <button className="drawer-btn approve" onClick={() => handleApprovalAction('approve')}>
                       ✓ {language === 'zh' ? '批准 (Approve)' : 'Approve'}
                     </button>
+                  </div>
+                ) : isAdmin ? (
+                  <div className="engineer-action-buttons">
+                    <span style={{ color: '#94a3b8', fontStyle: 'italic', marginRight: '1rem', fontWeight: 600 }}>
+                      {language === 'zh' ? '管理员仅供查看，无法审批' : 'Admins can view but cannot approve.'}
+                    </span>
                   </div>
                 ) : (
                   <button className="drawer-btn resubmit" onClick={handleResubmit}>
