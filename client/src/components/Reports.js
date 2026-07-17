@@ -250,7 +250,35 @@ export default function Reports({ currentUser }) {
         ...checkpointColumns.map(column => [column.label, column.key])
       ];
     } else if (reportType === 'changeover') {
-      return changeoverColumns;
+      const detailColumns = [
+        [language === 'zh' ? '1. SPI钢网后缀一致' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
+        [language === 'zh' ? '2. 程序小板序号一致' : '2. Sub-panel Serial Match', 'spi_program_subpanel_serial_match'],
+        [language === 'zh' ? '3. 复查180度极性' : '3. Recheck PCAB Polarity', 'spi_recheck_pcab_polarity'],
+        [language === 'zh' ? '4. 参数设置一致' : '4. Parameter Settings', 'spi_confirm_parameter_settings'],
+        [language === 'zh' ? '5. 读码功能开启' : '5. Read Barcode On', 'spi_read_barcode_on'],
+        [language === 'zh' ? '6. ECO检查表内容' : '6. ECO Checklists', 'pre_aoi_eco_checklists'],
+        [language === 'zh' ? '7. 修改程序机种' : '7. Modify Program Model', 'pre_aoi_program_model_modify'],
+        [language === 'zh' ? '8. VI新料测试' : '8. VI New Materia Test', 'pre_aoi_vi_program_new_materia'],
+        [language === 'zh' ? '9. 限制不良报警' : '9. Limit Defective Alarm', 'pre_aoi_limit_defective_alarm'],
+        [language === 'zh' ? '10. 裸板测试程序' : '10. Bare PCBA Test Program', 'pre_aoi_test_program_bare_pcba'],
+        [language === 'zh' ? '11. Bot程序序号一致' : '11. Bot Program Serial Match', 'pre_aoi_bot_program_serial_number'],
+        [language === 'zh' ? '12. 炉前读码功能开启' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
+        [language === 'zh' ? '13a. 确认物料已贴装' : '13a. Confirm Materials Mounted', 'pre_aoi_confirm_materials_mounted'],
+        [language === 'zh' ? '13b. 删除并重新优化' : '13b. Delete & Optimize Zones', 'pre_aoi_delete_all_zones'],
+        [language === 'zh' ? '14. 炉后AOI设备机种' : '14. Post-AOI Equipment Model', 'post_aoi_equipment_model'],
+        [language === 'zh' ? '15. ECO检查表内容' : '15. Post-AOI ECO Checklists', 'post_aoi_eco_checklists'],
+        [language === 'zh' ? '16. 修改程序机种' : '16. Post-AOI Modify Program', 'post_aoi_program_model_modify'],
+        [language === 'zh' ? '17. 复查标准件' : '17. Recheck Standard Models', 'post_aoi_recheck_chips_standard_models'],
+        [language === 'zh' ? '18. 扫描当前画板' : '18. Scan Board Picture', 'post_aoi_scan_board_picture'],
+        [language === 'zh' ? '19. 限制不良报警' : '19. Post-AOI Defective Alarm', 'post_aoi_limit_defective_alarm'],
+        [language === 'zh' ? '20. 对称屏蔽罩极性' : '20. Shield Polarity', 'post_aoi_confirm_polarity_shield'],
+        [language === 'zh' ? '21. Bot程序序号一致' : '21. Post-AOI Bot Serial Match', 'post_aoi_bot_program_serial_number'],
+        [language === 'zh' ? '22. ALD620次数限制' : '22. Registered Standard Times', 'post_aoi_registered_standard_models_times'],
+        [language === 'zh' ? '23. 调整设备宽度' : '23. Adjust Widths', 'others_adjust_widths'],
+        [language === 'zh' ? '24. 增加测试标准条码' : '24. Add Test Standard Barcode', 'others_add_test_standard_pcb_barcode'],
+        [t('rep_remarks'), 'remarks']
+      ];
+      return [...changeoverColumns, ...detailColumns];
     } else {
       return checklistColumns;
     }
@@ -278,6 +306,14 @@ export default function Reports({ currentUser }) {
     }
     if (key.startsWith('barcode_read_')) {
       return row[key] === 'Yes' ? t('yes') : (row[key] === 'No' ? t('no') : row[key]);
+    }
+    if (reportType === 'changeover') {
+      const val = row[key];
+      if (val === true || val === 'true') return 'True';
+      if (val === false || val === 'false') return 'False';
+      if (val === 'Yes' || val === '√') return '√';
+      if (val === 'No' || val === '\\') return '×';
+      if (!val && val !== 0) return '—';
     }
     return row[key] ?? '';
   };
