@@ -197,6 +197,7 @@ export default function Reports({ currentUser }) {
     [t('group'), 'group_name'],
     [t('shift'), 'shift'],
     [t('rep_th_status'), 'status'],
+    [language === 'zh' ? '文档状态' : 'Doc Status', 'approval_status'],
     [language === 'zh' ? '机种名称' : 'Model Name', 'model_name'],
     [language === 'zh' ? '机种代码' : 'Model Code', 'model_code'],
     [t('rep_designated_engineer'), 'designated_engineer_id'],
@@ -722,37 +723,6 @@ export default function Reports({ currentUser }) {
           <h1>{t('rep_title')}</h1>
           <p>{language === 'zh' ? '存储在系统后台的详细点检检验记录。' : 'Detailed records stored in the backend.'}</p>
         </div>
-        <div className="export-header-action">
-          <div className="export-dropdown-wrapper" onMouseLeave={() => setShowExport(false)}>
-            <button
-              type="button"
-              className="export-btn-trigger"
-              disabled={!filteredRows.length}
-              onClick={() => setShowExport(!showExport)}
-            >
-              <svg className="download-icon" viewBox="0 0 24 24" width="16" height="16" style={{ marginRight: '8px' }}>
-                <path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
-              </svg>
-              {t('rep_btn_export')}
-            </button>
-            {showExport && (
-              <div className="export-dropdown-menu">
-                <button type="button" className="export-menu-item" onClick={() => triggerExport('csv')}>
-                  <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                    <path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                  </svg>
-                  {t('rep_opt_csv')}
-                </button>
-                <button type="button" className="export-menu-item" onClick={() => triggerExport('pdf')}>
-                  <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                    <path fill="currentColor" d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V8H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V8H15c.83 0 1.5.67 1.5 1.5v2zm4.5-3H19v1h1.5V11H19v2h-1.5V8H21v1.5zM9 9.5h1v-1H9v1zm5.5 2h1v-2h-1v2zM2 6v14c0 1.1.9 2 2 2h14v-1.5H4V6H2z"/>
-                  </svg>
-                  {t('rep_opt_pdf')}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
 
       {/* ── Summary Dashboard Panel ── */}
@@ -824,6 +794,37 @@ export default function Reports({ currentUser }) {
               : <span>Showing <strong>{filteredRows.length}</strong> of {rows.length} entries</span>
             }
           </span>
+          <div className="export-header-action">
+            <div className="export-dropdown-wrapper" onMouseLeave={() => setShowExport(false)}>
+              <button
+                type="button"
+                className="export-btn-trigger"
+                disabled={!filteredRows.length}
+                onClick={() => setShowExport(!showExport)}
+              >
+                <svg className="download-icon" viewBox="0 0 24 24" width="16" height="16" style={{ marginRight: '8px' }}>
+                  <path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+                </svg>
+                {t('rep_btn_export')}
+              </button>
+              {showExport && (
+                <div className="export-dropdown-menu">
+                  <button type="button" className="export-menu-item" onClick={() => triggerExport('csv')}>
+                    <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                      <path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                    {t('rep_opt_csv')}
+                  </button>
+                  <button type="button" className="export-menu-item" onClick={() => triggerExport('pdf')}>
+                    <svg viewBox="0 0 24 24" width="14" height="14" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                      <path fill="currentColor" d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V8H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V8H15c.83 0 1.5.67 1.5 1.5v2zm4.5-3H19v1h1.5V11H19v2h-1.5V8H21v1.5zM9 9.5h1v-1H9v1zm5.5 2h1v-2h-1v2zM2 6v14c0 1.1.9 2 2 2h14v-1.5H4V6H2z"/>
+                    </svg>
+                    {t('rep_opt_pdf')}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
       {loading && <div className="report-state">{t('rep_loading')}</div>}
@@ -993,42 +994,42 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               <td><span className="shift-tag">{row.group_name}</span></td>
               <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : row.shift)}</td>
               <td>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                  {row.status === 'Not Filled' ? (
-                    <span className="status-pill pending">
-                      {language === 'zh' ? '未提交' : 'Not Filled'}
-                    </span>
-                  ) : (
-                    <span className={`status-pill ${row.status === 'Line Stop' ? 'disapproved' : 'approved'}`}>
-                      {row.status === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
-                    </span>
-                  )}
-                  {row.status !== 'Not Filled' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
-                      {row.approval_status === 'ENG_PENDING' && (
-                        <span className="status-pill pending" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
-                          ⌛ {language === 'zh' ? '审批中' : 'Pending'}
-                        </span>
-                      )}
-                      {row.approval_status === 'APPROVED' && (
-                        <span className="status-pill approved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
-                          ✓ {language === 'zh' ? '审批' : 'App'}
-                        </span>
-                      )}
-                      {row.approval_status === 'DISAPPROVED' && (
-                        <span className="status-pill disapproved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
-                          ✗ {language === 'zh' ? '驳回' : 'Rej'}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
+                {row.status === 'Not Filled' ? (
+                  <span className="status-pill pending">
+                    {language === 'zh' ? '未提交' : 'Not Filled'}
+                  </span>
+                ) : (
+                  <span className={`status-pill ${row.status === 'Line Stop' ? 'disapproved' : 'approved'}`}>
+                    {row.status === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
+                  </span>
+                )}
+              </td>
+              <td>
+                {row.status !== 'Not Filled' ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    {row.approval_status === 'ENG_PENDING' && (
+                      <span className="status-pill pending" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
+                        ⌛ {language === 'zh' ? '审批中' : 'Pending'}
+                      </span>
+                    )}
+                    {row.approval_status === 'APPROVED' && (
+                      <span className="status-pill approved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
+                        ✓ {language === 'zh' ? '审批' : 'App'}
+                      </span>
+                    )}
+                    {row.approval_status === 'DISAPPROVED' && (
+                      <span className="status-pill disapproved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
+                        ✗ {language === 'zh' ? '驳回' : 'Rej'}
+                      </span>
+                    )}
+                  </div>
+                ) : '—'}
               </td>
               <td>{row.model_name || '-'}</td>
               <td>{row.model_code || '-'}</td>
 
               {/* Dynamic rendering of the rest of the columns based on changeoverColumns definition */}
-              {changeoverColumns.slice(7).map(([label, key]) => {
+              {changeoverColumns.slice(8).map(([label, key]) => {
                 // Handle designated engineer
                 if (key === 'designated_engineer_id') {
                   return <td key={key}>{getEngineerDisplay(row[key])}</td>;
