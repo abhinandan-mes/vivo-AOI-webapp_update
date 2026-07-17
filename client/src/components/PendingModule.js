@@ -583,126 +583,147 @@ export default function PendingModule({ currentUser }) {
                 ) : selectedItem.type === 'checklist' ? (
                     /* Checklist Form Fields */
                     <div className="checklist-fields-editor">
-                    <div className="form-group-full">
-                      <label>{language === 'zh' ? 'Pre-AOI 完整程序名' : 'Pre-AOI Full Program Name'}</label>
-                      <input 
-                        type="text" 
-                        name="pre_aoi_program_full_name"
-                        value={reviewData.pre_aoi_program_full_name || ''}
-                        onChange={handleInputChange}
-                      />
+                      
+                      <div className="form-section-card">
+                        <h4 className="form-section-title">Program & Stencil Info</h4>
+                        <div className="form-grid-row">
+                          <div className="form-group-full">
+                            <label>{language === 'zh' ? 'Pre-AOI 完整程序名' : 'Pre-AOI Full Program Name'}</label>
+                            <input type="text" name="pre_aoi_program_full_name" value={reviewData.pre_aoi_program_full_name || ''} onChange={handleInputChange} />
+                          </div>
+                          <div className="form-group-half">
+                            <label>{language === 'zh' ? '钢网编号 A面' : 'Stencil Serial No. A-Side'}</label>
+                            <input type="text" name="stencil_serial_no_a_side" value={reviewData.stencil_serial_no_a_side || ''} onChange={handleInputChange} />
+                          </div>
+                          <div className="form-group-half">
+                            <label>{language === 'zh' ? '钢网编号 B面' : 'Stencil Serial No. B-Side'}</label>
+                            <input type="text" name="stencil_serial_no_b_side" value={reviewData.stencil_serial_no_b_side || ''} onChange={handleInputChange} />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-section-card">
+                        <h4 className="form-section-title">Barcode Reads (A-Side)</h4>
+                        <div className="form-grid-row">
+                          <div className="form-group-third">
+                            <label>Laser</label>
+                            <select name="barcode_read_a_layer" value={reviewData.barcode_read_a_layer || ''} onChange={handleInputChange}>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                          <div className="form-group-third">
+                            <label>SPI</label>
+                            <select name="barcode_read_a_spi" value={reviewData.barcode_read_a_spi || ''} onChange={handleInputChange}>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                          <div className="form-group-third">
+                            <label>Pre-AOI</label>
+                            <select name="barcode_read_a_pre_aoi" value={reviewData.barcode_read_a_pre_aoi || ''} onChange={handleInputChange}>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-section-card">
+                        <h4 className="form-section-title">Barcode Reads (B-Side)</h4>
+                        <div className="form-grid-row">
+                          <div className="form-group-third">
+                            <label>Laser</label>
+                            <select name="barcode_read_b_layer" value={reviewData.barcode_read_b_layer || ''} onChange={handleInputChange}>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                          <div className="form-group-third">
+                            <label>SPI</label>
+                            <select name="barcode_read_b_spi" value={reviewData.barcode_read_b_spi || ''} onChange={handleInputChange}>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                          <div className="form-group-third">
+                            <label>Pre-AOI</label>
+                            <select name="barcode_read_b_pre_aoi" value={reviewData.barcode_read_b_pre_aoi || ''} onChange={handleInputChange}>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-section-card">
+                        <h4 className="form-section-title">Workorder Info</h4>
+                        <div className="form-grid-row">
+                          <div className="form-group-half">
+                            <label>Workorder Info Pre-AOI</label>
+                            <input type="text" name="workorder_info_pre_aoi" value={reviewData.workorder_info_pre_aoi || ''} onChange={handleInputChange} />
+                          </div>
+                          <div className="form-group-half">
+                            <label>Workorder Info Post-AOI</label>
+                            <input type="text" name="workorder_info_post_aoi" value={reviewData.workorder_info_post_aoi || ''} onChange={handleInputChange} />
+                          </div>
+                          <div className="form-group-full">
+                            <label>AOI Scan Tools Workorder Traceability</label>
+                            <input type="text" name="aoi_scan_tools_workorder_traceability" value={reviewData.aoi_scan_tools_workorder_traceability || ''} onChange={handleInputChange} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-section-card highlighted-section">
+                        <h4 className="form-section-title">Signatures & Approvals</h4>
+                        <div className="form-grid-row">
+                          <div className="form-group-half">
+                            <label>{language === 'zh' ? '确认签字 (Confirmation)' : 'Confirmation'}</label>
+                            <select name="confirmation" value={reviewData.confirmation || ''} onChange={handleInputChange}>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                          <div className="form-group-half">
+                            <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
+                            <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
+                              {engineers.map(eng => (
+                                <option key={eng.username} value={eng.username}>{eng.full_name}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="form-group-full">
+                            <label>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
+                            <textarea 
+                              name="remarks"
+                              value={reviewData.remarks || ''}
+                              onChange={handleInputChange}
+                              rows="2"
+                              placeholder={language === 'zh' ? '技术员备注 (可选)' : 'Technician remarks (optional)'}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="form-group-half">
-                      <label>{language === 'zh' ? '钢网编号 B面' : 'Stencil Serial No. B-Side'}</label>
-                      <input 
-                        type="text" 
-                        name="stencil_serial_no_b_side"
-                        value={reviewData.stencil_serial_no_b_side || ''}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="form-group-half">
-                      <label>{language === 'zh' ? '钢网编号 A面' : 'Stencil Serial No. A-Side'}</label>
-                      <input 
-                        type="text" 
-                        name="stencil_serial_no_a_side"
-                        value={reviewData.stencil_serial_no_a_side || ''}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="form-group-third">
-                      <label>Barcode Read A Laser</label>
-                      <select name="barcode_read_a_layer" value={reviewData.barcode_read_a_layer || ''} onChange={handleInputChange}>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div className="form-group-third">
-                      <label>Barcode Read A SPI</label>
-                      <select name="barcode_read_a_spi" value={reviewData.barcode_read_a_spi || ''} onChange={handleInputChange}>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div className="form-group-third">
-                      <label>Barcode Read A Pre-AOI</label>
-                      <select name="barcode_read_a_pre_aoi" value={reviewData.barcode_read_a_pre_aoi || ''} onChange={handleInputChange}>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div className="form-group-third">
-                      <label>Barcode Read B Laser</label>
-                      <select name="barcode_read_b_layer" value={reviewData.barcode_read_b_layer || ''} onChange={handleInputChange}>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div className="form-group-third">
-                      <label>Barcode Read B SPI</label>
-                      <select name="barcode_read_b_spi" value={reviewData.barcode_read_b_spi || ''} onChange={handleInputChange}>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div className="form-group-third">
-                      <label>Barcode Read B Pre-AOI</label>
-                      <select name="barcode_read_b_pre_aoi" value={reviewData.barcode_read_b_pre_aoi || ''} onChange={handleInputChange}>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div className="form-group-half">
-                      <label>Workorder Info Pre-AOI</label>
-                      <input type="text" name="workorder_info_pre_aoi" value={reviewData.workorder_info_pre_aoi || ''} onChange={handleInputChange} />
-                    </div>
-                    <div className="form-group-half">
-                      <label>Workorder Info Post-AOI</label>
-                      <input type="text" name="workorder_info_post_aoi" value={reviewData.workorder_info_post_aoi || ''} onChange={handleInputChange} />
-                    </div>
-                    <div className="form-group-full">
-                      <label>AOI Scan Tools Workorder Traceability</label>
-                      <input type="text" name="aoi_scan_tools_workorder_traceability" value={reviewData.aoi_scan_tools_workorder_traceability || ''} onChange={handleInputChange} />
-                    </div>
-                    <div className="form-group-half">
-                      <label>{language === 'zh' ? '确认签字 (Confirmation)' : 'Confirmation'}</label>
-                      <select name="confirmation" value={reviewData.confirmation || ''} onChange={handleInputChange}>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div className="form-group-half">
-                      <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
-                      <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
-                        {engineers.map(eng => (
-                          <option key={eng.username} value={eng.username}>{eng.full_name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="form-group-full">
-                      <label>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
-                      <input type="text" name="remarks" value={reviewData.remarks || ''} onChange={handleInputChange} />
-                    </div>
-                  </div>
                 ) : selectedItem?.type === 'checkpoint' ? (
                   /* Checkpoints Form Fields */
                   <div className="checkpoint-checkboxes-editor">
                     <div className="checkpoint-editor-grid">
                       {checkpointGroups.map((group) => (
-                        <div key={group.label} className="checkpoint-editor-card">
-                          <h4>{group.label}</h4>
-                          <div className="checkboxes-row">
+                        <div key={group.label} className="form-section-card">
+                          <h4 className="form-section-title">{group.label}</h4>
+                          <div className="checkboxes-grid-row">
                             {group.positions.map((pos) => {
                               const key = `${group.prefix}_${pos}`;
                               return (
-                                <label key={key} className="checkpoint-editor-checkbox-label">
+                                <label key={key} className="modern-toggle-label">
                                   <input
                                     type="checkbox"
                                     name={key}
                                     checked={!!reviewData[key]}
                                     onChange={handleInputChange}
                                   />
-                                  <span>{pos.replace('_', ' ')}</span>
+                                  <span className="modern-toggle-slider"></span>
+                                  <span className="modern-toggle-text">{pos.replace('_', ' ')}</span>
                                 </label>
                               );
                             })}
@@ -710,64 +731,63 @@ export default function PendingModule({ currentUser }) {
                         </div>
                       ))}
                     </div>
-                    <div className="form-group-half" style={{ marginTop: '1rem' }}>
-                      <label>{language === 'zh' ? '责任人' : 'Responsible Person'}</label>
-                      <input type="text" name="responsible_person" value={reviewData.responsible_person || ''} onChange={handleInputChange} />
-                    </div>
-                    <div className="form-group-half" style={{ marginTop: '1rem' }}>
-                      <label>{language === 'zh' ? '检测时间' : 'Check Time'}</label>
-                      <input type="time" name="time" value={reviewData.time || ''} onChange={handleInputChange} />
-                    </div>
-                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
-                      <select 
-                        name="designated_engineer_id" 
-                        value={reviewData.designated_engineer_id || ''} 
-                        onChange={handleInputChange}
-                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
-                      >
-                        {engineers.map(eng => (
-                          <option key={eng.username} value={eng.username}>{eng.full_name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
-                      <input 
-                        type="text" 
-                        name="remarks" 
-                        value={reviewData.remarks || ''} 
-                        onChange={handleInputChange} 
-                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
-                      />
+
+                    <div className="form-section-card highlighted-section" style={{ marginTop: '1.5rem' }}>
+                      <h4 className="form-section-title">Signatures & Approvals</h4>
+                      <div className="form-grid-row">
+                        <div className="form-group-half">
+                          <label>{language === 'zh' ? '责任人' : 'Responsible Person'}</label>
+                          <input type="text" name="responsible_person" value={reviewData.responsible_person || ''} onChange={handleInputChange} />
+                        </div>
+                        <div className="form-group-half">
+                          <label>{language === 'zh' ? '检测时间' : 'Check Time'}</label>
+                          <input type="time" name="time" value={reviewData.time || ''} onChange={handleInputChange} />
+                        </div>
+                        <div className="form-group-half">
+                          <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
+                          <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
+                            {engineers.map(eng => (
+                              <option key={eng.username} value={eng.username}>{eng.full_name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="form-group-full">
+                          <label>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
+                          <textarea 
+                            name="remarks"
+                            value={reviewData.remarks || ''}
+                            onChange={handleInputChange}
+                            rows="2"
+                            placeholder={language === 'zh' ? '技术员备注 (可选)' : 'Technician remarks (optional)'}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ) : selectedItem?.type === 'changeover' ? (
                   <div className="changeover-editor">
                     {changeoverGroups.map((group, gIndex) => (
-                      <div key={gIndex} style={{ marginTop: '1.5rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem' }}>
-                        <h4 style={{ color: '#334155', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.5rem', marginBottom: '1rem' }}>{group.groupTitle}</h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <div key={gIndex} className="form-section-card">
+                        <h4 className="form-section-title">{group.groupTitle}</h4>
+                        <div className="changeover-items-list">
                           {group.items.map((item, iIndex) => (
-                            <div key={iIndex} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <div style={{ flex: 1, paddingRight: '1rem', fontSize: '0.9rem', color: '#475569' }}>
+                            <div key={iIndex} className="changeover-item-row">
+                              <div className="changeover-item-label">
                                 {item.label}
                               </div>
-                              <div style={{ width: '150px' }}>
+                              <div className="changeover-item-input">
                                 {item.type === 'text' ? (
                                   <input 
                                     type="text" 
                                     name={item.name} 
                                     value={reviewData[item.name] || ''} 
                                     onChange={handleInputChange}
-                                    style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
                                   />
                                 ) : (
                                   <select 
                                     name={item.name} 
                                     value={reviewData[item.name] || ''} 
                                     onChange={handleInputChange}
-                                    style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
                                   >
                                     {resultOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                                   </select>
@@ -778,28 +798,29 @@ export default function PendingModule({ currentUser }) {
                         </div>
                       </div>
                     ))}
-                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
-                      <select 
-                        name="designated_engineer_id" 
-                        value={reviewData.designated_engineer_id || ''} 
-                        onChange={handleInputChange}
-                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
-                      >
-                        {engineers.map(eng => (
-                          <option key={eng.username} value={eng.username}>{eng.full_name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
-                      <input 
-                        type="text" 
-                        name="remarks" 
-                        value={reviewData.remarks || ''} 
-                        onChange={handleInputChange} 
-                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
-                      />
+                    
+                    <div className="form-section-card highlighted-section" style={{ marginTop: '1.5rem' }}>
+                      <h4 className="form-section-title">Signatures & Approvals</h4>
+                      <div className="form-grid-row">
+                        <div className="form-group-half">
+                          <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
+                          <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
+                            {engineers.map(eng => (
+                              <option key={eng.username} value={eng.username}>{eng.full_name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="form-group-full">
+                          <label>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
+                          <textarea 
+                            name="remarks"
+                            value={reviewData.remarks || ''}
+                            onChange={handleInputChange}
+                            rows="2"
+                            placeholder={language === 'zh' ? '技术员备注 (可选)' : 'Technician remarks (optional)'}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ) : null}

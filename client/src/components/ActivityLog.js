@@ -25,7 +25,21 @@ const PlusIcon = () => (
     <line x1="5" y1="12" x2="19" y2="12"/>
   </svg>
 );
+const LogoutIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+    <polyline points="16 17 21 12 16 7"></polyline>
+    <line x1="21" y1="12" x2="9" y2="12"></line>
+  </svg>
+);
 
+const AlertIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="8" x2="12" y2="12"></line>
+    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+);
 
 
 const FilterIcon = () => (
@@ -97,17 +111,25 @@ export default function ActivityLog({ currentUser }) {
     endDate: todayStr
   });
 
-  // Pagination
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [totalLogins, setTotalLogins] = useState(0);
+  const [totalLogouts, setTotalLogouts] = useState(0);
+  const [totalFailures, setTotalFailures] = useState(0);
   const itemsPerPage = 15;
 
   useEffect(() => {
-    fetchLogs();
     fetchDashboardStats();
     if (isAdmin || isEngineer) {
       fetchUsers();
     }
   }, [isAdmin, isEngineer]);
+
+  useEffect(() => {
+    fetchLogs();
+  }, [activeFilters, currentPage]); // Re-fetch on filter or page change
 
   const filteredUsersList = useMemo(() => {
     if (isAdmin) return usersList;
@@ -136,9 +158,31 @@ export default function ActivityLog({ currentUser }) {
     setLoading(true);
     setError('');
     try {
-      const response = await apiService.getActivityLogs();
+      const params = {
+        page: currentPage,
+        limit: itemsPerPage,
+        user: activeFilters.user,
+        type: activeFilters.type,
+        startDate: activeFilters.startDate,
+        endDate: activeFilters.endDate
+      };
+      
+      const response = await apiService.getActivityLogs(params);
       if (response.data && response.data.success) {
         setLogs(response.data.logs || []);
+        if (response.data.pagination) {
+          setTotalPages(response.data.pagination.totalPages);
+          setTotalRecords(response.data.pagination.totalRecords);
+        }
+        if (response.data.totalLogins !== undefined) {
+          setTotalLogins(response.data.totalLogins);
+        }
+        if (response.data.totalLogouts !== undefined) {
+          setTotalLogouts(response.data.totalLogouts);
+        }
+        if (response.data.totalFailures !== undefined) {
+          setTotalFailures(response.data.totalFailures);
+        }
       }
     } catch (err) {
       console.error('Error fetching logs:', err);
@@ -245,9 +289,9 @@ export default function ActivityLog({ currentUser }) {
     return { date: dateStr, time: timeStr };
   };
 
-  // Live Summary Cards Calculations (of ALL fetched logs)
-  const totalEvents = logs.length;
-  const loginsCount = logs.filter(l => l.activity_type === 'LOGIN_SUCCESS').length;
+  // Live Summary Cards Calculations
+  const totalEvents = totalRecords;
+  const loginsCount = totalLogins;
 
   // Use the actual current database count for today's submissions to sync with Home/Reports
   const todayChecklistCount = dashboardStats.checklistTotal;
@@ -297,41 +341,8 @@ export default function ActivityLog({ currentUser }) {
     setCurrentPage(1);
   };
 
-  // Filter logs based on activeFilters state
-  const filteredLogs = useMemo(() => {
-    return logs.filter(log => {
-      // User filter
-      const matchesUser = activeFilters.user === 'ALL' || log.username === activeFilters.user;
-      
-      // Activity type filter
-      const matchesType = activeFilters.type === 'ALL' || log.activity_type === activeFilters.type;
-      
-      // Date filters (inclusive)
-      let matchesStartDate = true;
-      if (activeFilters.startDate) {
-        const logDate = new Date(log.created_at);
-        const filterStart = new Date(activeFilters.startDate + 'T00:00:00');
-        matchesStartDate = logDate >= filterStart;
-      }
-      
-      let matchesEndDate = true;
-      if (activeFilters.endDate) {
-        const logDate = new Date(log.created_at);
-        const filterEnd = new Date(activeFilters.endDate + 'T23:59:59');
-        matchesEndDate = logDate <= filterEnd;
-      }
-
-      return matchesUser && matchesType && matchesStartDate && matchesEndDate;
-    });
-  }, [logs, activeFilters]);
-
-  // Paginated Logs
-  const paginatedLogs = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredLogs.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredLogs, currentPage]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredLogs.length / itemsPerPage));
+  // Paginated Logs (Now handled by backend)
+  const paginatedLogs = logs;
 
   return (
     <div className="activity-log-container">
@@ -377,21 +388,21 @@ export default function ActivityLog({ currentUser }) {
 
         <div className="activity-stat-card">
           <div className="card-media card-grad-blue">
-            <PlusIcon />
+            <LogoutIcon />
           </div>
           <div className="card-info">
-            <span className="card-label">{language === 'zh' ? '今日安全表' : 'DAILY CHECKLISTS'}</span>
-            <strong className="card-val">{todayChecklistCount}</strong>
+            <span className="card-label">{language === 'zh' ? '登出次数' : 'LOGOUTS'}</span>
+            <strong className="card-val">{totalLogouts}</strong>
           </div>
         </div>
 
         <div className="activity-stat-card">
           <div className="card-media card-grad-rose">
-            <ClockIcon />
+            <AlertIcon />
           </div>
           <div className="card-info">
-            <span className="card-label">{language === 'zh' ? '今日功能表' : 'DAILY CHECKSHEETS'}</span>
-            <strong className="card-val">{todayCheckpointCount}</strong>
+            <span className="card-label">{language === 'zh' ? '登录失败' : 'FAILURES'}</span>
+            <strong className="card-val">{totalFailures}</strong>
           </div>
         </div>
       </div>
@@ -498,7 +509,7 @@ export default function ActivityLog({ currentUser }) {
           </div>
           <div className="header-right">
             <span className="results-badge">
-              {language === 'zh' ? `${filteredLogs.length} 条记录` : `${filteredLogs.length} event(s)`}
+              {language === 'zh' ? `${totalRecords} 条记录` : `${totalRecords} event(s)`}
             </span>
           </div>
         </div>
@@ -523,8 +534,8 @@ export default function ActivityLog({ currentUser }) {
                     <div className="logs-spinner">{t('loading')}</div>
                   </td>
                 </tr>
-              ) : paginatedLogs.length > 0 ? (
-                paginatedLogs.map(log => {
+              ) : logs.length > 0 ? (
+                logs.map(log => {
                   const ts = formatTimestampSplit(log.created_at);
                   const userInitials = getUserInitials(log.full_name || log.username);
                   const colorClass = getAvatarColorClass(log.full_name || log.username);
@@ -585,7 +596,7 @@ export default function ActivityLog({ currentUser }) {
         </div>
 
         {/* Pagination Toolbar */}
-        {!loading && filteredLogs.length > itemsPerPage && (
+        {!loading && totalRecords > 0 && (
           <div className="logs-pagination">
             <button 
               className="page-nav-btn"
@@ -595,11 +606,32 @@ export default function ActivityLog({ currentUser }) {
             >
               ◀
             </button>
-            <span className="page-indicator">
-              {language === 'zh' 
-                ? `第 ${currentPage} 页，共 ${totalPages} 页 (${filteredLogs.length} 条记录)`
-                : `Page ${currentPage} of ${totalPages} (${filteredLogs.length} records)`}
-            </span>
+            <div className="page-numbers">
+              {(() => {
+                const pages = [];
+                const maxVisible = 7;
+                let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+                let end = start + maxVisible - 1;
+                
+                if (end > totalPages) {
+                  end = totalPages;
+                  start = Math.max(1, end - maxVisible + 1);
+                }
+                
+                for (let i = start; i <= end; i++) {
+                  pages.push(
+                    <button
+                      key={i}
+                      className={`page-number-btn ${currentPage === i ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(i)}
+                    >
+                      {i}
+                    </button>
+                  );
+                }
+                return pages;
+              })()}
+            </div>
             <button 
               className="page-nav-btn"
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 

@@ -20,7 +20,8 @@ export default function Home({ currentUser }) {
   // New state for Checklist/Checksheet submission statistics
   const [dashboardStats, setDashboardStats] = useState({
     checkpoint: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
-    checklist: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
+    checklist: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
+    changeover: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
   });
 
   const [sessionToRevoke, setSessionToRevoke] = useState(null);
@@ -70,7 +71,8 @@ export default function Home({ currentUser }) {
       if (statsResponse.data.success) {
         setDashboardStats({
           checkpoint: statsResponse.data.checkpoint,
-          checklist: statsResponse.data.checklist
+          checklist: statsResponse.data.checklist,
+          changeover: statsResponse.data.changeover || { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
         });
       }
 

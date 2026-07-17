@@ -599,31 +599,54 @@
   color: #475569;
   width: 38px;
   height: 38px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.01);
+  font-size: 0.85rem;
 }
 
 .page-nav-btn:hover:not(:disabled) {
-  background: #f8fafc;
+  background: #f1f5f9;
   border-color: #94a3b8;
   color: #0f172a;
-  transform: translateY(-1px);
 }
 
 .page-nav-btn:disabled {
-  opacity: 0.4;
+  background: #f8fafc;
+  color: #cbd5e1;
   cursor: not-allowed;
+  border-color: #e2e8f0;
 }
 
-.page-indicator {
-  font-size: 0.88rem;
-  color: #64748b;
-  font-weight: 700;
+.page-numbers {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.page-number-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-number-btn:hover {
+  background: #f1f5f9;
+}
+
+.page-number-btn.active {
+  background: #415fff;
+  color: #ffffff;
+  border-color: #415fff;
 }
 
 /* ── Log Detail Modal Overlays ── */

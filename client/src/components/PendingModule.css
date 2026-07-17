@@ -491,6 +491,177 @@
   background: #2546e6;
 }
 
+/* -------------------------------------
+   Modern Form Cards & Layout
+-------------------------------------- */
+.form-section-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.highlighted-section {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.form-section-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  letter-spacing: -0.01em;
+}
+
+.form-grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+/* -------------------------------------
+   Modern Toggle Switches (Checkpoints)
+-------------------------------------- */
+.checkboxes-grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.modern-toggle-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  background: #f1f5f9;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.modern-toggle-label:hover {
+  background: #e2e8f0;
+}
+
+.modern-toggle-label input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.modern-toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  background-color: #cbd5e1;
+  border-radius: 34px;
+  transition: .3s;
+  margin-right: 0.6rem;
+}
+
+.modern-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+
+.modern-toggle-label input:checked + .modern-toggle-slider {
+  background-color: #415fff;
+}
+
+.modern-toggle-label input:checked + .modern-toggle-slider:before {
+  transform: translateX(16px);
+}
+
+.modern-toggle-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  user-select: none;
+}
+
+/* -------------------------------------
+   Changeover Lists
+-------------------------------------- */
+.changeover-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.changeover-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.changeover-item-row:last-child {
+  border-bottom: none;
+}
+
+.changeover-item-label {
+  flex: 1;
+  padding-right: 1rem;
+  font-size: 0.95rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.changeover-item-input {
+  width: 200px;
+}
+
+.changeover-item-input input, .changeover-item-input select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.changeover-item-input input:focus, .changeover-item-input select:focus {
+  border-color: #415fff;
+  background: #fff;
+}
+
+.form-group-full textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.93rem;
+  outline: none;
+  background: #fff;
+  transition: all 0.2s ease;
+  color: #0f172a;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-group-full textarea:focus {
+  border-color: #415fff;
+  box-shadow: 0 0 0 4px rgba(65, 95, 255, 0.1);
+}
+
 @media (max-width: 768px) {
   .pending-container { padding: 1rem; }
   .pending-tab-btn { padding: 0.6rem 1rem; font-size: 0.95rem; }

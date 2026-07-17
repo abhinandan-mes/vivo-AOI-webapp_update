@@ -49,7 +49,7 @@ export const apiService = {
   getAllSessionsSummary: () => API.get('/auth/sessions/all'),
   revokeSession: (sessionId) => API.post(`/auth/sessions/${sessionId}/revoke`),
   changePassword: (payload) => API.post('/auth/change-password', payload),
-  getActivityLogs: () => API.get('/activity-logs'),
+  getActivityLogs: (params) => API.get('/activity-logs', { params }),
   getRecentSubmissions: () => API.get('/activity-logs/recent-submissions'),
   getDashboardStats: (date) => API.get('/auth/dashboard-stats', { params: { date } }),
 

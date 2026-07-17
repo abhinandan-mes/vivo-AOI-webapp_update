@@ -178,6 +178,15 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ## ⚠️ Known Issues & Technical Debt
 
+### Recent Updates: UI Redesign & Pagination (July 2026)
+* **Activity Logs Overhaul**: Transitioned Activity Logs from client-side array filtering to robust server-side offset pagination (`skip`, `take`, `count`) in Prisma. The UI was modernized to include 4 specific metric cards (TOTAL EVENTS, LOGINS, LOGOUTS, FAILURES) tracking Authentication events, utilizing a numbered `1 2 3...` sliding-window pagination design.
+* **Review Forms UI Redesign (`PendingModule.js`)**: Modernized Checklist, Checkpoint, and Changeover review forms using grid layouts grouped into discrete CSS section cards (`.form-section-card`). 
+  - Substituted basic HTML checkboxes with premium `.modern-toggle-slider` toggle switches in the Checkpoint form.
+  - Unified the "Designated Engineer", "Confirmation", and "Technician Remarks" blocks into a consistent "Signatures & Approvals" footer across all forms.
+* **Changeover Type Classification**: Expanded the Changeover checksheet schema and UI to include a "Changeover Type" dropdown containing: Model, Series, After Sale, Trial.
+* **Line Status Sync**: Line Management status was decoupled from the Changeover forms natively; Changeover sync functionality was rewritten to focus purely on the new *Changeover Type* rather than interfering with global line metrics.
+* **Engineer Approval Flow Fix**: Fixed an issue in `changeoverController.js` where Engineer "Disapprove" actions inadvertently marked submissions as "Approved".
+
 ### Resolved: Security & Access Control Enhancements (June 2026)
 * **Access Control Vulnerability**: Enforced role authorization on user directory endpoints (`GET /auth/users` and `POST /auth/create-user`) by applying `requireRoles(['super_admin', 'admin'])`. Standard operators can no longer access user records or create accounts directly.
 * **Brute-Force Prevention**: Integrated `express-rate-limit` on the `POST /auth/login` endpoint (10 requests per 15 mins per IP).
