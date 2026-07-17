@@ -212,7 +212,8 @@ export default function ChangeoverChecksheet({ currentUser }) {
     }
   };
 
-  const isFormValid = formData.line && formData.group_name && formData.shift && formData.date && formData.model_name && formData.model_code;
+  const hasCross = Object.values(formData).includes('❌');
+  const isFormValid = formData.line && formData.group_name && formData.shift && formData.date && formData.model_name && formData.model_code && formData.designated_engineer_id && (!hasCross || formData.remarks.trim() !== '');
   const isInspector = currentUser?.role === 'inspector';
 
   return (
@@ -315,13 +316,28 @@ export default function ChangeoverChecksheet({ currentUser }) {
                  placeholder={language === 'zh' ? '输入机种代码' : 'Enter model code (numbers only)...'}
                />
              </div>
+             <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                <label htmlFor="designated_engineer_id">{language === 'zh' ? '指定工程师 *' : 'Designated Engineer *'}</label>
+                <select 
+                  id="designated_engineer_id" 
+                  name="designated_engineer_id" 
+                  value={formData.designated_engineer_id} 
+                  onChange={handleInputChange} 
+                  required
+                >
+                  <option value="">{t('cp_line_placeholder')} ({language === 'zh' ? '请选择' : 'Please select'})</option>
+                  {engineers.map(eng => (
+                    <option key={eng.username} value={eng.username}>{eng.full_name}</option>
+                  ))}
+                </select>
+              </div>
           </div>
           </div>
 
           <div className="form-section">
             <h2>{language === 'zh' ? '检查项目 (Check Items)' : 'Check Items'}</h2>
             <div className="changeover-info-banner" style={{ background: '#e0f2fe', color: '#0369a1', padding: '15px', borderRadius: '8px', marginBottom: '20px', fontSize: '0.9rem' }}>
-              <strong>Recording Way:</strong> "√" for normal operation, "\" or "/" for no operation. If there are abnormalities, feedback to leader to settle abnormalities.
+              <strong>Recording Way:</strong> "✔️" for Yes, "❌" for No, "N/A" for Not applicable. If there are abnormalities, feedback to leader to settle abnormalities.
             </div>
 
             {changeoverGroups.map((group, gIndex) => (
@@ -364,33 +380,22 @@ export default function ChangeoverChecksheet({ currentUser }) {
           </div>
 
           <div className="form-section">
-            <h2>{t('cp_confirmation')}</h2>
+            <h2>{language === 'zh' ? '确认与备注 (Confirmation & Remarks)' : 'Confirmation & Remarks'}</h2>
             <div className="form-grid-6">
-              <div className="form-group" style={{ gridColumn: 'span 3' }}>
-                <label htmlFor="designated_engineer_id">{t('rep_designated_engineer')} *</label>
-                <select 
-                  id="designated_engineer_id" 
-                  name="designated_engineer_id" 
-                  value={formData.designated_engineer_id} 
-                  onChange={handleInputChange} 
-                  required
-                >
-                  <option value="">{t('cp_line_placeholder')} ({language === 'zh' ? '请选择' : 'Please select'})</option>
-                  {engineers.map(eng => (
-                    <option key={eng.username} value={eng.username}>{eng.full_name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group" style={{ gridColumn: 'span 3' }}>
-                <label htmlFor="remarks">{t('remarks')}</label>
+              <div className="form-group" style={{ gridColumn: 'span 6' }}>
+                <label htmlFor="remarks">
+                  {language === 'zh' ? '备注 (Remarks)' : 'Remarks'}
+                  {hasCross && <span style={{ color: '#ef4444', marginLeft: '5px' }}>* (Required because '❌' was selected)</span>}
+                </label>
                 <input
                   id="remarks"
                   type="text"
                   name="remarks"
                   value={formData.remarks}
                   onChange={handleInputChange}
-                  placeholder={t('remarks')}
+                  placeholder={hasCross ? (language === 'zh' ? '请输入原因...' : 'Please enter reason...') : (language === 'zh' ? '备注...' : 'Remarks...')}
+                  required={hasCross}
+                  style={{ borderColor: hasCross && !formData.remarks.trim() ? '#ef4444' : '#cbd5e1' }}
                 />
               </div>
             </div>

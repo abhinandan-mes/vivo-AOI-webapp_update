@@ -14,3 +14,7 @@ No pending migrations to apply.
 [AUTH] Login successful: User "abhinandan" (Role: super_admin)
 [AUTH] Login attempt received for username: "abhinandan"
 [AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003873"
+[AUTH] Login successful: User "95003873" (Role: technician)
+[AUTH] Login attempt received for username: "95004181"
+[AUTH] Login successful: User "95004181" (Role: technician)
