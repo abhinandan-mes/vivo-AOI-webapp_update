@@ -226,3 +226,15 @@ ValidationError: An invalid 'request.ip' (10.172.130.189:12495) was detected. Co
   code: 'ERR_ERL_INVALID_IP_ADDRESS',
   help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
 }
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.189:7876) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}

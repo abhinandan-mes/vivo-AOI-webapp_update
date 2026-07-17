@@ -114,7 +114,7 @@ export default function PendingModule({ currentUser }) {
       title,
       message,
       type: action === 'approve' ? 'info' : 'danger',
-      confirmText: action === 'approve' ? t('yes') : t('no'),
+      confirmText: action === 'approve' ? t('yes') : (language === 'zh' ? '是的, 驳回' : 'Yes, Disapprove'),
       cancelText: t('cancel'),
       onConfirm: () => submitReview(action)
     });

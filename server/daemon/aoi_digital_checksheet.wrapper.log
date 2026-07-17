@@ -40,3 +40,19 @@
 2026-07-17 15:40:43 - Finished aoi_digital_checksheet.exe
 2026-07-17 15:40:46 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2026-07-17 15:40:46 - Started 9668
+2026-07-17 15:44:55 - Stopping aoi_digital_checksheet.exe
+2026-07-17 15:44:55 - ProcessKill 9668
+2026-07-17 15:44:56 - Found child process: 6116 Name: conhost.exe
+2026-07-17 15:44:56 - Found child process: 6348 Name: node.exe
+2026-07-17 15:44:56 - Stopping process 6116
+2026-07-17 15:44:56 - Send SIGINT 6116
+2026-07-17 15:44:56 - SIGINT to 6116 failed - Killing as fallback
+2026-07-17 15:44:56 - Stopping process 6348
+2026-07-17 15:44:56 - Send SIGINT 6348
+2026-07-17 15:44:56 - SIGINT to 6348 failed - Killing as fallback
+2026-07-17 15:44:56 - Stopping process 9668
+2026-07-17 15:44:56 - Send SIGINT 9668
+2026-07-17 15:44:56 - SIGINT to 9668 failed - Killing as fallback
+2026-07-17 15:44:56 - Finished aoi_digital_checksheet.exe
+2026-07-17 15:44:58 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-07-17 15:44:58 - Started 10296
