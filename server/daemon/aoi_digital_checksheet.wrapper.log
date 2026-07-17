@@ -1,0 +1,2 @@
+2026-07-17 12:17:28 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-07-17 12:17:28 - Started 6928

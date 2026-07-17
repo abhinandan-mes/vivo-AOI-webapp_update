@@ -334,7 +334,7 @@ export default function PendingModule({ currentUser }) {
                 </table>
               </div>
             )
-          ) : (
+          ) : activeTab === 'checkpoint' ? (
             checkpoints.length === 0 ? (
               <div className="pending-empty-state">
                 <span className="empty-icon">✓</span>
@@ -390,7 +390,7 @@ export default function PendingModule({ currentUser }) {
                 </table>
               </div>
             )
-          ) : (
+          ) : activeTab === 'changeover' ? (
             changeovers.length === 0 ? (
               <div className="pending-empty-state">
                 <span className="empty-icon">✓</span>
@@ -446,7 +446,7 @@ export default function PendingModule({ currentUser }) {
                 </table>
               </div>
             )
-          )}
+          ) : null}
         </div>
       )}
 
@@ -539,8 +539,7 @@ export default function PendingModule({ currentUser }) {
                       🔄 {language === 'zh' ? '变更为正常生产状态' : 'Change Status to Production'}
                     </button>
                   </div>
-                ) : (
-                  selectedItem.type === 'checklist' ? (
+                ) : selectedItem.type === 'checklist' ? (
                     /* Checklist Form Fields */
                     <div className="checklist-fields-editor">
                     <div className="form-group-full">
@@ -644,7 +643,7 @@ export default function PendingModule({ currentUser }) {
                       <input type="text" name="remarks" value={reviewData.remarks || ''} onChange={handleInputChange} />
                     </div>
                   </div>
-                ) : (
+                ) : selectedItem?.type === 'checkpoint' ? (
                   /* Checkpoints Form Fields */
                   <div className="checkpoint-checkboxes-editor">
                     <div className="checkpoint-editor-grid">
@@ -691,8 +690,7 @@ export default function PendingModule({ currentUser }) {
                       <input type="text" name="remarks" value={reviewData.remarks || ''} onChange={handleInputChange} />
                     </div>
                   </div>
-                ) : (
-                  /* Changeover Form Fields */
+                ) : selectedItem?.type === 'changeover' ? (
                   <div className="changeover-editor">
                     <div className="form-group-full">
                       <label>{language === 'zh' ? '机种名称' : 'Model Name'}</label>
@@ -745,8 +743,7 @@ export default function PendingModule({ currentUser }) {
                       <input type="text" name="remarks" value={reviewData.remarks || ''} onChange={handleInputChange} />
                     </div>
                   </div>
-                )
-                )}
+                ) : null}
               </div>
 
               {/* Engineer Remarks Block */}

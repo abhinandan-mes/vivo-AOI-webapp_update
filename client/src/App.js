@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
-import FunctionCheckpoint from './components/FunctionCheckpoint';
-import TechnicianChecklist from './components/TechnicianChecklist';
-import ChangeoverChecksheet from './components/ChangeoverChecksheet';
+import ChecksheetHub from './components/ChecksheetHub';
 import Reports from './components/Reports';
 import LoginPage from './components/LoginPage';
 import UserManagement from './components/UserManagement';
@@ -288,9 +286,14 @@ function App() {
             >
               {t('nav_home')}
             </NavLink>
-            <NavLink to="/changeover" className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}>
-              {language === 'zh' ? '换线记录表' : 'Changeover Checksheet'}
-            </NavLink>
+            {user.role !== 'inspector' && (
+              <NavLink 
+                to="/checksheets" 
+                className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+              >
+                {language === 'zh' ? '提交表单' : 'Checksheets'}
+              </NavLink>
+            )}
             {user.role !== 'inspector' && pendingCount > 0 && (
               <NavLink
                 to="/pending"
@@ -310,21 +313,6 @@ function App() {
                 </span>
               </NavLink>
             )}
-            {user.role !== 'inspector' && (
-              <>
-                <NavLink
-                  to="/checklist"
-                  className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-                >
-                  {t('nav_checklist')}
-                </NavLink>
-                <NavLink
-                  to="/checkpoint"
-                  className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-                >
-                  {t('nav_checkpoint')}
-                </NavLink>
-              </>
             )}
             <NavLink
               to="/reports"
@@ -389,11 +377,7 @@ function App() {
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<Home currentUser={user} />} />
           {user.role !== 'inspector' && (
-            <>
-              <Route path="/checkpoint" element={<FunctionCheckpoint currentUser={user} />} />
-              <Route path="/checklist" element={<TechnicianChecklist currentUser={user} />} />
-              <Route path="/changeover" element={<ChangeoverChecksheet currentUser={user} />} />
-            </>
+            <Route path="/checksheets" element={<ChecksheetHub user={user} />} />
           )}
           <Route path="/reports" element={<Reports currentUser={user} />} />
           {user.role !== 'inspector' && (

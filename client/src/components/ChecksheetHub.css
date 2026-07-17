@@ -1,0 +1,80 @@
+.checksheet-hub-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.checksheet-tabs-wrapper {
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  margin-bottom: 2rem;
+  border: 1px solid #f1f5f9;
+}
+
+.checksheet-header-title {
+  font-size: 1.5rem;
+  color: #1e293b;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  margin-top: 0;
+}
+
+.checksheet-tabs {
+  display: flex;
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 0.5rem;
+  border-radius: 12px;
+  width: max-content;
+}
+
+.checksheet-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checksheet-tab-btn:hover {
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+.checksheet-tab-btn.active {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.checksheet-content {
+  background: transparent;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .checksheet-tabs-wrapper {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  .checksheet-tabs {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+  .checksheet-tab-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
