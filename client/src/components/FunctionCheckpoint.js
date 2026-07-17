@@ -252,8 +252,8 @@ export default function FunctionCheckpoint({ currentUser }) {
                  disabled
                >
                  <option value="" disabled>{t('cp_shift_placeholder')}</option>
-                 <option value="Day">{t('day')}</option>
-                 <option value="Night">{t('night')}</option>
+                 <option value="Day">{currentUser?.language === 'zh' || language === 'zh' ? '白班 (Day Shift)' : 'Day Shift'}</option>
+                 <option value="Night">{currentUser?.language === 'zh' || language === 'zh' ? '晚班 (Night Shift)' : 'Night Shift'}</option>
                </select>
              </div>
             <div className="form-group">

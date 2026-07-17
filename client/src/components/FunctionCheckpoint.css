@@ -80,6 +80,7 @@
 .form-group input[type="text"],
 .form-group input[type="date"],
 .form-group input[type="time"],
+.form-group input[type="number"],
 .form-group select {
   padding: 0.9rem;
   border: 1px solid #c9d5e3;

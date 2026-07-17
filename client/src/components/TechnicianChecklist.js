@@ -262,8 +262,8 @@ export default function TechnicianChecklist({ currentUser }) {
                 disabled
               >
                 <option value="" disabled>{t('cp_shift_placeholder')}</option>
-                <option value="Day">{t('day')}</option>
-                <option value="Night">{t('night')}</option>
+                 <option value="Day">{language === 'zh' ? '白班 (Day Shift)' : 'Day Shift'}</option>
+                 <option value="Night">{language === 'zh' ? '晚班 (Night Shift)' : 'Night Shift'}</option>
               </select>
             </div>
             <div className="form-group">
