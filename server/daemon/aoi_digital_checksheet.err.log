@@ -1,2 +1,206 @@
 ⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
 Environment variables loaded from .env
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0
+d:\AOi_check_sheet\server\routes\auth.js:517
+    const checklists = await prisma.aoiTechnicianChecklist.findMany({
+          ^
+
+SyntaxError: Identifier 'checklists' has already been declared
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\server.js:8:20)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+
+Node.js v26.4.0

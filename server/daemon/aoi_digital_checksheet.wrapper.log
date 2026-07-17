@@ -1,2 +1,24 @@
 2026-07-17 12:17:28 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2026-07-17 12:17:28 - Started 6928
+2026-07-17 13:52:36 - Stopping aoi_digital_checksheet.exe
+2026-07-17 13:52:36 - ProcessKill 6928
+2026-07-17 13:52:36 - Found child process: 8900 Name: conhost.exe
+2026-07-17 13:52:36 - Found child process: 10992 Name: node.exe
+2026-07-17 13:52:36 - Stopping process 8900
+2026-07-17 13:52:36 - Send SIGINT 8900
+2026-07-17 13:52:36 - SIGINT to 8900 failed - Killing as fallback
+2026-07-17 13:52:36 - Stopping process 10992
+2026-07-17 13:52:36 - Send SIGINT 10992
+2026-07-17 13:52:36 - SIGINT to 10992 failed - Killing as fallback
+2026-07-17 13:52:36 - Stopping process 6928
+2026-07-17 13:52:36 - Send SIGINT 6928
+2026-07-17 13:52:36 - SIGINT to 6928 failed - Killing as fallback
+2026-07-17 13:52:36 - Finished aoi_digital_checksheet.exe
+2026-07-17 13:52:37 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-07-17 13:52:37 - Started 12880
+2026-07-17 13:52:48 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-07-17 13:52:48 - Started 6232
+2026-07-17 13:53:21 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-07-17 13:53:21 - Started 7460
+2026-07-17 13:53:35 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-07-17 13:53:35 - Started 9968

@@ -513,10 +513,7 @@ router.get('/auth/dashboard-stats', authenticateToken, async (req, res) => {
       where: { date: targetDate }
     });
 
-    // 2. Fetch checklists for targetDate
-    const checklists = await prisma.aoiTechnicianChecklist.findMany({
-      where: { date: targetDate }
-    });
+
 
     // Calculate statistics
     const checkpointCount = checkpoints.length;

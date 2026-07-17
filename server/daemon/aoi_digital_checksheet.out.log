@@ -18,3 +18,5 @@ No pending migrations to apply.
 [AUTH] Login successful: User "95003873" (Role: technician)
 [AUTH] Login attempt received for username: "95004181"
 [AUTH] Login successful: User "95004181" (Role: technician)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
