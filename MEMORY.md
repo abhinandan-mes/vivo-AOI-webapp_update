@@ -465,6 +465,23 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
     * **Engineer User Filter Dropdown**: Unlocked the USER filter dropdown for the `engineer` role, allowing them to filter logs by other users. The dropdown options list for engineers excludes `admin` and `super_admin` accounts. Backend queries also strictly omit returning admin or super_admin activity logs to engineers.
   * **Engineer Checklist & Checksheet Form Submission**: Authorized the `engineer` role to fill and submit both the **Technician Checklist** (`/checklist` POST route) and the **Daily Function Check** (`/checkpoint` POST route) on both frontend layouts and backend endpoints.
   * **Health Check & Reverse Proxy Compatibility**: Moved the anonymous `/api/health` check endpoint definition before any authenticated Express routes. This prevents IIS URL Rewrite reverse proxies and health probes from receiving 401 Unauthorized blocks, ensuring correct health status reporting.
+    * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
+    * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
+    * Deleted the legacy startup shortcut (`AOI-Server.lnk`) from the Windows Startup folder to prevent double-execution port conflicts on user login.
+
+### Resolved: Pending Tasks Visibility & Reports Sorting Enhancements (July 2026)
+* **Reports Page Dynamic Sorting**:
+  * Added a default sorting logic prioritizing **Latest Submissions** (`created_at` timestamp descending).
+  * Injected a `Sort By` dropdown into the filters panel to allow toggling between *Latest Submissions* and the legacy *Line Ascending* mode.
+  * Rebalanced the CSS grid template for `.report-filters` from a rigid 6-column to a uniform 4-column layout (`repeat(4, 1fr)`), allowing all 8 elements (7 inputs + 1 clear button) to elegantly wrap into exactly two even rows.
+* **Smart Pending Tasks Visibility**:
+  * Added a global `pendingCount` state watcher in `App.js` that periodically queries the backend (every 30s) to monitor the logged-in user's precise queue of pending checklists and checkpoints.
+  * The **Pending Tasks** navigation tab is now entirely hidden if the user has `0` pending checks assigned to them, decluttering the UI for inactive periods.
+  * Added a dynamic red notification badge displaying the total pending count directly on the navigation tab.
+* **Strict Admin/Engineer Workflow Scoping**:
+  * **Designated Engineer Column**: Exposed a new `Designated Engineer` column inside the `PendingModule.js` tables, utilizing the `getEngineerDisplay` helper to visibly show Admins exactly *who* the checksheet is waiting on.
+  * **View Only Admin Mode**: Revoked the `Approve/Reject` action buttons for `admin` and `super_admin` roles to enforce process compliance (admins shouldn't bypass the designated engineer). The buttons are replaced by a **"View Only"** action that opens the drawer strictly in read-only mode, disabling the engineer remarks textarea and hiding approval buttons.
+
   * **Native Windows Service Migration**:
     * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
     * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
