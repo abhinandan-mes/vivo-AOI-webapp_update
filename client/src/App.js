@@ -20,6 +20,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
 
   useEffect(() => {
     // JWT expiry fired by Axios interceptor — treat as inactivity (preserve redirect)
@@ -59,6 +60,38 @@ function App() {
       active = false;
     };
   }, []);
+
+  // Fetch pending count periodically if user is logged in and not an inspector
+  useEffect(() => {
+    if (!user || user.role === 'inspector') {
+      setPendingCount(0);
+      return;
+    }
+
+    let isMounted = true;
+    const fetchPending = async () => {
+      try {
+        const [checklistsRes, checkpointsRes] = await Promise.all([
+          apiService.getPendingChecklists(),
+          apiService.getPendingCheckpoints()
+        ]);
+        if (isMounted) {
+          const total = (checklistsRes.data.data?.length || 0) + (checkpointsRes.data.data?.length || 0);
+          setPendingCount(total);
+        }
+      } catch (err) {
+        console.error('Error fetching pending count:', err);
+      }
+    };
+
+    fetchPending();
+    const intervalId = setInterval(fetchPending, 30000); // Check every 30 seconds
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [user]);
 
   const handleLogin = async credentials => {
     const response = await apiService.login(credentials);
@@ -253,12 +286,23 @@ function App() {
             >
               {t('nav_home')}
             </NavLink>
-            {user.role !== 'inspector' && (
+            {user.role !== 'inspector' && pendingCount > 0 && (
               <NavLink
                 to="/pending"
                 className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
               >
                 {t('nav_pending')}
+                <span style={{
+                  marginLeft: '8px',
+                  background: '#ef4444',
+                  color: '#fff',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold'
+                }}>
+                  {pendingCount}
+                </span>
               </NavLink>
             )}
             {user.role !== 'inspector' && (
