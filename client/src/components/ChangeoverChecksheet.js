@@ -290,8 +290,8 @@ export default function ChangeoverChecksheet({ currentUser }) {
                  required
                  disabled
                >
-                 <option value="Day">{t('day_shift')}</option>
-                 <option value="Night">{t('night_shift')}</option>
+                 <option value="Day">{language === 'zh' ? '白班 (Day Shift)' : 'Day Shift'}</option>
+                 <option value="Night">{language === 'zh' ? '晚班 (Night Shift)' : 'Night Shift'}</option>
                </select>
              </div>
              <div className="form-group" style={{ gridColumn: 'span 1' }}>
@@ -325,7 +325,7 @@ export default function ChangeoverChecksheet({ currentUser }) {
                   onChange={handleInputChange} 
                   required
                 >
-                  <option value="">{t('cp_line_placeholder')} ({language === 'zh' ? '请选择' : 'Please select'})</option>
+                  <option value="">{language === 'zh' ? '请选择工程师...' : 'Select Engineer (Please select)...'}</option>
                   {engineers.map(eng => (
                     <option key={eng.username} value={eng.username}>{eng.full_name}</option>
                   ))}
@@ -399,6 +399,16 @@ export default function ChangeoverChecksheet({ currentUser }) {
                 />
               </div>
             </div>
+          </div>
+          <div className="changeover-notes" style={{ marginTop: '2rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.85rem', color: '#475569', lineHeight: '1.6' }}>
+            <h4 style={{ margin: '0 0 10px 0', color: '#0f172a' }}>{language === 'zh' ? '填写说明 (Notes)' : 'Notes'}</h4>
+            <ol style={{ margin: 0, paddingLeft: '20px' }}>
+              <li>The AOI changeover and change side checklists are accurately filled by the AOI technicians of the equipment application group during transferring new program.</li>
+              <li>Recording way of the checklist: "✔️" for normal operation, "❌", "N/A" for no operation, and if there are abnormalities in line production, feedback to leader of AOI technician to settle abnormalities.</li>
+              <li>Due to the difference of the equipment, changeover and change side checklists are filled out according to the type of the equipment by AOI technician, mark with "N/A" for no operation. SPI does not enable the code reading function when the auxiliary board line produces the X-board.</li>
+              <li>The check items of trial-production can be provisionally adjusted upon actual situations.</li>
+              <li>The new model program is filled in according to turnaround time. The process change is based on the records checklist.</li>
+            </ol>
           </div>
         </fieldset>
 
