@@ -319,42 +319,47 @@ export default function Reports({ currentUser }) {
   const rows = useMemo(() => {
     const data = reportType === 'checkpoint' ? checkpoints : reportType === 'changeover' ? changeovers : checklists;
     
-    // Find all unique dates in the dataset
-    const uniqueDates = Array.from(new Set(data.map(d => dateKey(d.date))));
-    if (uniqueDates.length === 0) {
-      uniqueDates.push(dateKey(new Date()));
-    }
-    
     const completeRows = [];
-    
-    uniqueDates.forEach(dateStr => {
-      const recordsForDate = data.filter(d => dateKey(d.date) === dateStr);
+
+    if (reportType === 'changeover') {
+      // Changeovers don't happen on every line every day, so we do NOT pad with "Not Filled" rows.
+      completeRows.push(...data);
+    } else {
+      // Find all unique dates in the dataset
+      const uniqueDates = Array.from(new Set(data.map(d => dateKey(d.date))));
+      if (uniqueDates.length === 0) {
+        uniqueDates.push(dateKey(new Date()));
+      }
       
-      allLineOptions.forEach(line => {
-        const isInstalled = !notInstalledLines.includes(line);
-        if (!isInstalled) return;
+      uniqueDates.forEach(dateStr => {
+        const recordsForDate = data.filter(d => dateKey(d.date) === dateStr);
         
-        shiftOptions.forEach(shift => {
-          const actualRecord = recordsForDate.find(r => String(r.line) === line && r.shift === shift);
-          if (actualRecord) {
-            completeRows.push(actualRecord);
-          } else {
-            if (hasShiftStarted(dateStr, shift)) {
-              completeRows.push({
-                id: `dummy-${dateStr}-${line}-${shift}`,
-                date: dateStr,
-                line: line,
-                shift: shift,
-                group_name: '—',
-                status: 'Not Filled',
-                submitted_by: '—',
-                created_at: null,
-              });
+        allLineOptions.forEach(line => {
+          const isInstalled = !notInstalledLines.includes(line);
+          if (!isInstalled) return;
+          
+          shiftOptions.forEach(shift => {
+            const actualRecord = recordsForDate.find(r => String(r.line) === line && r.shift === shift);
+            if (actualRecord) {
+              completeRows.push(actualRecord);
+            } else {
+              if (hasShiftStarted(dateStr, shift)) {
+                completeRows.push({
+                  id: `dummy-${dateStr}-${line}-${shift}`,
+                  date: dateStr,
+                  line: line,
+                  shift: shift,
+                  group_name: '—',
+                  status: 'Not Filled',
+                  submitted_by: '—',
+                  created_at: null,
+                });
+              }
             }
-          }
+          });
         });
       });
-    });
+    }
 
     return completeRows.sort((a, b) => {
       if (filters.sort === 'latest') {
@@ -1031,8 +1036,8 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               <td>{row.submitted_by || '—'}</td>
 
               {/* Dynamic rendering of the rest of the columns based on changeoverColumns definition */}
-              {changeoverColumns.slice(8).map(([label, key]) => {
-                // skip last item which is designated engineer (already handled or will handle dynamically)
+              {changeoverColumns.slice(7).map(([label, key]) => {
+                // Handle designated engineer
                 if (key === 'designated_engineer_id') {
                   return <td key={key}>{getEngineerDisplay(row[key])}</td>;
                 }
@@ -1098,6 +1103,51 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                       {row.engineer_remarks || '—'}
                     </span>
                   </div>
+                  
+                  {/* Show the 24 Changeover Check Items */}
+                  <div style={{ gridColumn: 'span 4', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
+                    <strong style={{ display: 'block', color: '#334155', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '📋 换线检查项目记录' : '📋 Changeover Check Items Details'}
+                    </strong>
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+                      {[
+                        [language === 'zh' ? '1. SPI钢网后缀名匹配' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
+                        [language === 'zh' ? '2. SPI程序连板流水号匹配' : '2. SPI Subpanel Match', 'spi_program_subpanel_serial_match'],
+                        [language === 'zh' ? '3. SPI复测180度极性' : '3. SPI Recheck Polarity', 'spi_recheck_pcab_polarity'],
+                        [language === 'zh' ? '4. SPI参数设置确认' : '4. SPI Parameter Check', 'spi_confirm_parameter_settings'],
+                        [language === 'zh' ? '5. SPI扫码功能开启' : '5. SPI Read Barcode', 'spi_read_barcode_on'],
+                        [language === 'zh' ? '6. 炉前ECO确认' : '6. Pre-AOI ECO', 'pre_aoi_eco_checklists'],
+                        [language === 'zh' ? '7. 炉前程序机种确认' : '7. Pre-AOI Program Model', 'pre_aoi_program_model_modify'],
+                        [language === 'zh' ? '8. 炉前新物料测试' : '8. Pre-AOI New Material', 'pre_aoi_vi_program_new_materia'],
+                        [language === 'zh' ? '9. 炉前连流报警' : '9. Pre-AOI Alarm Limit', 'pre_aoi_limit_defective_alarm'],
+                        [language === 'zh' ? '10. 炉前裸板测试' : '10. Pre-AOI Bare Board', 'pre_aoi_test_program_bare_pcba'],
+                        [language === 'zh' ? '11. 炉前BOT连板流水号' : '11. Pre-AOI Bot Subpanel', 'pre_aoi_bot_program_serial_number'],
+                        [language === 'zh' ? '12. 炉前扫码功能开启' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
+                        [language === 'zh' ? '13a. 炉前物料确认' : '13a. Pre-AOI Mount Confirm', 'pre_aoi_confirm_materials_mounted'],
+                        [language === 'zh' ? '13b. 炉前删除所有框' : '13b. Pre-AOI Delete Zones', 'pre_aoi_delete_all_zones'],
+                        [language === 'zh' ? '14. 炉后设备型号' : '14. Post-AOI Equipment', 'post_aoi_equipment_model'],
+                        [language === 'zh' ? '15. 炉后ECO确认' : '15. Post-AOI ECO', 'post_aoi_eco_checklists'],
+                        [language === 'zh' ? '16. 炉后程序机种确认' : '16. Post-AOI Program Model', 'post_aoi_program_model_modify'],
+                        [language === 'zh' ? '17. 炉后复测芯片/标准件' : '17. Post-AOI Recheck Chips', 'post_aoi_recheck_chips_standard_models'],
+                        [language === 'zh' ? '18. 炉后扫描整板图片' : '18. Post-AOI Scan Board', 'post_aoi_scan_board_picture'],
+                        [language === 'zh' ? '19. 炉后连流报警' : '19. Post-AOI Alarm Limit', 'post_aoi_limit_defective_alarm'],
+                        [language === 'zh' ? '20. 炉后屏蔽罩极性' : '20. Post-AOI Shield Polarity', 'post_aoi_confirm_polarity_shield'],
+                        [language === 'zh' ? '21. 炉后BOT连板流水号' : '21. Post-AOI Bot Subpanel', 'post_aoi_bot_program_serial_number'],
+                        [language === 'zh' ? '22. 炉后标准件次数' : '22. Post-AOI Standard Times', 'post_aoi_registered_standard_models_times'],
+                        [language === 'zh' ? '23. 设备导轨宽度' : '23. Others Width Adjust', 'others_adjust_widths'],
+                        [language === 'zh' ? '24. PCB扫码标准' : '24. Others PCB Barcode', 'others_add_test_standard_pcb_barcode']
+                      ].map(([label, key]) => (
+                        <div key={key} style={{ display: 'flex', justifyContent: 'space-between', background: '#fff', padding: '0.4rem 0.6rem', borderRadius: '6px', border: '1px solid #f1f5f9', fontSize: '0.85rem' }}>
+                          <span style={{ color: '#64748b' }}>{label}</span>
+                          <span style={{ fontWeight: 600, color: ['✔️', 'Yes', 'True', '√'].includes(row[key]) ? '#16a34a' : ['❌', 'No', '\\'].includes(row[key]) ? '#dc2626' : '#475569' }}>
+                            {row[key] || '—'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   {row.engineer_modified_fields && (
                     <div style={{ gridColumn: 'span 4', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
                       <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>

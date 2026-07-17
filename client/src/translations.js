@@ -211,6 +211,7 @@ export const translations = {
     rep_th_confirmed: "Confirmed",
     rep_th_resp_person: "Responsible Person",
     rep_th_time: "Time",
+    rep_designated_engineer: "Designated Engineer",
 
     // User Management
     um_title: "User Management",
@@ -478,6 +479,7 @@ export const translations = {
     rep_th_confirmed: "确认状态",
     rep_th_resp_person: "负责人",
     rep_th_time: "时间",
+    rep_designated_engineer: "指定工程师",
 
     // User Management
     um_title: "用户管理",
