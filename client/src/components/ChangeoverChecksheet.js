@@ -53,37 +53,37 @@ export default function ChangeoverChecksheet({ currentUser }) {
     status: 'Production',
     
     // SPI
-    spi_steel_stencil_suffix_match: '✔️',
-    spi_program_subpanel_serial_match: '✔️',
-    spi_recheck_pcab_polarity: '✔️',
-    spi_confirm_parameter_settings: '✔️',
-    spi_read_barcode_on: '✔️',
+    spi_steel_stencil_suffix_match: '',
+    spi_program_subpanel_serial_match: '',
+    spi_recheck_pcab_polarity: '',
+    spi_confirm_parameter_settings: '',
+    spi_read_barcode_on: '',
 
     // Pre-AOI
-    pre_aoi_eco_checklists: '✔️',
-    pre_aoi_program_model_modify: '✔️',
-    pre_aoi_vi_program_new_materia: '✔️',
-    pre_aoi_limit_defective_alarm: '✔️',
-    pre_aoi_test_program_bare_pcba: '✔️',
-    pre_aoi_bot_program_serial_number: '✔️',
-    pre_aoi_read_barcode_on: '✔️',
-    pre_aoi_confirm_materials_mounted: '✔️',
-    pre_aoi_delete_all_zones: '✔️',
+    pre_aoi_eco_checklists: '',
+    pre_aoi_program_model_modify: '',
+    pre_aoi_vi_program_new_materia: '',
+    pre_aoi_limit_defective_alarm: '',
+    pre_aoi_test_program_bare_pcba: '',
+    pre_aoi_bot_program_serial_number: '',
+    pre_aoi_read_barcode_on: '',
+    pre_aoi_confirm_materials_mounted: '',
+    pre_aoi_delete_all_zones: '',
 
     // Post-AOI
     post_aoi_equipment_model: '',
-    post_aoi_eco_checklists: '✔️',
-    post_aoi_program_model_modify: '✔️',
-    post_aoi_recheck_chips_standard_models: '✔️',
-    post_aoi_scan_board_picture: '✔️',
-    post_aoi_limit_defective_alarm: '✔️',
-    post_aoi_confirm_polarity_shield: '✔️',
-    post_aoi_bot_program_serial_number: '✔️',
-    post_aoi_registered_standard_models_times: '✔️',
+    post_aoi_eco_checklists: '',
+    post_aoi_program_model_modify: '',
+    post_aoi_recheck_chips_standard_models: '',
+    post_aoi_scan_board_picture: '',
+    post_aoi_limit_defective_alarm: '',
+    post_aoi_confirm_polarity_shield: '',
+    post_aoi_bot_program_serial_number: '',
+    post_aoi_registered_standard_models_times: '',
 
     // Others
-    others_adjust_widths: '✔️',
-    others_add_test_standard_pcb_barcode: '✔️'
+    others_adjust_widths: '',
+    others_add_test_standard_pcb_barcode: ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -204,37 +204,37 @@ export default function ChangeoverChecksheet({ currentUser }) {
         status: 'Production',
         
         // SPI
-        spi_steel_stencil_suffix_match: '✔️',
-        spi_program_subpanel_serial_match: '✔️',
-        spi_recheck_pcab_polarity: '✔️',
-        spi_confirm_parameter_settings: '✔️',
-        spi_read_barcode_on: '✔️',
+        spi_steel_stencil_suffix_match: '',
+        spi_program_subpanel_serial_match: '',
+        spi_recheck_pcab_polarity: '',
+        spi_confirm_parameter_settings: '',
+        spi_read_barcode_on: '',
 
         // Pre-AOI
-        pre_aoi_eco_checklists: '✔️',
-        pre_aoi_program_model_modify: '✔️',
-        pre_aoi_vi_program_new_materia: '✔️',
-        pre_aoi_limit_defective_alarm: '✔️',
-        pre_aoi_test_program_bare_pcba: '✔️',
-        pre_aoi_bot_program_serial_number: '✔️',
-        pre_aoi_read_barcode_on: '✔️',
-        pre_aoi_confirm_materials_mounted: '✔️',
-        pre_aoi_delete_all_zones: '✔️',
+        pre_aoi_eco_checklists: '',
+        pre_aoi_program_model_modify: '',
+        pre_aoi_vi_program_new_materia: '',
+        pre_aoi_limit_defective_alarm: '',
+        pre_aoi_test_program_bare_pcba: '',
+        pre_aoi_bot_program_serial_number: '',
+        pre_aoi_read_barcode_on: '',
+        pre_aoi_confirm_materials_mounted: '',
+        pre_aoi_delete_all_zones: '',
 
         // Post-AOI
         post_aoi_equipment_model: '',
-        post_aoi_eco_checklists: '✔️',
-        post_aoi_program_model_modify: '✔️',
-        post_aoi_recheck_chips_standard_models: '✔️',
-        post_aoi_scan_board_picture: '✔️',
-        post_aoi_limit_defective_alarm: '✔️',
-        post_aoi_confirm_polarity_shield: '✔️',
-        post_aoi_bot_program_serial_number: '✔️',
-        post_aoi_registered_standard_models_times: '✔️',
+        post_aoi_eco_checklists: '',
+        post_aoi_program_model_modify: '',
+        post_aoi_recheck_chips_standard_models: '',
+        post_aoi_scan_board_picture: '',
+        post_aoi_limit_defective_alarm: '',
+        post_aoi_confirm_polarity_shield: '',
+        post_aoi_bot_program_serial_number: '',
+        post_aoi_registered_standard_models_times: '',
 
         // Others
-        others_adjust_widths: '✔️',
-        others_add_test_standard_pcb_barcode: '✔️'
+        others_adjust_widths: '',
+        others_add_test_standard_pcb_barcode: ''
       });
     } catch (error) {
       setMessage('✗ ' + (language === 'zh' ? '错误' : 'Error') + ': ' + error.message);
@@ -243,8 +243,12 @@ export default function ChangeoverChecksheet({ currentUser }) {
     }
   };
 
+  const areAllCheckItemsFilled = changeoverGroups.every(group =>
+    group.items.every(item => formData[item.name] && formData[item.name].trim() !== '')
+  );
+  
   const hasCross = Object.values(formData).includes('❌');
-  const isFormValid = formData.line && formData.group_name && formData.shift && formData.date && formData.model_name && formData.model_code && formData.designated_engineer_id && (!hasCross || formData.remarks.trim() !== '');
+  const isFormValid = formData.line && formData.group_name && formData.shift && formData.date && formData.model_name && formData.model_code && formData.designated_engineer_id && areAllCheckItemsFilled && (!hasCross || formData.remarks.trim() !== '');
   const isInspector = currentUser?.role === 'inspector';
 
   return (
@@ -396,9 +400,18 @@ export default function ChangeoverChecksheet({ currentUser }) {
                             name={item.name} 
                             value={formData[item.name]} 
                             onChange={handleInputChange}
-                            style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', cursor: 'pointer' }}
+                            style={{ 
+                              width: '100%', 
+                              padding: '0.5rem', 
+                              borderRadius: '6px', 
+                              border: `1px solid ${formData[item.name] === '' ? '#ef4444' : '#cbd5e1'}`, 
+                              background: '#fff', 
+                              color: formData[item.name] === '❌' ? '#ef4444' : formData[item.name] === '✔️' ? '#22c55e' : '#334155',
+                              cursor: 'pointer'
+                            }}
                             required
                           >
+                            <option value="" disabled>{language === 'zh' ? '请选择' : 'Select...'}</option>
                             {resultOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                           </select>
                         )}
