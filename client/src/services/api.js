@@ -58,9 +58,18 @@ export const apiService = {
   getAllCheckpoints: () => API.get('/checkpoint'),
   getCheckpointById: (id) => API.get(`/checkpoint/${id}`),
   getCheckpointsByDate: (date) => API.get(`/checkpoint/date/${date}`),
+  updateCheckpoint: (id, data) => API.put(`/checkpoint/${id}`, data),
   deleteCheckpoint: (id) => API.delete(`/checkpoint/${id}`),
   getPendingCheckpoints: () => API.get('/checkpoint/pending'),
-  updateCheckpoint: (id, payload) => API.put(`/checkpoint/${id}`, payload),
+
+  // Changeover Checksheet APIs
+  createChangeoverChecksheet: (data) => API.post('/changeover', data),
+  getAllChangeoverChecksheets: () => API.get('/changeover'),
+  getChangeoverChecksheetById: (id) => API.get(`/changeover/${id}`),
+  getChangeoverChecksheetsByDate: (date) => API.get(`/changeover/date/${date}`),
+  updateChangeoverChecksheet: (id, data) => API.put(`/changeover/${id}`, data),
+  deleteChangeoverChecksheet: (id) => API.delete(`/changeover/${id}`),
+  getPendingChangeoverChecksheets: () => API.get('/changeover/pending'),
 
   // Technician Checklist APIs
   createChecklist: (data) => API.post('/checklist', data),

@@ -47,6 +47,8 @@ This document serves as the project memory and system documentation for the **AO
 │   │   │   ├── LoginPage.js / .css     # Authentication UI
 │   │   │   ├── FunctionCheckpoint.js / .css # Daily Function Checks form
 │   │   │   ├── TechnicianChecklist.js / .css # Technician Checklist form
+│   │   │   ├── ChangeoverChecksheet.js / .css # Changeover checksheet form
+│   │   │   ├── PendingModule.js / .css      # Review/Approval workspace
 │   │   │   ├── Reports.js / .css       # Data filtering & CSV download reports
 │   │   │   └── UserManagement.js / .css # Admin panel for user administration
 │   │   ├── services/
@@ -58,6 +60,17 @@ This document serves as the project memory and system documentation for the **AO
 ├── README.md                           # Main user-facing readme
 └── QUICKSTART.md                       # Quick start developer instructions
 ```
+
+### Components Map
+
+- **`Login.js` / `LoginPage.js`**: Handle JWT authentication.
+- **`Dashboard.js`**: Provide an overview of today’s metrics (e.g. submitted checks, line stops).
+- **`FunctionCheckpoint.js`**: Daily functional check form (Checkpoints).
+- **`TechnicianChecklist.js`**: Maintenance checklist form (Checklists).
+- **`ChangeoverChecksheet.js`**: Form for recording AOI machine changeovers. 
+- **`PendingModule.js`**: Interface for engineers to review and approve/reject Checkpoints, Checklists, and Changeovers.
+- **`Reports.js`**: Comprehensive reporting interface for all forms with filtering and CSV/PDF export.
+- **`UserManagement.js`**: RBAC controls for creating/updating users (Admin only).
 
 ---
 
@@ -302,6 +315,12 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Centralized Spacing Rules**: Moved the desktop and mobile screen margin rules to the parent `.main-content` wrapper (`padding: 1rem 2rem 2rem 2rem` on desktop, `padding: 1rem` on mobile) to guarantee perfect horizontal alignment across all views.
 *   **Spacious Centered Forms**: Constrained the inputs inside the checklist form (`1000px`), checkpoint form (`1200px`), and user management card (`1200px`) to prevent them from stretching too wide, maintaining clean readability on high-res displays while keeping them centered.
 *   **Clean Mobile Breakpoints**: Configured mobile styles to set all child page containers to `width: 100%; max-width: 100%; padding: 0;` on viewports under `768px` so they render properly.
+
+### Resolved: Changeover Checksheet Module (July 2026)
+*   **Database Log Model**: Created the `ChangeoverChecksheet` model inside `schema.prisma` with 24 specific checkpoint fields mirroring the Excel template. Applied migrations and integrated CRUD backend controllers.
+*   **Frontend Checksheet Form**: Implemented `ChangeoverChecksheet.js` using the standard layout with the unique checkpoints.
+*   **Approval Workflow**: Expanded `PendingModule.js` to include a "Changeover Checks" tab, allowing Engineers to review, edit, approve, and reject Changeovers.
+*   **Unified Reports**: Integrated Changeover Checksheets directly into the `Reports.js` interface as a third toggle tab, leveraging the same exporting and UI structure.
 
 ### Resolved: Reports Dashboard Split Status Counts (July 2026)
 *   **Production & Line Stop Metrics**: Expanded the summary dashboard cards in Reports to split "Submitted" counts into separate, color-coded "Production" (Green) and "Line Stop" (Red) metrics.

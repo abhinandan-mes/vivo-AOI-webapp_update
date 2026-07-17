@@ -109,6 +109,7 @@ export default function Reports({ currentUser }) {
   const [reportType, setReportType] = useState('checklist');
   const [checklists, setChecklists] = useState([]);
   const [checkpoints, setCheckpoints] = useState([]);
+  const [changeovers, setChangeovers] = useState([]);
   const [engineers, setEngineers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -190,11 +191,57 @@ export default function Reports({ currentUser }) {
     return eng ? `${eng.full_name} (${eng.username})` : id;
   };
 
-  const reportTitle = reportType => reportType === 'checkpoint' ? t('rep_toggle_checkpoint') : t('rep_toggle_checklist');
-  const reportFileName = reportType => reportType === 'checkpoint' ? 'daily-function-checks' : 'technician-checklists';
+  const changeoverColumns = useMemo(() => [
+    [t('date'), 'date'],
+    [t('line'), 'line'],
+    [t('group'), 'group_name'],
+    [t('shift'), 'shift'],
+    [t('rep_th_status'), 'status'],
+    [language === 'zh' ? '机种名称' : 'Model Name', 'model_name'],
+    [t('rep_th_submitted_at'), 'created_at'],
+    [t('rep_th_submitted_by'), 'submitted_by'],
+    // We can list all 24 items, but for brevity let's add the basic ones and let the export output everything or we define the full list
+    [language === 'zh' ? '1. SPI钢网后缀名匹配' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
+    [language === 'zh' ? '2. SPI程序连板流水号匹配' : '2. SPI Subpanel Match', 'spi_program_subpanel_serial_match'],
+    [language === 'zh' ? '3. SPI复测180度极性' : '3. SPI Recheck Polarity', 'spi_recheck_pcab_polarity'],
+    [language === 'zh' ? '4. SPI参数设置确认' : '4. SPI Parameter Check', 'spi_confirm_parameter_settings'],
+    [language === 'zh' ? '5. SPI扫码功能开启' : '5. SPI Read Barcode', 'spi_read_barcode_on'],
+    [language === 'zh' ? '6. 炉前ECO确认' : '6. Pre-AOI ECO', 'pre_aoi_eco_checklists'],
+    [language === 'zh' ? '7. 炉前程序机种确认' : '7. Pre-AOI Program Model', 'pre_aoi_program_model_modify'],
+    [language === 'zh' ? '8. 炉前新物料测试' : '8. Pre-AOI New Material', 'pre_aoi_vi_program_new_materia'],
+    [language === 'zh' ? '9. 炉前连流报警' : '9. Pre-AOI Alarm Limit', 'pre_aoi_limit_defective_alarm'],
+    [language === 'zh' ? '10. 炉前裸板测试' : '10. Pre-AOI Bare Board', 'pre_aoi_test_program_bare_pcba'],
+    [language === 'zh' ? '11. 炉前BOT连板流水号' : '11. Pre-AOI Bot Subpanel', 'pre_aoi_bot_program_serial_number'],
+    [language === 'zh' ? '12. 炉前扫码功能开启' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
+    [language === 'zh' ? '13a. 炉前物料确认' : '13a. Pre-AOI Mount Confirm', 'pre_aoi_confirm_materials_mounted'],
+    [language === 'zh' ? '13b. 炉前删除所有框' : '13b. Pre-AOI Delete Zones', 'pre_aoi_delete_all_zones'],
+    [language === 'zh' ? '14. 炉后设备型号' : '14. Post-AOI Equipment', 'post_aoi_equipment_model'],
+    [language === 'zh' ? '15. 炉后ECO确认' : '15. Post-AOI ECO', 'post_aoi_eco_checklists'],
+    [language === 'zh' ? '16. 炉后程序机种确认' : '16. Post-AOI Program Model', 'post_aoi_program_model_modify'],
+    [language === 'zh' ? '17. 炉后复测芯片/标准件' : '17. Post-AOI Recheck Chips', 'post_aoi_recheck_chips_standard_models'],
+    [language === 'zh' ? '18. 炉后扫描整板图片' : '18. Post-AOI Scan Board', 'post_aoi_scan_board_picture'],
+    [language === 'zh' ? '19. 炉后连流报警' : '19. Post-AOI Alarm Limit', 'post_aoi_limit_defective_alarm'],
+    [language === 'zh' ? '20. 炉后屏蔽罩极性' : '20. Post-AOI Shield Polarity', 'post_aoi_confirm_polarity_shield'],
+    [language === 'zh' ? '21. 炉后BOT连板流水号' : '21. Post-AOI Bot Subpanel', 'post_aoi_bot_program_serial_number'],
+    [language === 'zh' ? '22. 炉后标准件次数' : '22. Post-AOI Standard Times', 'post_aoi_registered_standard_models_times'],
+    [language === 'zh' ? '23. 设备导轨宽度' : '23. Others Width Adjust', 'others_adjust_widths'],
+    [language === 'zh' ? '24. PCB扫码标准' : '24. Others PCB Barcode', 'others_add_test_standard_pcb_barcode'],
+    [t('rep_designated_engineer'), 'designated_engineer_id']
+  ], [language, t]);
+
+  const reportTitle = reportType => 
+    reportType === 'checkpoint' ? t('rep_toggle_checkpoint') : 
+    reportType === 'changeover' ? (language === 'zh' ? '换线记录表' : 'Changeover Checksheet') : 
+    t('rep_toggle_checklist');
+
+  const reportFileName = reportType => 
+    reportType === 'checkpoint' ? 'daily-function-checks' : 
+    reportType === 'changeover' ? 'changeover-checksheets' : 
+    'technician-checklists';
   
-  const getExportColumns = reportType => reportType === 'checkpoint'
-    ? [
+  const getExportColumns = reportType => {
+    if (reportType === 'checkpoint') {
+      return [
         [t('date'), 'date'],
         [t('line'), 'line'],
         [t('group'), 'group_name'],
@@ -205,8 +252,13 @@ export default function Reports({ currentUser }) {
         [t('rep_th_submitted_by'), 'submitted_by'],
         [t('rep_th_submitted_at'), 'created_at'],
         ...checkpointColumns.map(column => [column.label, column.key])
-      ]
-    : checklistColumns;
+      ];
+    } else if (reportType === 'changeover') {
+      return changeoverColumns;
+    } else {
+      return checklistColumns;
+    }
+  };
 
   const isCheckpointColumn = key => checkpointColumns.some(column => column.key === key);
 
@@ -242,11 +294,13 @@ export default function Reports({ currentUser }) {
     Promise.all([
       apiService.getAllChecklists(),
       apiService.getAllCheckpoints(),
+      apiService.getAllChangeoverChecksheets(),
       apiService.getEngineers()
     ])
-      .then(([checklistRes, checkpointRes, engineersRes]) => {
+      .then(([checklistRes, checkpointRes, changeoverRes, engineersRes]) => {
         setChecklists(checklistRes.data.data || []);
         setCheckpoints(checkpointRes.data.data || []);
+        setChangeovers(changeoverRes.data.data || []);
         setEngineers(engineersRes.data.data || []);
       })
       .catch(err => {
@@ -273,6 +327,8 @@ export default function Reports({ currentUser }) {
       setLoading(true);
       if (type === 'checkpoint') {
         await apiService.deleteCheckpoint(id);
+      } else if (type === 'changeover') {
+        await apiService.deleteChangeoverChecksheet(id);
       } else {
         await apiService.deleteChecklist(id);
       }
@@ -286,7 +342,7 @@ export default function Reports({ currentUser }) {
   };
 
   const rows = useMemo(() => {
-    const data = reportType === 'checkpoint' ? checkpoints : checklists;
+    const data = reportType === 'checkpoint' ? checkpoints : reportType === 'changeover' ? changeovers : checklists;
     
     // Find all unique dates in the dataset
     const uniqueDates = Array.from(new Set(data.map(d => dateKey(d.date))));
@@ -740,6 +796,13 @@ export default function Reports({ currentUser }) {
         >
           {t('rep_toggle_checkpoint')}
         </button>
+        <button
+          type="button"
+          className={`toggle-btn ${reportType === 'changeover' ? 'active' : ''}`}
+          onClick={() => setReportType('changeover')}
+        >
+          {language === 'zh' ? '换线记录表' : 'Changeover Checksheet'}
+        </button>
       </div>
 
       <div className="report-filters">
@@ -791,6 +854,8 @@ export default function Reports({ currentUser }) {
         <div className="report-table-wrap">
           {reportType === 'checkpoint' 
             ? <CheckpointReport rows={filteredRows} checkpointColumns={checkpointColumns} checkpointGroups={checkpointGroups} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} /> 
+            : reportType === 'changeover'
+            ? <ChangeoverReport rows={filteredRows} changeoverColumns={changeoverColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} />
             : <ChecklistReport rows={filteredRows} checklistColumns={checklistColumns} t={t} language={language} formatDate={formatDate} formatDateTime={formatDateTime} isSuperAdmin={isSuperAdmin} onDelete={handleDeleteClick} getEngineerDisplay={getEngineerDisplay} />
           }
         </div>
@@ -881,6 +946,215 @@ export default function Reports({ currentUser }) {
         type="danger"
       />
     </section>
+  );
+}
+
+function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, formatDateTime, isSuperAdmin, onDelete, getEngineerDisplay }) {
+  const [expandedRow, setExpandedRow] = useState(null);
+  
+  const toggleRow = id => {
+    setExpandedRow(prev => prev === id ? null : id);
+  };
+
+  const getFieldLabel = (key) => {
+    const col = changeoverColumns.find(c => c[1] === key);
+    return col ? col[0] : key;
+  };
+
+  const formatValue = (val) => {
+    if (val === true || val === 'true') return 'True';
+    if (val === false || val === 'false') return 'False';
+    if (val === 'Yes' || val === '√') return '√';
+    if (val === 'No' || val === '\\') return '\\';
+    if (!val) return '—';
+    return val;
+  };
+
+  return (
+    <table className="reports-table">
+      <thead>
+        <tr>
+          {changeoverColumns.map(([label]) => <th key={label}>{label}</th>)}
+          {isSuperAdmin && <th style={{ width: '60px', textAlign: 'center' }}>{t('actions')}</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(row => {
+          const isExpanded = expandedRow === row.id;
+          const isLineStop = row.status === 'Line Stop';
+          const totalColSpan = changeoverColumns.length + (isSuperAdmin ? 1 : 0);
+
+          const renderModifyIndicator = (fields) => {
+            if (!row.engineer_modified_fields) return null;
+            try {
+              const diffs = JSON.parse(row.engineer_modified_fields);
+              const hasMod = diffs.some(d => fields.includes(d.field));
+              if (hasMod) {
+                return <span style={{ marginLeft: '4px', color: '#eab308', fontSize: '0.8rem' }} title={language === 'zh' ? '工程师已修改' : 'Modified by Engineer'}>✏️</span>;
+              }
+            } catch(e) {}
+            return null;
+          };
+
+          const renderCheckBadge = (value, fieldName) => {
+            if (!value) return null;
+            const isOk = ['Yes', '√', 'True'].includes(value);
+            return (
+              <span className={`status-badge-inline ${isOk ? 'ok' : 'fail'}`} title={fieldName}>
+                {isOk ? '√' : '\\'}
+              </span>
+            );
+          };
+
+          const mainRow = (
+            <tr key={row.id} className={isExpanded ? 'expanded' : ''} onClick={() => toggleRow(row.id)}>
+              <td style={{ fontWeight: 600 }}>{formatDate(row.date)}</td>
+              <td><span className="line-tag">{row.line}</span></td>
+              <td><span className="shift-tag">{row.group_name}</span></td>
+              <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : row.shift)}</td>
+              <td>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                  {row.status === 'Not Filled' ? (
+                    <span className="status-pill pending">
+                      {language === 'zh' ? '未提交' : 'Not Filled'}
+                    </span>
+                  ) : (
+                    <span className={`status-pill ${row.status === 'Line Stop' ? 'disapproved' : 'approved'}`}>
+                      {row.status === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
+                    </span>
+                  )}
+                  {row.status !== 'Not Filled' && (
+                    <>
+                      {row.approval_status === 'ENG_PENDING' && (
+                        <span style={{ color: '#d97706', fontWeight: 500 }}>
+                          ⌛ <strong>{language === 'zh' ? '审批中' : 'Pending'}:</strong> {getEngineerDisplay(row.designated_engineer_id)}
+                        </span>
+                      )}
+                      {row.approval_status === 'APPROVED' && (
+                        <span style={{ color: '#166534', fontWeight: 500 }}>
+                          ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                          <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                            ({formatDateTime(row.updated_at)})
+                          </span>
+                        </span>
+                      )}
+                      {row.approval_status === 'DISAPPROVED' && (
+                        <span style={{ color: '#b91c1c', fontWeight: 500 }}>
+                          ✗ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                          <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                            ({formatDateTime(row.updated_at)})
+                          </span>
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+              </td>
+              <td>{row.model_name || '—'}</td>
+              <td>{formatDateTime(row.created_at)}</td>
+              <td>{row.submitted_by || '—'}</td>
+
+              {/* Dynamic rendering of the rest of the columns based on changeoverColumns definition */}
+              {changeoverColumns.slice(8).map(([label, key]) => {
+                // skip last item which is designated engineer (already handled or will handle dynamically)
+                if (key === 'designated_engineer_id') {
+                  return <td key={key}>{getEngineerDisplay(row[key])}</td>;
+                }
+                
+                return (
+                  <td key={key}>
+                    {row.status === 'Not Filled' || isLineStop ? '—' : (
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {['Yes', 'No', '√', '\\', '/', 'N/A'].includes(row[key]) ? (
+                          renderCheckBadge(row[key], label)
+                        ) : (
+                          <span>{row[key] || '—'}</span>
+                        )}
+                        {renderModifyIndicator([key])}
+                      </div>
+                    )}
+                  </td>
+                );
+              })}
+              
+              {isSuperAdmin && (
+                <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+                  <button 
+                    type="button"
+                    className="btn-delete-report-row" 
+                    onClick={() => onDelete(row.id, 'changeover')}
+                    title={language === 'zh' ? '删除记录' : 'Delete Record'}
+                  >
+                    🗑️
+                  </button>
+                </td>
+              )}
+            </tr>
+          );
+
+          if (!isExpanded) return [mainRow];
+
+          const detailRow = (
+            <tr key={`${row.id}-details`} className="expanded-row-details">
+              <td colSpan={totalColSpan} style={{ background: '#f8fafc', padding: '1.5rem', borderBottom: '1px solid #e2e8f0' }}>
+                <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', textAlign: 'left' }}>
+                  <div>
+                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '指定工程师' : 'Designated Engineer'}
+                    </strong>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
+                      {getEngineerDisplay(row.designated_engineer_id)}
+                    </span>
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '技术员备注' : 'Technician Remarks'}
+                    </strong>
+                    <span style={{ fontSize: '0.95rem', color: '#334155' }}>
+                      {row.remarks || '—'}
+                    </span>
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                      {language === 'zh' ? '工程师审核备注' : 'Engineer Remarks'}
+                    </strong>
+                    <span style={{ fontSize: '0.95rem', color: '#334155' }}>
+                      {row.engineer_remarks || '—'}
+                    </span>
+                  </div>
+                  {row.engineer_modified_fields && (
+                    <div style={{ gridColumn: 'span 4', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
+                      <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>
+                        {language === 'zh' ? '⚠️ 工程师修改内容记录' : '⚠️ Engineer Modification History'}
+                      </strong>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
+                        {(() => {
+                          try {
+                            const diffs = JSON.parse(row.engineer_modified_fields);
+                            return diffs.map((diff, index) => (
+                              <div key={index} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.6rem 1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 2px 8px rgba(15,23,42,0.02)' }}>
+                                <span style={{ fontWeight: 700, color: '#0f172a' }}>{getFieldLabel(diff.field)}:</span>
+                                <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontStyle: 'italic' }}>{formatValue(diff.from)}</span>
+                                <span style={{ color: '#3b82f6', fontWeight: 900 }}>→</span>
+                                <strong style={{ color: '#16a34a', background: '#f0fdf4', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{formatValue(diff.to)}</strong>
+                              </div>
+                            ));
+                          } catch(e) {
+                            return <span>{row.engineer_modified_fields}</span>;
+                          }
+                        })()}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          );
+          
+          return [mainRow, detailRow];
+        })}
+      </tbody>
+    </table>
   );
 }
 

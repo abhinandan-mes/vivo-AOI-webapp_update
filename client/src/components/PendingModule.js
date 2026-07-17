@@ -9,6 +9,7 @@ export default function PendingModule({ currentUser }) {
   const [activeTab, setActiveTab] = useState('checklist'); // 'checklist' | 'checkpoint'
   const [checklists, setChecklists] = useState([]);
   const [checkpoints, setCheckpoints] = useState([]);
+  const [changeovers, setChangeovers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [engineers, setEngineers] = useState([]);
@@ -42,13 +43,15 @@ export default function PendingModule({ currentUser }) {
     setLoading(true);
     setError('');
     try {
-      const [resChecklists, resCheckpoints, resEngs] = await Promise.all([
+      const [resChecklists, resCheckpoints, resChangeovers, resEngs] = await Promise.all([
         apiService.getPendingChecklists(),
         apiService.getPendingCheckpoints(),
+        apiService.getPendingChangeoverChecksheets(),
         apiService.getEngineers()
       ]);
       setChecklists(resChecklists.data.data || []);
       setCheckpoints(resCheckpoints.data.data || []);
+      setChangeovers(resChangeovers.data.data || []);
       setEngineers(resEngs.data.data || []);
     } catch (err) {
       console.error('Error fetching pending items:', err);
@@ -129,8 +132,10 @@ export default function PendingModule({ currentUser }) {
 
       if (selectedItem.type === 'checklist') {
         await apiService.updateChecklist(selectedItem.id, payload);
-      } else {
+      } else if (selectedItem.type === 'checkpoint') {
         await apiService.updateCheckpoint(selectedItem.id, payload);
+      } else {
+        await apiService.updateChangeoverChecksheet(selectedItem.id, payload);
       }
       
       handleCloseReview();
@@ -186,6 +191,56 @@ export default function PendingModule({ currentUser }) {
     { label: 'Post-AOI FOV', prefix: 'post_aoi_fov', positions: ['before', 'after'] }
   ];
 
+  const changeoverGroups = [
+    {
+      groupTitle: language === 'zh' ? 'SPI 位置 (SPI Location)' : 'SPI Location',
+      items: [
+        { name: 'spi_steel_stencil_suffix_match', label: '1. Whether suffixed number of steel stencil of SPI program is corresponding to the currently used steel stencil and matches with production instruction or not.' },
+        { name: 'spi_program_subpanel_serial_match', label: '2. Whether the program sub-panel serial number is consistent with the PCBA board number or not.' },
+        { name: 'spi_recheck_pcab_polarity', label: '3. Whether recheck PCAB 180° polarity or not. (XP operation system PC use the edge of board fiducials, Window7 operation system use sub-panel fiducials and character of vendor board.)' },
+        { name: 'spi_confirm_parameter_settings', label: '4. Whether confirm parameter settings of each component type are consistent with guidance file or not.' },
+        { name: 'spi_read_barcode_on', label: '5. check top and bottom side of Parmi spi whether the function of reading barcode is on or not' }
+      ]
+    },
+    {
+      groupTitle: language === 'zh' ? '炉前AOI 位置 (Pre AOI Location)' : 'Pre AOI Location',
+      items: [
+        { name: 'pre_aoi_eco_checklists', label: '6. Whether confirm the contents of ECO checklists in the AOI program or not.' },
+        { name: 'pre_aoi_program_model_modify', label: '7. Whether confirm program model of production instructions to modify or not.' },
+        { name: 'pre_aoi_vi_program_new_materia', label: '8. When VI program has new materia, confirm whether software can run normally, related settings and options during testing normally or not.' },
+        { name: 'pre_aoi_limit_defective_alarm', label: '9. Whether limit defective alarm of the AOI settings or not.' },
+        { name: 'pre_aoi_test_program_bare_pcba', label: '10. Whether confirm the test program with a bare PCBA in Pre-AOI, focusing on the yellow covered materials, and pink non-standard materials or not.' },
+        { name: 'pre_aoi_bot_program_serial_number', label: '11. Whether confirm the sub-panel of Bot program serial number, barcode is consistent with the bare PCBA serial number and move one sub-panel fiducial into edge of PCBA fiducial to prevent wrong 180°polarity or not.' },
+        { name: 'pre_aoi_read_barcode_on', label: '12. check top and bottom side of pre aoi whether the function of reading barcode is on or not' },
+        { name: 'pre_aoi_confirm_materials_mounted', label: '13a. Whether confirm materials including the TF card, SD, SIM card slot, earphone slot, battery connector, N board and metal cushions are mounted in front of Pre-AOI before changeover new program, whether confirm new part number is missing or skipped.' },
+        { name: 'pre_aoi_delete_all_zones', label: '13b. Whether confirm to delete all zones first and then optimize testing zone again during changing over new program. whether confirm to focus on optimizing the damaged models of glass IC and JEDEC zone. whether confirm to optimize damaged models and solder extend models of the SD, SIM slot lead foot or not.' }
+      ]
+    },
+    {
+      groupTitle: language === 'zh' ? '炉后AOI 位置 (Post-AOI Location)' : 'Post-AOI Location',
+      items: [
+        { name: 'post_aoi_equipment_model', label: '14. Whether confirm the types of post AOI inspection equipment or not. (Fill in the model of the AOI equipment)', type: 'text' },
+        { name: 'post_aoi_eco_checklists', label: '15. Whether confirm the contents of ECO checklists in the AOI program or not.' },
+        { name: 'post_aoi_program_model_modify', label: '16. Whether confirm program model of production instructions to modify or not.' },
+        { name: 'post_aoi_recheck_chips_standard_models', label: '17. Whether recheck chips, BTB connector, Filter, ANT, shield cover, RF connector and ANT connector standard models or not.' },
+        { name: 'post_aoi_scan_board_picture', label: '18. Whether confirm to scan current board picture or not. blue frame(non-standard components), pink frame (protective components), cyan frame(skipped components)' },
+        { name: 'post_aoi_limit_defective_alarm', label: '19. Whether limit defective alarm of the AOI settings or not.' },
+        { name: 'post_aoi_confirm_polarity_shield', label: '20. Whether confirm requirements for the polarity of the symmetric shield cover in operation instruction or not.' },
+        { name: 'post_aoi_bot_program_serial_number', label: '21. Whether confirm the sub-panel of Bot program serial number is consistent with the bare PCBA serial number and move one sub-panel fiducial into edge of PCBA fiducial to prevent wrong 180° polarity or not.' },
+        { name: 'post_aoi_registered_standard_models_times', label: '22. Whether confirm registered standard models times is less than or equal to 70 by using ALD620, out of range to clear non-use models or not.' }
+      ]
+    },
+    {
+      groupTitle: language === 'zh' ? '其他 (Others)' : 'Others',
+      items: [
+        { name: 'others_adjust_widths', label: '23. Whether confirm to adjust widths of all equipment of the SPI, AOI, loader or not.' },
+        { name: 'others_add_test_standard_pcb_barcode', label: '24. If model pcb has PCB barcode, must add test standard of reading barcode to track PCB barcode precisely' }
+      ]
+    }
+  ];
+
+  const resultOptions = ['√', '/', '\\', 'N/A'];
+
   return (
     <div className="pending-container">
       <div className="pending-header-section">
@@ -209,6 +264,13 @@ export default function PendingModule({ currentUser }) {
         >
           ⚙️ {t('rep_toggle_checkpoint')}
           {checkpoints.length > 0 && <span className="tab-badge">{checkpoints.length}</span>}
+        </button>
+        <button 
+          className={`pending-tab-btn ${activeTab === 'changeover' ? 'active' : ''}`}
+          onClick={() => setActiveTab('changeover')}
+        >
+          ⇄ {language === 'zh' ? '换线记录表' : 'Changeover Checks'}
+          {changeovers.length > 0 && <span className="tab-badge">{changeovers.length}</span>}
         </button>
       </div>
 
@@ -318,6 +380,62 @@ export default function PendingModule({ currentUser }) {
                             </button>
                           ) : (
                             <button className="pending-action-btn edit" onClick={() => handleOpenReview(item, 'checkpoint')}>
+                              ✏️ {language === 'zh' ? '修改重提' : 'Edit & Resubmit'}
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          ) : (
+            changeovers.length === 0 ? (
+              <div className="pending-empty-state">
+                <span className="empty-icon">✓</span>
+                <p>{language === 'zh' ? '暂无待处理换线记录表！' : 'No pending changeover checksheet records found!'}</p>
+              </div>
+            ) : (
+              <div className="table-responsive">
+                <table className="pending-table">
+                  <thead>
+                    <tr>
+                      <th>{t('date')}</th>
+                      <th>{t('line')}</th>
+                      <th>{t('shift')}</th>
+                      <th>{language === 'zh' ? '机种名称' : 'Model Name'}</th>
+                      <th>{language === 'zh' ? '提交人员' : 'Submitted By'}</th>
+                      <th>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</th>
+                      <th>{language === 'zh' ? '流程状态' : 'Approval Status'}</th>
+                      <th>{t('actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {changeovers.map(item => (
+                      <tr key={item.id}>
+                        <td>{new Date(item.date).toLocaleDateString()}</td>
+                        <td><span className="line-tag">{item.line}</span></td>
+                        <td>{item.shift}</td>
+                        <td>{item.model_name}</td>
+                        <td>{item.submitted_by}</td>
+                        <td>{getEngineerDisplay(item.designated_engineer_id)}</td>
+                        <td>
+                          <span className={`status-pill ${item.approval_status}`}>
+                            {item.approval_status === 'ENG_PENDING' ? (language === 'zh' ? '等待工程师审批' : 'Pending Engineer') : (language === 'zh' ? '工程师已驳回' : 'Rejected')}
+                          </span>
+                        </td>
+                        <td>
+                          {isEngineer ? (
+                            <button className="pending-action-btn review" onClick={() => handleOpenReview(item, 'changeover')}>
+                              🔍 {language === 'zh' ? '审核' : 'Review'}
+                            </button>
+                          ) : isAdmin ? (
+                            <button className="pending-action-btn view" style={{ background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }} onClick={() => handleOpenReview(item, 'changeover')}>
+                              👁️ {language === 'zh' ? '查看' : 'View'}
+                            </button>
+                          ) : (
+                            <button className="pending-action-btn edit" onClick={() => handleOpenReview(item, 'changeover')}>
                               ✏️ {language === 'zh' ? '修改重提' : 'Edit & Resubmit'}
                             </button>
                           )}
@@ -560,6 +678,60 @@ export default function PendingModule({ currentUser }) {
                       <label>{language === 'zh' ? '检测时间' : 'Check Time'}</label>
                       <input type="time" name="time" value={reviewData.time || ''} onChange={handleInputChange} />
                     </div>
+                    <div className="form-group-full" style={{ marginTop: '1rem' }}>
+                      <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
+                      <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
+                        {engineers.map(eng => (
+                          <option key={eng.username} value={eng.username}>{eng.full_name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group-full" style={{ marginTop: '1rem' }}>
+                      <label>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
+                      <input type="text" name="remarks" value={reviewData.remarks || ''} onChange={handleInputChange} />
+                    </div>
+                  </div>
+                ) : (
+                  /* Changeover Form Fields */
+                  <div className="changeover-editor">
+                    <div className="form-group-full">
+                      <label>{language === 'zh' ? '机种名称' : 'Model Name'}</label>
+                      <input type="text" name="model_name" value={reviewData.model_name || ''} onChange={handleInputChange} />
+                    </div>
+                    {changeoverGroups.map((group, gIndex) => (
+                      <div key={gIndex} style={{ marginTop: '1.5rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem' }}>
+                        <h4 style={{ color: '#334155', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.5rem', marginBottom: '1rem' }}>{group.groupTitle}</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                          {group.items.map((item, iIndex) => (
+                            <div key={iIndex} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <div style={{ flex: 1, paddingRight: '1rem', fontSize: '0.9rem', color: '#475569' }}>
+                                {item.label}
+                              </div>
+                              <div style={{ width: '150px' }}>
+                                {item.type === 'text' ? (
+                                  <input 
+                                    type="text" 
+                                    name={item.name} 
+                                    value={reviewData[item.name] || ''} 
+                                    onChange={handleInputChange}
+                                    style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
+                                  />
+                                ) : (
+                                  <select 
+                                    name={item.name} 
+                                    value={reviewData[item.name] || ''} 
+                                    onChange={handleInputChange}
+                                    style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
+                                  >
+                                    {resultOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                  </select>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                     <div className="form-group-full" style={{ marginTop: '1rem' }}>
                       <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
                       <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
