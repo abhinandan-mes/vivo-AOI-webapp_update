@@ -48,6 +48,7 @@ export default function ChangeoverChecksheet({ currentUser }) {
     shift: initialShiftAndDate.shift,
     model_name: '',
     model_code: '',
+    changeover_type: '',
     designated_engineer_id: '',
     remarks: '',
     status: 'Production',
@@ -172,7 +173,7 @@ export default function ChangeoverChecksheet({ currentUser }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isFormValid = formData.line && formData.group_name && formData.shift && formData.date && formData.designated_engineer_id && formData.model_name;
+    const isFormValid = formData.line && formData.group_name && formData.shift && formData.date && formData.designated_engineer_id && formData.model_name && formData.changeover_type;
     if (!isFormValid) return;
     setShowConfirmModal(true);
   };
@@ -346,7 +347,23 @@ export default function ChangeoverChecksheet({ currentUser }) {
                  placeholder={language === 'zh' ? '输入机种代码' : 'Enter model code (numbers only)...'}
                />
              </div>
-             <div className="form-group" style={{ gridColumn: 'span 2' }}>
+             <div className="form-group" style={{ gridColumn: 'span 1' }}>
+                <label htmlFor="changeover_type">{language === 'zh' ? '换线类型 (Changeover Type) *' : 'Changeover Type *'}</label>
+                <select
+                  id="changeover_type"
+                  name="changeover_type"
+                  value={formData.changeover_type}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">{language === 'zh' ? '请选择...' : 'Select type...'}</option>
+                  <option value="Model">Model</option>
+                  <option value="Series">Series</option>
+                  <option value="After Sale">After Sale</option>
+                  <option value="Trial">Trial</option>
+                </select>
+              </div>
+             <div className="form-group" style={{ gridColumn: 'span 1' }}>
                 <label htmlFor="designated_engineer_id">{language === 'zh' ? '指定工程师 *' : 'Designated Engineer *'}</label>
                 <select 
                   id="designated_engineer_id" 

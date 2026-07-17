@@ -216,7 +216,7 @@ export default function Reports({ currentUser }) {
     [t('line'), 'line'],
     [t('group'), 'group_name'],
     [t('shift'), 'shift'],
-    [t('rep_th_status'), 'status'],
+    [language === 'zh' ? '换线类型' : 'Changeover Type', 'changeover_type'],
     [language === 'zh' ? '文档状态' : 'Doc Status', 'approval_status'],
     [language === 'zh' ? '机种名称' : 'Model Name', 'model_name'],
     [language === 'zh' ? '机种代码' : 'Model Code', 'model_code'],
@@ -1079,36 +1079,31 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               <td><span className="shift-tag">{row.group_name}</span></td>
               <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : row.shift)}</td>
               <td>
-                {row.status === 'Not Filled' ? (
-                  <span className="status-pill pending">
-                    {language === 'zh' ? '未提交' : 'Not Filled'}
-                  </span>
-                ) : (
-                  <span className={`status-pill ${row.status === 'Line Stop' ? 'disapproved' : 'approved'}`}>
-                    {row.status === 'Line Stop' ? t('cl_status_linestop') : t('cl_status_production')}
-                  </span>
-                )}
+                <span className="line-tag" style={{ background: '#f3e8ff', color: '#7e22ce', border: '1px solid #d8b4fe' }}>
+                  {row.changeover_type || '—'}
+                </span>
               </td>
               <td>
-                {row.status !== 'Not Filled' ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                    {row.approval_status === 'ENG_PENDING' && (
-                      <span className="status-pill pending" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
-                        ⌛ {language === 'zh' ? '审批中' : 'Pending'}
-                      </span>
-                    )}
-                    {row.approval_status === 'APPROVED' && (
-                      <span className="status-pill approved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
-                        ✓ {language === 'zh' ? '审批' : 'App'}
-                      </span>
-                    )}
-                    {row.approval_status === 'DISAPPROVED' && (
-                      <span className="status-pill disapproved" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>
-                        ✗ {language === 'zh' ? '驳回' : 'Rej'}
-                      </span>
-                    )}
-                  </div>
-                ) : '—'}
+                {(() => {
+                  if (row.status === 'Not Filled') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                      {language === 'zh' ? '未提交' : 'Not Filled'}
+                    </span>;
+                  }
+                  if (row.approval_status === 'ENG_PENDING') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
+                      ⏳ {language === 'zh' ? '待审核' : 'Review'}
+                    </span>;
+                  }
+                  if (row.approval_status === 'DISAPPROVED') {
+                    return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
+                      ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
+                    </span>;
+                  }
+                  return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
+                    🟢 {language === 'zh' ? '已批准' : 'Approved'}
+                  </span>;
+                })()}
               </td>
               <td>{row.model_name || '-'}</td>
               <td>{row.model_code || '-'}</td>

@@ -163,6 +163,7 @@ model AoiChangeoverChecksheet {
   shift                                 String   @db.VarChar(50)
   model_name                            String?  @db.VarChar(255)
   model_code                            String?  @db.VarChar(100)
+  changeover_type                       String?  @db.VarChar(50)
   
   // SPI Location (1-5)
   spi_steel_stencil_suffix_match        String?  @db.VarChar(50)

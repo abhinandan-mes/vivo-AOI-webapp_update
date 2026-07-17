@@ -509,6 +509,45 @@ export default function PendingModule({ currentUser }) {
                     <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>
                   </select>
                 </div>
+                {selectedItem.type === 'changeover' && (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <strong>{language === 'zh' ? '机种名称' : 'Model Name'}:</strong>
+                      <input 
+                        type="text" 
+                        name="model_name" 
+                        value={reviewData.model_name || ''} 
+                        onChange={handleInputChange} 
+                        style={{ marginLeft: '10px', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', flex: 1 }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <strong>{language === 'zh' ? '机种代码' : 'Model Code'}:</strong>
+                      <input 
+                        type="number" 
+                        name="model_code" 
+                        value={reviewData.model_code || ''} 
+                        onChange={handleInputChange} 
+                        style={{ marginLeft: '10px', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', flex: 1 }} 
+                      />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gridColumn: 'span 2' }}>
+                      <strong>{language === 'zh' ? '换线类型' : 'Changeover Type'}:</strong>
+                      <select 
+                        name="changeover_type" 
+                        value={reviewData.changeover_type || ''} 
+                        onChange={handleInputChange} 
+                        style={{ marginLeft: '10px', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', flex: 1 }}
+                      >
+                        <option value="">{language === 'zh' ? '请选择...' : 'Select...'}</option>
+                        <option value="Model">Model</option>
+                        <option value="Series">Series</option>
+                        <option value="After Sale">After Sale</option>
+                        <option value="Trial">Trial</option>
+                      </select>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Form Content Rendering */}
@@ -679,29 +718,32 @@ export default function PendingModule({ currentUser }) {
                       <label>{language === 'zh' ? '检测时间' : 'Check Time'}</label>
                       <input type="time" name="time" value={reviewData.time || ''} onChange={handleInputChange} />
                     </div>
-                    <div className="form-group-full" style={{ marginTop: '1rem' }}>
-                      <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
-                      <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
+                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
+                      <select 
+                        name="designated_engineer_id" 
+                        value={reviewData.designated_engineer_id || ''} 
+                        onChange={handleInputChange}
+                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
+                      >
                         {engineers.map(eng => (
                           <option key={eng.username} value={eng.username}>{eng.full_name}</option>
                         ))}
                       </select>
                     </div>
-                    <div className="form-group-full" style={{ marginTop: '1rem' }}>
-                      <label>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
-                      <input type="text" name="remarks" value={reviewData.remarks || ''} onChange={handleInputChange} />
+                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
+                      <input 
+                        type="text" 
+                        name="remarks" 
+                        value={reviewData.remarks || ''} 
+                        onChange={handleInputChange} 
+                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
+                      />
                     </div>
                   </div>
                 ) : selectedItem?.type === 'changeover' ? (
                   <div className="changeover-editor">
-                    <div className="form-group-half">
-                      <label>{language === 'zh' ? '机种名称' : 'Model Name'}</label>
-                      <input type="text" name="model_name" value={reviewData.model_name || ''} onChange={handleInputChange} />
-                    </div>
-                    <div className="form-group-half">
-                      <label>{language === 'zh' ? '机种代码' : 'Model Code'}</label>
-                      <input type="number" name="model_code" value={reviewData.model_code || ''} onChange={handleInputChange} />
-                    </div>
                     {changeoverGroups.map((group, gIndex) => (
                       <div key={gIndex} style={{ marginTop: '1.5rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem' }}>
                         <h4 style={{ color: '#334155', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.5rem', marginBottom: '1rem' }}>{group.groupTitle}</h4>
@@ -736,17 +778,28 @@ export default function PendingModule({ currentUser }) {
                         </div>
                       </div>
                     ))}
-                    <div className="form-group-full" style={{ marginTop: '1rem' }}>
-                      <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
-                      <select name="designated_engineer_id" value={reviewData.designated_engineer_id || ''} onChange={handleInputChange}>
+                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
+                      <select 
+                        name="designated_engineer_id" 
+                        value={reviewData.designated_engineer_id || ''} 
+                        onChange={handleInputChange}
+                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
+                      >
                         {engineers.map(eng => (
                           <option key={eng.username} value={eng.username}>{eng.full_name}</option>
                         ))}
                       </select>
                     </div>
-                    <div className="form-group-full" style={{ marginTop: '1rem' }}>
-                      <label>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
-                      <input type="text" name="remarks" value={reviewData.remarks || ''} onChange={handleInputChange} />
+                    <div className="form-group-full" style={{ marginTop: '1rem', background: '#f1f5f9', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                      <label style={{ color: '#334155', fontWeight: 600 }}>{language === 'zh' ? '技术员备注' : 'Technician Remarks'}</label>
+                      <input 
+                        type="text" 
+                        name="remarks" 
+                        value={reviewData.remarks || ''} 
+                        onChange={handleInputChange} 
+                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginTop: '0.5rem', background: '#fff' }}
+                      />
                     </div>
                   </div>
                 ) : null}
