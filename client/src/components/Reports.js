@@ -951,7 +951,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
   };
 
   return (
-    <table className="reports-table">
+    <table className="report-table" style={{ minWidth: '100%' }}>
       <thead>
         <tr>
           {changeoverColumns.map(([label]) => <th key={label}>{label}</th>)}
