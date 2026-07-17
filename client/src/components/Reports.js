@@ -796,10 +796,10 @@ export default function Reports({ currentUser }) {
           <select name="status" value={filters.status} onChange={updateFilter}>
             <option value="">{language === 'zh' ? '全部状态' : 'All statuses'}</option>
             <option value="Production">{language === 'zh' ? '已提交(生产)' : 'Production'}</option>
-            <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>
+            {reportType !== 'changeover' && <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>}
             <option value="Pending Review">{language === 'zh' ? '待审核' : 'Pending Review'}</option>
             <option value="Disapproved">{language === 'zh' ? '已驳回' : 'Disapproved'}</option>
-            <option value="Not Filled">{language === 'zh' ? '未提交' : 'Not Filled'}</option>
+            {reportType !== 'changeover' && <option value="Not Filled">{language === 'zh' ? '未提交' : 'Not Filled'}</option>}
           </select>
         </label>
         <label>
@@ -1032,8 +1032,6 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               </td>
               <td>{row.model_name || '-'}</td>
               <td>{row.model_code || '-'}</td>
-              <td>{formatDateTime(row.created_at)}</td>
-              <td>{row.submitted_by || '—'}</td>
 
               {/* Dynamic rendering of the rest of the columns based on changeoverColumns definition */}
               {changeoverColumns.slice(7).map(([label, key]) => {
@@ -1049,7 +1047,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                         {['Yes', 'No', '√', '\\', '/', 'N/A'].includes(row[key]) ? (
                           renderCheckBadge(row[key], label)
                         ) : (
-                          <span>{row[key] || '—'}</span>
+                          <span>{key === 'created_at' ? formatDateTime(row[key]) : (row[key] || '—')}</span>
                         )}
                         {renderModifyIndicator([key])}
                       </div>
