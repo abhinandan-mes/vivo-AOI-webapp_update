@@ -114,7 +114,7 @@ export default function Reports({ currentUser }) {
   const [error, setError] = useState('');
   const [filters, setFilters] = useState(() => {
     const todayStr = dateKey(new Date());
-    return { from: todayStr, to: todayStr, line: '', shift: '', group: '' };
+    return { from: todayStr, to: todayStr, line: '', shift: '', group: '', status: '', sort: 'latest' };
   });
   const [showExport, setShowExport] = useState(false);
   const [exportConfirm, setExportConfirm] = useState({ show: false, format: '' });
@@ -326,18 +326,39 @@ export default function Reports({ currentUser }) {
     });
 
     return completeRows.sort((a, b) => {
-      const timeA = new Date(a.date).getTime();
-      const timeB = new Date(b.date).getTime();
-      if (timeB !== timeA) return timeB - timeA;
-      
-      // then by line ascending
-      const lineCompare = String(a.line).localeCompare(String(b.line));
-      if (lineCompare !== 0) return lineCompare;
-      
-      // then by shift ascending (Day, then Night)
-      return String(a.shift).localeCompare(String(b.shift));
+      if (filters.sort === 'latest') {
+        // Sort by created_at descending (latest first)
+        // Dummy rows have created_at = null, they should appear at the end or we can just sort by date then created_at
+        const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        
+        if (timeB !== timeA) return timeB - timeA;
+        
+        // Fallback: Date descending
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        if (dateB !== dateA) return dateB - dateA;
+        
+        // Fallback: Line ascending
+        const lineCompare = String(a.line).localeCompare(String(b.line));
+        if (lineCompare !== 0) return lineCompare;
+        
+        return String(a.shift).localeCompare(String(b.shift));
+      } else {
+        // 'line_asc' logic
+        const timeA = new Date(a.date).getTime();
+        const timeB = new Date(b.date).getTime();
+        if (timeB !== timeA) return timeB - timeA;
+        
+        // then by line ascending
+        const lineCompare = String(a.line).localeCompare(String(b.line));
+        if (lineCompare !== 0) return lineCompare;
+        
+        // then by shift ascending (Day, then Night)
+        return String(a.shift).localeCompare(String(b.shift));
+      }
     });
-  }, [reportType, checklists, checkpoints, allLineOptions, notInstalledLines]);
+  }, [reportType, checklists, checkpoints, allLineOptions, notInstalledLines, filters.sort]);
 
   const filteredRows = useMemo(() => rows.filter(row => {
     const date = dateKey(row.date);
@@ -656,7 +677,7 @@ export default function Reports({ currentUser }) {
     );
   };
 
-  const hasActiveFilters = Object.values(filters).some(value => value !== '');
+  const hasActiveFilters = Object.entries(filters).some(([key, value]) => key !== 'sort' && value !== '');
 
   return (
     <section className="reports-container">
@@ -738,8 +759,15 @@ export default function Reports({ currentUser }) {
             <option value="Not Filled">{language === 'zh' ? '未提交' : 'Not Filled'}</option>
           </select>
         </label>
+        <label>
+          {language === 'zh' ? '排序方式' : 'Sort By'}
+          <select name="sort" value={filters.sort} onChange={updateFilter}>
+            <option value="latest">{language === 'zh' ? '最新提交' : 'Latest Submissions'}</option>
+            <option value="line_asc">{language === 'zh' ? '线别升序' : 'Line Ascending'}</option>
+          </select>
+        </label>
         {hasActiveFilters && (
-          <button className="clear-filters" type="button" onClick={() => setFilters({ from: '', to: '', line: '', shift: '', group: '', status: '' })}>
+          <button className="clear-filters" type="button" onClick={() => setFilters({ from: '', to: '', line: '', shift: '', group: '', status: '', sort: 'latest' })}>
             ✕ {t('clear')}
           </button>
         )}
