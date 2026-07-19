@@ -56,6 +56,16 @@
   color: #4338ca;
 }
 
+.confirm-modal-icon.primary {
+  background-color: #e0e7ff;
+  color: #415fff;
+}
+
+.confirm-modal-icon.success {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
 .confirm-modal-title {
   margin: 0;
   font-size: 1.15rem;
@@ -129,6 +139,22 @@
 
 .confirm-btn-confirm.info:hover {
   background-color: #3b82f6;
+}
+
+.confirm-btn-confirm.primary {
+  background-color: #415fff;
+}
+
+.confirm-btn-confirm.primary:hover {
+  background-color: #3b82f6;
+}
+
+.confirm-btn-confirm.success {
+  background-color: #16a34a;
+}
+
+.confirm-btn-confirm.success:hover {
+  background-color: #15803d;
 }
 
 @keyframes fadeIn {

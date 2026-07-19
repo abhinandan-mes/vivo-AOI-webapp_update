@@ -519,10 +519,15 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
   * **Designated Engineer Column**: Exposed a new `Designated Engineer` column inside the `PendingModule.js` tables, utilizing the `getEngineerDisplay` helper to visibly show Admins exactly *who* the checksheet is waiting on.
   * **View Only Admin Mode**: Revoked the `Approve/Reject` action buttons for `admin` and `super_admin` roles to enforce process compliance (admins shouldn't bypass the designated engineer). The buttons are replaced by a **"View Only"** action that opens the drawer strictly in read-only mode, disabling the engineer remarks textarea and hiding approval buttons.
 
-  * **Native Windows Service Migration**:
-    * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
-    * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
-    * Deleted the legacy startup shortcut (`AOI-Server.lnk`) from the Windows Startup folder to prevent double-execution port conflicts on user login.
+### Resolved: Activity Log Details Modal UI Overhaul (July 2026)
+* **High-Contrast Dark Shadow Design**: Redesigned the Log Details Modal container with a solid pure white background (`#ffffff`), sleek rounded corners (`border-radius: 20px`), a modern subtle border, and deep shadows (`0 25px 50px -12px rgba(15, 23, 42, 0.18)`) to block out background table grids and make overlay text 100% legible.
+* **Premium Dashboard Header/Footer Styling**: Wrapped modal headers and footers with a light grey dashboard styling (`background: #f8fafc`) and subtle bottom/top borders, separating action elements cleanly.
+* **Enhanced Visual Fields Layout**: Styled detail field rows with clean typography, styled `code` wrappers for client IP and username values, and centered a modern flat grey close button (`btn-modal-close`) at the bottom. Added modal scale-in micro-animations on popup activation.
+
+* **Native Windows Service Migration**:
+  * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
+  * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
+  * Deleted the legacy startup shortcut (`AOI-Server.lnk`) from the Windows Startup folder to prevent double-execution port conflicts on user login.
 
 ----
 
@@ -565,20 +570,24 @@ chmod +x setup.sh
 - **Frontend**: Navigate to `client` and run `npm start` (starts on port `3000` and proxies `/api` requests to `5001`).
 
 ### Production Server Startup (Windows — `vivoadmin` machine)
-The production server on the `vivoadmin` machine is configured to start automatically and silently on every Windows login.
+The production server on the `vivoadmin` machine is configured to start automatically and permanently as a native Windows Service named **`AOI_Digital_Checksheet`**.
 
-*   **Hidden Launcher Script**: `D:\AOi_check_sheet\server\start-server-hidden.vbs`
-    *   A VBScript file that runs `run-server.bat` with `WindowStyle = 0` (completely hidden — no Command Prompt window appears).
-    *   To start the server manually: **double-click** `start-server-hidden.vbs`.
+* **Windows Service**: `AOI_Digital_Checksheet`
+  * Runs in the background automatically at system boot (before a user logs in).
+  * Managed via the standard Windows Services manager (`services.msc`) or PowerShell commands.
+  * Automatically restarts if the Node.js process crashes.
 
-*   **Windows Auto-Startup Shortcut**: `C:\Users\vivoadmin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\AOI-Server.lnk`
-    *   A shortcut pointing to `start-server-hidden.vbs` placed in the Windows Startup folder.
-    *   The server launches **automatically** every time `vivoadmin` logs into Windows — no manual action required.
+* **Manage the service manually (elevated PowerShell)**:
+  * **Start**: `Start-Service -Name "AOI_Digital_Checksheet"`
+  * **Stop**: `Stop-Service -Name "AOI_Digital_Checksheet"`
+  * **Restart**: `Restart-Service -Name "AOI_Digital_Checksheet"`
 
-*   **Verify server is running**: Check that port `5001` is listening:
-    ```powershell
-    Get-NetTCPConnection -LocalPort 5001 -ErrorAction SilentlyContinue
-    ```
-    If it returns a row with `State = Listen`, the server is up.
+* **Setup Helpers** (stored in the `server/` directory):
+  * `install-service.js`: Runs `node install-service.js` to register the service.
+  * `uninstall-service.js`: Runs `node uninstall-service.js` to remove the service.
 
-*   **Note**: If `server.log` becomes locked (Access Denied error), delete it from `D:\AOi_check_sheet\server\` before restarting.
+* **Verify server is running**: Check that port `5001` is listening:
+  ```powershell
+  Get-NetTCPConnection -LocalPort 5001 -ErrorAction SilentlyContinue
+  ```
+  If it returns a row with `State = Listen`, the server is up.
