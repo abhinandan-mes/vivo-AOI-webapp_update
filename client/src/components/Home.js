@@ -33,7 +33,7 @@ export default function Home({ currentUser }) {
   const [lineStatuses, setLineStatuses] = useState([]);
 
   useEffect(() => {
-    apiService.getLineStatus()
+    apiService.getAllLines()
       .then(res => setLineStatuses(res.data.data || []))
       .catch(() => setLineStatuses([]));
   }, []);
