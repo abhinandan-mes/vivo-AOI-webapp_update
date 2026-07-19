@@ -526,7 +526,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: Dashboard Submissions Pagination & View All Modal (July 2026)
 * **Stats Day Submissions Filter**: Modified the Home page Recent Submissions widget to display submissions belonging specifically to the selected Stats Day (defaulting to today's date) instead of a fixed overall history slice of 10 items.
-* **Dashboard Submissions Pagination**: Implemented client-side pagination controls (max 10 items per page) for the Recent Submissions list to prevent long page scrolls and maintain a compact grid layout.
+* **Dashboard Submissions Pagination**: Implemented client-side pagination controls (max 10 items per page) for the Recent Submissions list to prevent long page scrolls and maintain a compact grid layout. Overrode the `.page-nav-btn` layout styles in `Home.css` with flexible padding, auto-width, and `white-space: nowrap` rules to prevent `Previous`/`Next` text wrapping and overlapping.
 * **Filterable View All Overlay Modal**: Replaced the "View All" link redirection to Reports with a premium **All Submissions Modal** overlay (`view-all-submissions-modal`). This modal queries the backend dynamically and features:
   * Full filter criteria (Date, Line, Shift, Group, and Activity Type).
   * Server-side paginated results tables with high-density columns.

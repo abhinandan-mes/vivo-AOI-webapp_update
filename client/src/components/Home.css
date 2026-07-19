@@ -920,3 +920,79 @@
 .rs-view-all-btn:hover {
   background: rgba(65, 95, 255, 0.15) !important;
 }
+
+/* ── Dashboard Recent Submissions Pagination Styling Overrides ── */
+.home-container .logs-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.home-container .logs-pagination .page-nav-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  min-width: 90px;
+  width: auto;
+  height: 38px;
+  padding: 0 0.75rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  gap: 0.35rem;
+}
+
+.home-container .logs-pagination .page-nav-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.home-container .logs-pagination .page-nav-btn:disabled {
+  background: #f8fafc;
+  color: #cbd5e1;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+.home-container .logs-pagination .page-numbers {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.home-container .logs-pagination .page-number-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.home-container .logs-pagination .page-number-btn:hover {
+  background: #f1f5f9;
+}
+
+.home-container .logs-pagination .page-number-btn.active {
+  background: #415fff;
+  color: #ffffff;
+  border-color: #415fff;
+}
