@@ -535,6 +535,9 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 ### Resolved: Git Branch Policy Constraint (July 2026)
 * **Branch Security**: Defined system memory and workspace rules prohibiting direct commits to the `main` branch. All feature developments must be executed on a separate feature or development branch before merging, preventing unstable code in the production-ready main branch.
 
+### Resolved: Login Rate-Limiter Reverse Proxy Validation Fix (July 2026)
+* **IP Address Sanitization**: Created a helper function `getCleanIp` in `server.js` that extracts and sanitizes the remote IP address, discarding any client port numbers (e.g. `10.172.130.189:11416` -> `10.172.130.189`) forwarded by the IIS reverse proxy. This prevents unhandled validation crashes in `express-rate-limit` (`ERR_ERL_INVALID_IP_ADDRESS`) during login attempts, restoring login system availability.
+
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
   * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
