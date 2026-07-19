@@ -50,7 +50,7 @@ export const apiService = {
   revokeSession: (sessionId) => API.post(`/auth/sessions/${sessionId}/revoke`),
   changePassword: (payload) => API.post('/auth/change-password', payload),
   getActivityLogs: (params) => API.get('/activity-logs', { params }),
-  getRecentSubmissions: () => API.get('/activity-logs/recent-submissions'),
+  getRecentSubmissions: (date) => API.get('/activity-logs/recent-submissions' + (date ? `?date=${date}` : '')),
   getDashboardStats: (date) => API.get('/auth/dashboard-stats', { params: { date } }),
 
   // Function Checkpoint APIs

@@ -7,14 +7,22 @@ const router = express.Router();
 // Get recent submissions for home page (descending by created_at)
 router.get('/activity-logs/recent-submissions', authenticateToken, async (req, res) => {
   try {
+    const { date } = req.query;
+    const targetDateStr = date || new Date().toLocaleDateString('en-CA');
+    const startOfDay = new Date(targetDateStr + 'T00:00:00.000');
+    const endOfDay = new Date(targetDateStr + 'T23:59:59.999');
+
     const logs = await prisma.appActivityLog.findMany({
       where: {
         activity_type: {
           in: ['CHECKLIST_SUBMIT', 'CHECKPOINT_SUBMIT']
+        },
+        created_at: {
+          gte: startOfDay,
+          lte: endOfDay
         }
       },
-      orderBy: { created_at: 'desc' },
-      take: 10
+      orderBy: { created_at: 'desc' }
     });
 
     const usernames = Array.from(new Set(logs.map(l => l.username)));
@@ -55,7 +63,7 @@ router.get('/activity-logs', authenticateToken, async (req, res) => {
     const skip = (page - 1) * limit;
 
     // Filters
-    const { user, type, startDate, endDate } = req.query;
+    const { user, type, startDate, endDate, line, shift, group, dashboardSubmissionsOnly } = req.query;
 
     const queryOptions = {
       orderBy: { created_at: 'desc' },
@@ -66,6 +74,10 @@ router.get('/activity-logs', authenticateToken, async (req, res) => {
 
     if (type && type !== 'ALL') {
       queryOptions.where.activity_type = type;
+    } else if (dashboardSubmissionsOnly === 'true') {
+      queryOptions.where.activity_type = {
+        in: ['CHECKLIST_SUBMIT', 'CHECKPOINT_SUBMIT']
+      };
     }
 
     if (startDate || endDate) {
@@ -76,6 +88,21 @@ router.get('/activity-logs', authenticateToken, async (req, res) => {
       if (endDate) {
         queryOptions.where.created_at.lte = new Date(endDate + 'T23:59:59.999Z');
       }
+    }
+
+    // Unstructured text details filters (Line, Shift, Group)
+    const andConditions = [];
+    if (line) {
+      andConditions.push({ details: { contains: `Line: ${line}` } });
+    }
+    if (shift) {
+      andConditions.push({ details: { contains: `Shift: ${shift}` } });
+    }
+    if (group) {
+      andConditions.push({ details: { contains: `Group: ${group}` } });
+    }
+    if (andConditions.length > 0) {
+      queryOptions.where.AND = andConditions;
     }
 
     if (isAdmin) {

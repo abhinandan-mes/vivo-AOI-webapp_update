@@ -524,6 +524,17 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 * **Premium Dashboard Header/Footer Styling**: Wrapped modal headers and footers with a light grey dashboard styling (`background: #f8fafc`) and subtle bottom/top borders, separating action elements cleanly.
 * **Enhanced Visual Fields Layout**: Styled detail field rows with clean typography, styled `code` wrappers for client IP and username values, and centered a modern flat grey close button (`btn-modal-close`) at the bottom. Added modal scale-in micro-animations on popup activation.
 
+### Resolved: Dashboard Submissions Pagination & View All Modal (July 2026)
+* **Stats Day Submissions Filter**: Modified the Home page Recent Submissions widget to display submissions belonging specifically to the selected Stats Day (defaulting to today's date) instead of a fixed overall history slice of 10 items.
+* **Dashboard Submissions Pagination**: Implemented client-side pagination controls (max 10 items per page) for the Recent Submissions list to prevent long page scrolls and maintain a compact grid layout.
+* **Filterable View All Overlay Modal**: Replaced the "View All" link redirection to Reports with a premium **All Submissions Modal** overlay (`view-all-submissions-modal`). This modal queries the backend dynamically and features:
+  * Full filter criteria (Date, Line, Shift, Group, and Activity Type).
+  * Server-side paginated results tables with high-density columns.
+  * Backend SQL `LIKE`/`contains` query filtering for unstructured string detail parameters.
+
+### Resolved: Git Branch Policy Constraint (July 2026)
+* **Branch Security**: Defined system memory and workspace rules prohibiting direct commits to the `main` branch. All feature developments must be executed on a separate feature or development branch before merging, preventing unstable code in the production-ready main branch.
+
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
   * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
 import apiService from '../services/api';
 import './Home.css';
@@ -15,7 +14,33 @@ export default function Home({ currentUser }) {
   const [expandedUser, setExpandedUser] = useState(null);
   const [recentSubmissions, setRecentSubmissions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [recentPage, setRecentPage] = useState(1);
   const itemsPerPage = 10;
+
+  // View All Submissions Modal State
+  const [isViewAllOpen, setIsViewAllOpen] = useState(false);
+  const [viewAllLogs, setViewAllLogs] = useState([]);
+  const [viewAllTotal, setViewAllTotal] = useState(0);
+  const [viewAllPage, setViewAllPage] = useState(1);
+  const [viewAllLoading, setViewAllLoading] = useState(false);
+  const [viewAllFilters, setViewAllFilters] = useState({
+    date: '',
+    line: '',
+    shift: '',
+    group: '',
+    type: ''
+  });
+  const [lineStatuses, setLineStatuses] = useState([]);
+
+  useEffect(() => {
+    apiService.getLineStatus()
+      .then(res => setLineStatuses(res.data.data || []))
+      .catch(() => setLineStatuses([]));
+  }, []);
+
+  const activeLines = useMemo(() => {
+    return lineStatuses.filter(l => l.is_installed).map(l => l.line);
+  }, [lineStatuses]);
 
   // New state for Checklist/Checksheet submission statistics
   const [dashboardStats, setDashboardStats] = useState({
@@ -62,6 +87,57 @@ export default function Home({ currentUser }) {
     fetchDashboardData(selectedDate);
   }, [selectedDate]); // eslint-disable-line
 
+  const fetchViewAllLogs = async (page = 1, currentFilters = viewAllFilters) => {
+    setViewAllLoading(true);
+    try {
+      const params = {
+        page,
+        limit: 10,
+        dashboardSubmissionsOnly: 'true'
+      };
+
+      if (currentFilters.date) {
+        params.startDate = currentFilters.date;
+        params.endDate = currentFilters.date;
+      }
+      if (currentFilters.line) {
+        params.line = currentFilters.line;
+      }
+      if (currentFilters.shift) {
+        params.shift = currentFilters.shift;
+      }
+      if (currentFilters.group) {
+        params.group = currentFilters.group;
+      }
+      if (currentFilters.type) {
+        params.type = currentFilters.type;
+      }
+
+      const res = await apiService.getActivityLogs(params);
+      if (res.data && res.data.success) {
+        setViewAllLogs(res.data.logs || []);
+        setViewAllTotal(res.data.pagination?.totalRecords || 0);
+        setViewAllPage(page);
+      }
+    } catch (err) {
+      console.error('Error fetching view all logs:', err);
+    } finally {
+      setViewAllLoading(false);
+    }
+  };
+
+  const handleViewAllFilterChange = (name, value) => {
+    const updatedFilters = { ...viewAllFilters, [name]: value };
+    setViewAllFilters(updatedFilters);
+    fetchViewAllLogs(1, updatedFilters);
+  };
+
+  const handleClearViewAllFilters = () => {
+    const cleared = { date: '', line: '', shift: '', group: '', type: '' };
+    setViewAllFilters(cleared);
+    fetchViewAllLogs(1, cleared);
+  };
+
   const fetchDashboardData = async (date) => {
     setLoading(true);
     setError('');
@@ -77,9 +153,10 @@ export default function Home({ currentUser }) {
       }
 
       // Fetch recent submissions for the new widget
-      const recentResponse = await apiService.getRecentSubmissions();
+      const recentResponse = await apiService.getRecentSubmissions(date);
       if (recentResponse.data && recentResponse.data.success) {
         setRecentSubmissions(recentResponse.data.logs || []);
+        setRecentPage(1); // Reset page to 1 when date changes
       }
 
       // 2. Fetch sessions list
@@ -186,6 +263,9 @@ export default function Home({ currentUser }) {
 
   const totalDay = (stats.checklist?.shifts?.day || 0) + (stats.checkpoint?.shifts?.day || 0) + (stats.changeover?.shifts?.day || 0);
   const totalNight = (stats.checklist?.shifts?.night || 0) + (stats.checkpoint?.shifts?.night || 0) + (stats.changeover?.shifts?.night || 0);
+
+  const recentTotalPages = Math.ceil(recentSubmissions.length / 10) || 1;
+  const paginatedRecent = recentSubmissions.slice((recentPage - 1) * 10, recentPage * 10);
 
   if (loading && sessions.length === 0 && usersSummary.length === 0) {
     return <div className="home-loading">{t('home_loading')}</div>;
@@ -299,20 +379,42 @@ export default function Home({ currentUser }) {
           <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <h2 style={{ margin: 0 }}>{language === 'zh' ? '最近提交活动' : 'Recent Submissions'}</h2>
-              <p className="card-subtitle" style={{ margin: '0.2rem 0 0 0' }}>{language === 'zh' ? '最后 10 次检查点或检查表提交。' : 'The last 10 Checkpoint or Checklist submissions.'}</p>
+              <p className="card-subtitle" style={{ margin: '0.2rem 0 0 0' }}>{language === 'zh' ? '所选日期的检查点或检查表提交。' : 'Checkpoint or Checklist submissions for the selected date.'}</p>
             </div>
-            <Link to="/reports" style={{textDecoration: 'none', color: '#2563eb', fontWeight: '600', fontSize: '0.9rem', padding: '0.4rem 0.8rem', background: '#eff6ff', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.3rem'}}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsViewAllOpen(true);
+                fetchViewAllLogs(1);
+              }}
+              style={{
+                border: 'none',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                color: '#415fff',
+                fontWeight: '700',
+                fontSize: '0.88rem',
+                padding: '0.5rem 1rem',
+                background: 'rgba(65, 95, 255, 0.08)',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                transition: 'all 0.2s ease'
+              }}
+              className="rs-view-all-btn"
+            >
               {language === 'zh' ? '查看全部' : 'View All'} <span>&rarr;</span>
-            </Link>
+            </button>
           </div>
           
           <div className="recent-submissions-list">
-            {recentSubmissions.length === 0 ? (
+            {paginatedRecent.length === 0 ? (
               <p style={{ color: '#64748b', fontStyle: 'italic', padding: '1rem 0' }}>
                 {language === 'zh' ? '未找到最近的提交。' : 'No recent submissions found.'}
               </p>
             ) : (
-              recentSubmissions.map(log => {
+              paginatedRecent.map(log => {
                 const isCheckpoint = log.activity_type === 'CHECKPOINT_SUBMIT';
                 const detailsStr = log.details || '';
                 
@@ -394,6 +496,37 @@ export default function Home({ currentUser }) {
               })
             )}
           </div>
+
+          {/* Pagination controls for Recent Submissions */}
+          {recentTotalPages > 1 && (
+            <div className="logs-pagination" style={{ marginTop: '1.25rem', padding: '0 1rem 1rem 1rem', justifyContent: 'center' }}>
+              <button
+                className="page-nav-btn"
+                onClick={() => setRecentPage(p => Math.max(1, p - 1))}
+                disabled={recentPage === 1}
+              >
+                &larr; {language === 'zh' ? '上一页' : 'Previous'}
+              </button>
+              <div className="page-numbers">
+                {Array.from({ length: recentTotalPages }, (_, i) => i + 1).map(pageNo => (
+                  <button
+                    key={pageNo}
+                    className={`page-number-btn ${recentPage === pageNo ? 'active' : ''}`}
+                    onClick={() => setRecentPage(pageNo)}
+                  >
+                    {pageNo}
+                  </button>
+                ))}
+              </div>
+              <button
+                className="page-nav-btn"
+                onClick={() => setRecentPage(p => Math.min(recentTotalPages, p + 1))}
+                disabled={recentPage === recentTotalPages}
+              >
+                {language === 'zh' ? '下一页' : 'Next'} &rarr;
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Right Column: Active Sessions */}
@@ -627,6 +760,194 @@ export default function Home({ currentUser }) {
         cancelText={language === 'zh' ? '取消' : 'Cancel'}
         type="danger"
       />
+
+      {/* ── View All Submissions Modal ── */}
+      {isViewAllOpen && (
+        <div className="global-modal-overlay" onClick={() => setIsViewAllOpen(false)}>
+          <div className="global-modal-content view-all-submissions-modal" onClick={e => e.stopPropagation()}>
+            <div className="global-modal-header">
+              <h2>{language === 'zh' ? '所有提交记录' : 'All Submissions'}</h2>
+              <button className="global-modal-close" onClick={() => setIsViewAllOpen(false)}>×</button>
+            </div>
+            
+            <div className="global-modal-body">
+              {/* Modal Filters Row */}
+              <div className="modal-filters-row">
+                <div className="modal-filter-item">
+                  <label>{language === 'zh' ? '日期' : 'Date'}</label>
+                  <input
+                    type="date"
+                    value={viewAllFilters.date}
+                    onChange={e => handleViewAllFilterChange('date', e.target.value)}
+                  />
+                </div>
+                
+                <div className="modal-filter-item">
+                  <label>{language === 'zh' ? '线别' : 'Line'}</label>
+                  <select
+                    value={viewAllFilters.line}
+                    onChange={e => handleViewAllFilterChange('line', e.target.value)}
+                  >
+                    <option value="">{language === 'zh' ? '全部线别' : 'All Lines'}</option>
+                    {activeLines.map(line => (
+                      <option key={line} value={line}>{line}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="modal-filter-item">
+                  <label>{language === 'zh' ? '班次' : 'Shift'}</label>
+                  <select
+                    value={viewAllFilters.shift}
+                    onChange={e => handleViewAllFilterChange('shift', e.target.value)}
+                  >
+                    <option value="">{language === 'zh' ? '全部班次' : 'All Shifts'}</option>
+                    <option value="Day">{t('day')}</option>
+                    <option value="Night">{t('night')}</option>
+                  </select>
+                </div>
+                
+                <div className="modal-filter-item">
+                  <label>{language === 'zh' ? '班组' : 'Group'}</label>
+                  <select
+                    value={viewAllFilters.group}
+                    onChange={e => handleViewAllFilterChange('group', e.target.value)}
+                  >
+                    <option value="">{language === 'zh' ? '全部班组' : 'All Groups'}</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                  </select>
+                </div>
+                
+                <div className="modal-filter-item">
+                  <label>{language === 'zh' ? '类型' : 'Type'}</label>
+                  <select
+                    value={viewAllFilters.type}
+                    onChange={e => handleViewAllFilterChange('type', e.target.value)}
+                  >
+                    <option value="">{language === 'zh' ? '全部类型' : 'All Types'}</option>
+                    <option value="CHECKLIST_SUBMIT">{language === 'zh' ? '技术员点检表' : 'Technician Checklist'}</option>
+                    <option value="CHECKPOINT_SUBMIT">{language === 'zh' ? '日常功能点检' : 'Daily Function Check'}</option>
+                  </select>
+                </div>
+                
+                <div className="modal-filter-item align-end">
+                  <button 
+                    type="button" 
+                    className="btn-clear-modal-filters" 
+                    onClick={handleClearViewAllFilters}
+                  >
+                    {language === 'zh' ? '重置' : 'Reset'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Records Table */}
+              <div className="modal-table-container">
+                {viewAllLoading ? (
+                  <div className="modal-loading-placeholder">
+                    {language === 'zh' ? '加载中...' : 'Loading submissions...'}
+                  </div>
+                ) : viewAllLogs.length === 0 ? (
+                  <div className="modal-empty-placeholder">
+                    {language === 'zh' ? '未找到符合条件的提交记录。' : 'No submission records found.'}
+                  </div>
+                ) : (
+                  <table className="modal-records-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>{language === 'zh' ? '记录类型' : 'Type'}</th>
+                        <th>{language === 'zh' ? '产线' : 'Line'}</th>
+                        <th>{language === 'zh' ? '班次' : 'Shift'}</th>
+                        <th>{language === 'zh' ? '班组' : 'Group'}</th>
+                        <th>{language === 'zh' ? '状态' : 'Status'}</th>
+                        <th>{language === 'zh' ? '提交者' : 'Submitted By'}</th>
+                        <th>{language === 'zh' ? '提交时间' : 'Submit Time'}</th>
+                        {isAdminOrSuper && <th>IP</th>}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {viewAllLogs.map(log => {
+                        const isCheckpoint = log.activity_type === 'CHECKPOINT_SUBMIT';
+                        const detailsStr = log.details || '';
+                        
+                        const lineMatch = detailsStr.match(/Line:\s*([^,]+)/);
+                        const lineLabel = lineMatch ? lineMatch[1] : '-';
+                        
+                        const shiftMatch = detailsStr.match(/Shift:\s*([^,]+)/);
+                        const shiftLabel = shiftMatch ? (shiftMatch[1] === 'Day' ? t('day') : (shiftMatch[1] === 'Night' ? t('night') : shiftMatch[1])) : '-';
+                        
+                        const groupMatch = detailsStr.match(/Group:\s*([^,]+)/);
+                        const groupLabel = groupMatch ? groupMatch[1] : '-';
+                        
+                        const statusMatch = detailsStr.match(/Status:\s*([^,]+)/);
+                        const statusLabel = statusMatch ? statusMatch[1] : '-';
+                        
+                        return (
+                          <tr key={log.id}>
+                            <td>#{log.id}</td>
+                            <td>
+                              <span className={`rs-type-tag ${isCheckpoint ? 'tag-checkpoint' : 'tag-checklist'}`}>
+                                {isCheckpoint ? (language === 'zh' ? '点检' : 'Checksheet') : (language === 'zh' ? '检查' : 'Checklist')}
+                              </span>
+                            </td>
+                            <td><strong>{lineLabel}</strong></td>
+                            <td>{shiftLabel}</td>
+                            <td>{groupLabel}</td>
+                            <td>
+                              <span className={`status-pill ${statusLabel === 'Production' ? 'badge-prod' : 'badge-stop'}`}>
+                                {statusLabel}
+                              </span>
+                            </td>
+                            <td>{log.full_name || log.username}</td>
+                            <td>{new Date(log.created_at).toLocaleString()}</td>
+                            {isAdminOrSuper && <td className="ip-cell-text">{log.public_ip ? log.public_ip.split(':')[0] : '—'}</td>}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              {/* Modal Pagination */}
+              {!viewAllLoading && viewAllTotal > 10 && (
+                <div className="modal-pagination-controls">
+                  <span>
+                    {language === 'zh' 
+                      ? `第 ${viewAllPage} 页，共 ${Math.ceil(viewAllTotal / 10)} 页 (共 ${viewAllTotal} 条)`
+                      : `Page ${viewAllPage} of ${Math.ceil(viewAllTotal / 10)} (${viewAllTotal} total records)`
+                    }
+                  </span>
+                  <div className="modal-pagination-buttons">
+                    <button 
+                      onClick={() => fetchViewAllLogs(Math.max(1, viewAllPage - 1))}
+                      disabled={viewAllPage === 1}
+                    >
+                      &larr; {language === 'zh' ? '上一页' : 'Prev'}
+                    </button>
+                    <button 
+                      onClick={() => fetchViewAllLogs(Math.min(Math.ceil(viewAllTotal / 10), viewAllPage + 1))}
+                      disabled={viewAllPage === Math.ceil(viewAllTotal / 10)}
+                    >
+                      {language === 'zh' ? '下一页' : 'Next'} &rarr;
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="global-modal-footer">
+              <button className="btn-modal-close" onClick={() => setIsViewAllOpen(false)}>
+                {language === 'zh' ? '关闭' : 'Close'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

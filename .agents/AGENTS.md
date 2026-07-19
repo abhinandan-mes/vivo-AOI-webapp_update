@@ -29,3 +29,4 @@ This repository contains the **AOI CheckPoint (Daily Inspection System)** web ap
 2. **Authentication Interceptors**: All API endpoints except `/api/auth/login` require JWT authentication. Ensure all API requests go through the configured Axios client in [api.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/services/api.js) which automatically injects the `Bearer <token>` header.
 3. **Role-Based Access Control (RBAC)**: Maintain the role checks for user routes and screen components. Only `super_admin` and `admin` have access to the User Management page.
 4. **No TailwindCSS**: Avoid using TailwindCSS in this workspace unless explicitly requested by the USER. Style layouts using custom selectors in component-specific `.css` files.
+5. **Git Branch Policy**: Do not make git commits directly to the `main` branch. All commits must be made to a dedicated development or feature branch and pushed to that branch on origin.
