@@ -27,6 +27,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
+// Helper to clean IP address under reverse proxies that forward ports
+const getCleanIp = (req) => {
+  let ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  if (typeof ip === 'string') {
+    if (ip.startsWith('::ffff:')) {
+      ip = ip.replace('::ffff:', '');
+    }
+    if (ip.includes('.') && ip.includes(':')) {
+      ip = ip.split(':')[0];
+    }
+  }
+  return ip;
+};
+
 // Rate limiting for login attempts — only active in production
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -34,6 +48,7 @@ const loginLimiter = rateLimit({
   message: { success: false, error: 'Too many login attempts from this IP, please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: (req) => getCleanIp(req),
   skip: () => process.env.NODE_ENV !== 'production', // disabled in dev
 });
 
