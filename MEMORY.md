@@ -538,6 +538,10 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 ### Resolved: Login Rate-Limiter Reverse Proxy Validation Fix (July 2026)
 * **IP Address Sanitization**: Created a helper function `getCleanIp` in `server.js` that extracts and sanitizes the remote IP address, discarding any client port numbers (e.g. `10.172.130.189:11416` -> `10.172.130.189`) forwarded by the IIS reverse proxy. This prevents unhandled validation crashes in `express-rate-limit` (`ERR_ERL_INVALID_IP_ADDRESS`) during login attempts, restoring login system availability.
 
+### Resolved: Footer Dynamic Versioning & Small vivo Brand (July 2026)
+* **Dynamic Version Tag**: Configured a footer version tag using the format `V2.DD.M.YY` (representing the day changes are committed/published) to display beside the vivo brand. Today's version is updated to `V2.19.7.26` (July 19, 2026).
+* **Font Sizing**: Styled the vivo brand to be smaller in font-size (`0.78rem`) and set the blue highlight color (`#415fff`) for the version string, aligning cleanly in both the login screen and application main layouts.
+
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
   * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.

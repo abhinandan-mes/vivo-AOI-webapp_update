@@ -253,7 +253,7 @@ function App() {
           </Routes>
         </main>
         <footer className="footer login-footer">
-          <p>AOI Digital Checksheet &copy; 2026 Vivo</p>
+          <p>AOI Digital Checksheet &copy; 2026 <span className="small-brand">vivo</span> | <span className="footer-version">V2.19.7.26</span></p>
           <p className="footer-credit">
             Designed, Developed &amp; Maintained by{" "}
             <a 
@@ -394,7 +394,7 @@ function App() {
       </main>
 
       <footer className="footer">
-        <p>AOI Digital Checksheet &copy; 2026 Vivo | V2.16.7.26</p>
+        <p>AOI Digital Checksheet &copy; 2026 <span className="small-brand">vivo</span> | <span className="footer-version">V2.19.7.26</span></p>
         <p className="footer-credit">
           Designed, Developed &amp; Maintained by{" "}
           <a 
