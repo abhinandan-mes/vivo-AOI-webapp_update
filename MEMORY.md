@@ -542,6 +542,9 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 * **Dynamic Version Tag**: Configured a footer version tag using the format `V2.DD.M.YY` (representing the day changes are committed/published) to display beside the vivo brand. Today's version is updated to `V2.19.7.26` (July 19, 2026).
 * **Font Sizing**: Styled the vivo brand to be smaller in font-size (`0.78rem`) and set the blue highlight color (`#415fff`) for the version string, aligning cleanly in both the login screen and application main layouts.
 
+### Resolved: Browser Tab Favicon (July 2026)
+* **Standard vivo Logo Favicon**: Set the official `favicon.svg` (the vivo logo) as the browser tab icon. Added the SVG link tag `<link rel="icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />` inside the `<head>` of `client/public/index.html` and cleaned up any legacy `.ico` favicon link references.
+
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
   * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.

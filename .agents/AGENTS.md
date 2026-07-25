@@ -30,3 +30,4 @@ This repository contains the **AOI CheckPoint (Daily Inspection System)** web ap
 3. **Role-Based Access Control (RBAC)**: Maintain the role checks for user routes and screen components. Only `super_admin` and `admin` have access to the User Management page.
 4. **No TailwindCSS**: Avoid using TailwindCSS in this workspace unless explicitly requested by the USER. Style layouts using custom selectors in component-specific `.css` files.
 5. **Git Branch Policy**: Do not make git commits directly to the `main` branch. All commits must be made to a dedicated development or feature branch and pushed to that branch on origin.
+6. **Favicon SVG**: The official `favicon.svg` (the vivo logo) is configured as the standard browser tab icon inside `<head>` of `client/public/index.html`. Do not restore or reference legacy `.ico` files.
