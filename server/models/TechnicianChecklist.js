@@ -68,7 +68,7 @@ const technicianChecklistModel = {
   getAll: async () => {
     return await prisma.aoiTechnicianChecklist.findMany({
       orderBy: { created_at: 'desc' },
-      take: 10000
+      take: 10000000
     });
   },
 
