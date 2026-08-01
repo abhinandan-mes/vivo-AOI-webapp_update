@@ -75,7 +75,18 @@ const checkpointGroups = [
 const text = value => value === null || value === undefined || value === '' ? '—' : value;
 const dateKey = value => {
   if (!value) return '';
+  if (value instanceof Date) {
+    const pad = number => String(number).padStart(2, '0');
+    return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}`;
+  }
+  if (typeof value === 'string') {
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+  }
   const date = new Date(value);
+  if (isNaN(date.getTime())) return '';
   const pad = number => String(number).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 };
@@ -196,7 +207,24 @@ export default function Reports({ currentUser }) {
 
   const formatDate = value => {
     if (!value) return '—';
-    return new Date(value).toLocaleDateString(language === 'zh' ? 'zh-CN' : undefined);
+    let dateStr = '';
+    if (typeof value === 'string') {
+      const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (match) {
+        dateStr = `${match[1]}-${match[2]}-${match[3]}`;
+      }
+    }
+    if (!dateStr) {
+      const dateObj = new Date(value);
+      if (isNaN(dateObj.getTime())) return '—';
+      const pad = number => String(number).padStart(2, '0');
+      dateStr = `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
+    }
+    const [year, month, day] = dateStr.split('-');
+    if (language === 'zh') {
+      return `${year}/${parseInt(month)}/${parseInt(day)}`;
+    }
+    return `${day}-${month}-${year}`;
   };
 
   const formatDateTime = value => {

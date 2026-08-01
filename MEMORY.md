@@ -545,6 +545,9 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 ### Resolved: Browser Tab Favicon (July 2026)
 * **Standard vivo Logo Favicon**: Set the official `favicon.svg` (the vivo logo) as the browser tab icon. Added the SVG link tag `<link rel="icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />` inside the `<head>` of `client/public/index.html` and cleaned up any legacy `.ico` favicon link references.
 
+### Resolved: Reports Form Date Filter (August 2026)
+* **Timezone-Agnostic Date Filtering**: Fixed client-side date comparison in `Reports.js` by refactoring `dateKey` and `formatDate` to parse and format date strings timezone-agnostically. Instead of converting UTC database timestamps (e.g. `"2026-07-14T00:00:00.000Z"`) into shifted local browser timezone Date objects, the components now extract the calendar date (`"2026-07-14"`) directly via pattern matching. This prevents records from shifting days or being filtered out entirely on client browsers.
+
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
   * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
