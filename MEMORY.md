@@ -547,6 +547,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: Reports Form Date Filter (August 2026)
 * **Timezone-Agnostic Date Filtering**: Fixed client-side date comparison in `Reports.js` by refactoring `dateKey` and `formatDate` to parse and format date strings timezone-agnostically. Instead of converting UTC database timestamps (e.g. `"2026-07-14T00:00:00.000Z"`) into shifted local browser timezone Date objects, the components now extract the calendar date (`"2026-07-14"`) directly via pattern matching. This prevents records from shifting days or being filtered out entirely on client browsers.
+* **Increased Query Limit**: Increased the hardcoded `take: 200` database query limits to `take: 10000` in the backend models (`TechnicianChecklist.js`, `FunctionCheckpoint.js`, and `ChangeoverChecksheet.js`). Since daily checklists generate 30-40 records per day across all production lines and shifts, a limit of 200 only retained about 5 days of history. The higher limit enables loading historical data (e.g. from July 7th) to display and filter older reports correctly.
 
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).

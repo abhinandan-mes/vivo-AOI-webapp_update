@@ -92,7 +92,7 @@ const changeoverChecksheetModel = {
   getAll: async () => {
     return await prisma.aoiChangeoverChecksheet.findMany({
       orderBy: { created_at: 'desc' },
-      take: 200
+      take: 10000
     });
   },
 
