@@ -44,8 +44,8 @@ export default function ChangeoverChecksheet({ currentUser }) {
   const [formData, setFormData] = useState({
     line: '',
     group_name: '',
-    date: initialShiftAndDate.date,
-    shift: initialShiftAndDate.shift,
+    date: '',
+    shift: '',
     model_name: '',
     model_code: '',
     changeover_type: '',
@@ -196,8 +196,8 @@ export default function ChangeoverChecksheet({ currentUser }) {
       setFormData({
         line: '',
         group_name: '',
-        date: currentShiftAndDate.date,
-        shift: currentShiftAndDate.shift,
+        date: '',
+        shift: '',
         model_name: '',
         model_code: '',
         designated_engineer_id: '',
@@ -300,7 +300,7 @@ export default function ChangeoverChecksheet({ currentUser }) {
               </select>
             </div>
             <div className="form-group">
-               <label htmlFor="date-input">{t('cp_date_req')} ({language === 'zh' ? '自动' : 'Auto'})</label>
+               <label htmlFor="date-input">{t('cp_date_req')}</label>
                <input
                  id="date-input"
                  type="date"
@@ -308,19 +308,18 @@ export default function ChangeoverChecksheet({ currentUser }) {
                  value={formData.date}
                  onChange={handleInputChange}
                  required
-                 disabled
                />
              </div>
              <div className="form-group">
-               <label htmlFor="shift-select">{t('cp_shift_req')} ({language === 'zh' ? '自动' : 'Auto'})</label>
+               <label htmlFor="shift-select">{t('cp_shift_req')}</label>
                <select 
                  id="shift-select" 
                  name="shift" 
                  value={formData.shift} 
                  onChange={handleInputChange} 
                  required
-                 disabled
                >
+                 <option value="" disabled>{language === 'zh' ? '请选择...' : 'Select...'}</option>
                  <option value="Day">{language === 'zh' ? '白班 (Day Shift)' : 'Day Shift'}</option>
                  <option value="Night">{language === 'zh' ? '晚班 (Night Shift)' : 'Night Shift'}</option>
                </select>

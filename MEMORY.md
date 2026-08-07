@@ -189,6 +189,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 * **Changeover Type Database Sync**: Mapped the `changeover_type` field in `server/models/ChangeoverChecksheet.js` to ensure the value selected by the technician is correctly persisted to the PostgreSQL database and retrievable by the engineer.
 * **Review Modal UI Buttons**: Added missing CSS class styles for `.primary` and `.success` buttons in the `ConfirmModal`, and fixed logic to respect the `hideCancel` parameter.
 * **Auto-Scrolling Native Validation**: Modified the submit buttons on all three checksheet forms to not be `disabled` while required fields are empty, enabling the browser's native HTML5 validation to intercept submissions, automatically scroll to the missing field, and prompt the user.
+* **Manual Date/Shift for Changeovers (Aug 2026)**: Removed the automatic Date and Shift population solely for the Changeover Checksheet, making them standard required inputs for the technician to fill manually.
 
 ### Resolved: Security & Access Control Enhancements (June 2026)
 * **Access Control Vulnerability**: Enforced role authorization on user directory endpoints (`GET /auth/users` and `POST /auth/create-user`) by applying `requireRoles(['super_admin', 'admin'])`. Standard operators can no longer access user records or create accounts directly.
