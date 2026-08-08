@@ -548,7 +548,16 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: Reports Form Date Filter (August 2026)
 * **Timezone-Agnostic Date Filtering**: Fixed client-side date comparison in `Reports.js` by refactoring `dateKey` and `formatDate` to parse and format date strings timezone-agnostically. Instead of converting UTC database timestamps (e.g. `"2026-07-14T00:00:00.000Z"`) into shifted local browser timezone Date objects, the components now extract the calendar date (`"2026-07-14"`) directly via pattern matching. This prevents records from shifting days or being filtered out entirely on client browsers.
-* **Increased Query Limit**: Increased the hardcoded `take: 200` database query limits to `take: 10000000` (10 million) in the backend models (`TechnicianChecklist.js`, `FunctionCheckpoint.js`, and `ChangeoverChecksheet.js`) to support up to 2 years of historical checksheet data. Since daily checklists generate 30-40 records per day across all production lines and shifts, a limit of 200 only retained about 5 days of history. The higher limit enables loading historical data (e.g. from July 7th) to display and filter older reports correctly.
+* **Increased Query Limit**: Increased the hardcoded `take: 200` database query limits to `take: 10000000` (10 million) in the backend models (`TechnicianChecklist.js`, `FunctionCheckpoint.js`, and `ChangeoverChecksheet.js`) to support up to 2 years of checksheet data.
+
+### Resolved: Review Form UI/UX Upgrades (August 2026)
+* **Timezone-Agnostic Pending Dates**: Replaced all occurrences of local browser timezone conversions (`new Date(item.date).toLocaleDateString()`) with a strict timezone-independent `formatDate` helper in `PendingModule.js`. This resolves date-shifting bugs (such as dates changing by 1 day) in the pending tasks tables and review panels.
+* **Premium Review Form UI**: Redesigned the Technician Checksheets Review Form layout to adhere to high-density executive dashboard styling:
+  * **Metadata Header Panel**: Refactored the basic information section into a clean horizontal grid layout with uppercase labels, bold values, custom icons, and styled status-select dropdown elements (green for Production, red for Line Stop).
+  * **Two-Column Card Grid**: Wrapped the "Barcode Reads (A-Side)" and "Barcode Reads (B-Side)" cards inside a responsive `1fr 1fr` grid, preventing unequal alignment and text stretching.
+  * **Changeover Info Partitioning**: Extracted changeover input fields (`Model Name`, `Model Code`, `Changeover Type`) from the read-only basic info grid and grouped them into their own dedicated "Model & Changeover Info" card.
+  * **Admin Information Banner**: Replaced the footnote label in the footer with a highly visible Blue Info Card banner at the top of the body for administrators ("Admins can view but cannot approve"), keeping action footers focused.
+  * **Actions Buttons**: Sized, colored, and animated footer buttons with modern transitions, subtle box-shadows, and micro-hover offsets.
 
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).

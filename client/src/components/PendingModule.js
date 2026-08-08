@@ -31,6 +31,28 @@ export default function PendingModule({ currentUser }) {
   const isEngineer = currentUser?.role === 'engineer';
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
 
+  const formatDate = (value) => {
+    if (!value) return '—';
+    let dateStr = '';
+    if (typeof value === 'string') {
+      const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (match) {
+        dateStr = `${match[1]}-${match[2]}-${match[3]}`;
+      }
+    }
+    if (!dateStr) {
+      const dateObj = new Date(value);
+      if (isNaN(dateObj.getTime())) return '—';
+      const pad = number => String(number).padStart(2, '0');
+      dateStr = `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
+    }
+    const [year, month, day] = dateStr.split('-');
+    if (language === 'zh') {
+      return `${year}/${parseInt(month)}/${parseInt(day)}`;
+    }
+    return `${day}-${month}-${year}`;
+  };
+
   const getEngineerDisplay = (id) => {
     if (!id) return language === 'zh' ? '系统自动' : 'System (Automatic)';
     if (id === 'System (Automatic)') return language === 'zh' ? '系统自动' : 'System (Automatic)';
@@ -302,7 +324,7 @@ export default function PendingModule({ currentUser }) {
                   <tbody>
                     {checklists.map(item => (
                       <tr key={item.id}>
-                        <td>{new Date(item.date).toLocaleDateString()}</td>
+                        <td>{formatDate(item.date)}</td>
                         <td><span className="line-tag">{item.line}</span></td>
                         <td>{item.shift}</td>
                         <td>{item.group_name}</td>
@@ -358,7 +380,7 @@ export default function PendingModule({ currentUser }) {
                   <tbody>
                     {checkpoints.map(item => (
                       <tr key={item.id}>
-                        <td>{new Date(item.date).toLocaleDateString()}</td>
+                        <td>{formatDate(item.date)}</td>
                         <td><span className="line-tag">{item.line}</span></td>
                         <td>{item.shift}</td>
                         <td>{item.group_name}</td>
@@ -415,7 +437,7 @@ export default function PendingModule({ currentUser }) {
                   <tbody>
                     {changeovers.map(item => (
                       <tr key={item.id}>
-                        <td>{new Date(item.date).toLocaleDateString()}</td>
+                        <td>{formatDate(item.date)}</td>
                         <td><span className="line-tag">{item.line}</span></td>
                         <td>{item.shift}</td>
                         <td>{item.model_name}</td>
@@ -475,69 +497,88 @@ export default function PendingModule({ currentUser }) {
                 </div>
               )}
 
-              {/* Basic Info Read-only */}
-              <div className="drawer-basic-info-grid">
-                <div><strong>{t('line')}:</strong> {reviewData.line}</div>
-                <div><strong>{t('group')}:</strong> {reviewData.group_name}</div>
-                <div><strong>{t('date')}:</strong> {new Date(reviewData.date).toLocaleDateString()}</div>
-                <div><strong>{t('shift')}:</strong> {reviewData.shift}</div>
-                <div><strong>{language === 'zh' ? '提交人员' : 'Submitted By'}:</strong> {reviewData.submitted_by}</div>
-                <div>
-                  <strong>{language === 'zh' ? '状态' : 'Status'}:</strong>{' '}
-                  <select
-                    name="status"
-                    value={reviewData.status}
-                    onChange={(e) => {
-                      const newStatus = e.target.value;
-                      setReviewData(prev => ({
-                        ...prev,
-                        status: newStatus
-                      }));
-                    }}
-                    style={{
-                      padding: '0.2rem 0.5rem',
-                      borderRadius: '6px',
-                      border: '1px solid #cbd5e1',
-                      fontSize: '0.85rem',
-                      fontWeight: 600,
-                      background: '#fff',
-                      cursor: 'pointer',
-                      color: reviewData.status === 'Line Stop' ? '#ef4444' : '#10b981'
-                    }}
-                  >
-                    <option value="Production">{language === 'zh' ? '已提交(生产)' : 'Production'}</option>
-                    <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>
-                  </select>
+              {isAdmin && !isEngineer && (
+                <div className="admin-view-banner">
+                  ℹ️ {language === 'zh' 
+                    ? '您当前以管理员身份登录。您可以查看此点检表的所有内容，但无法进行审批操作。' 
+                    : 'You are currently logged in as an Administrator. You can view all checksheet fields, but you do not have permission to approve/disapprove.'}
                 </div>
-                {selectedItem.type === 'changeover' && (
-                  <>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <strong>{language === 'zh' ? '机种名称' : 'Model Name'}:</strong>
+              )}
+
+              {/* Basic Info Read-only */}
+              <div className="metadata-panel">
+                <div className="metadata-item">
+                  <span className="metadata-label">{t('line')}</span>
+                  <span className="metadata-value line-badge">📍 {reviewData.line}</span>
+                </div>
+                <div className="metadata-item">
+                  <span className="metadata-label">{t('shift')}</span>
+                  <span className={`metadata-value shift-badge ${reviewData.shift === 'Day' ? 'day' : 'night'}`}>
+                    {reviewData.shift === 'Day' ? '☀️ Day' : '🌙 Night'}
+                  </span>
+                </div>
+                <div className="metadata-item">
+                  <span className="metadata-label">{t('group')}</span>
+                  <span className="metadata-value group-badge">👥 Group {reviewData.group_name}</span>
+                </div>
+                <div className="metadata-item">
+                  <span className="metadata-label">{t('date')}</span>
+                  <span className="metadata-value date-badge">📅 {formatDate(reviewData.date)}</span>
+                </div>
+                <div className="metadata-item submitted-by-col">
+                  <span className="metadata-label">{language === 'zh' ? '提交人员' : 'Submitted By'}</span>
+                  <span className="metadata-value submitter-badge">👤 {reviewData.submitted_by}</span>
+                </div>
+                <div className="metadata-item">
+                  <span className="metadata-label">{language === 'zh' ? '状态' : 'Status'}</span>
+                  <div className="metadata-value status-badge-select">
+                    <select
+                      name="status"
+                      value={reviewData.status}
+                      onChange={(e) => {
+                        const newStatus = e.target.value;
+                        setReviewData(prev => ({
+                          ...prev,
+                          status: newStatus
+                        }));
+                      }}
+                      className={`status-select ${reviewData.status === 'Line Stop' ? 'line-stop' : 'production'}`}
+                    >
+                      <option value="Production">{language === 'zh' ? '已提交(生产)' : 'Production'}</option>
+                      <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {selectedItem.type === 'changeover' && (
+                <div className="form-section-card changeover-meta-card">
+                  <h4 className="form-section-title">{language === 'zh' ? '机种与换线信息' : 'Model & Changeover Info'}</h4>
+                  <div className="form-grid-row">
+                    <div className="form-group-third">
+                      <label>{language === 'zh' ? '机种名称' : 'Model Name'}</label>
                       <input 
                         type="text" 
                         name="model_name" 
                         value={reviewData.model_name || ''} 
                         onChange={handleInputChange} 
-                        style={{ marginLeft: '10px', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', flex: 1 }} 
                       />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <strong>{language === 'zh' ? '机种代码' : 'Model Code'}:</strong>
+                    <div className="form-group-third">
+                      <label>{language === 'zh' ? '机种代码' : 'Model Code'}</label>
                       <input 
                         type="number" 
                         name="model_code" 
                         value={reviewData.model_code || ''} 
                         onChange={handleInputChange} 
-                        style={{ marginLeft: '10px', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', flex: 1 }} 
                       />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gridColumn: 'span 2' }}>
-                      <strong>{language === 'zh' ? '换线类型' : 'Changeover Type'}:</strong>
+                    <div className="form-group-third">
+                      <label>{language === 'zh' ? '换线类型' : 'Changeover Type'}</label>
                       <select 
                         name="changeover_type" 
                         value={reviewData.changeover_type || ''} 
-                        onChange={handleInputChange} 
-                        style={{ marginLeft: '10px', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', flex: 1 }}
+                        onChange={handleInputChange}
                       >
                         <option value="">{language === 'zh' ? '请选择...' : 'Select...'}</option>
                         <option value="Model">Model</option>
@@ -546,9 +587,9 @@ export default function PendingModule({ currentUser }) {
                         <option value="Trial">Trial</option>
                       </select>
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </div>
+              )}
 
               {/* Form Content Rendering */}
               <div className="drawer-form-contents-section">
@@ -602,56 +643,58 @@ export default function PendingModule({ currentUser }) {
                         </div>
                       </div>
 
-                      <div className="form-section-card">
-                        <h4 className="form-section-title">Barcode Reads (A-Side)</h4>
-                        <div className="form-grid-row">
-                          <div className="form-group-third">
-                            <label>Laser</label>
-                            <select name="barcode_read_a_layer" value={reviewData.barcode_read_a_layer || ''} onChange={handleInputChange}>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                            </select>
-                          </div>
-                          <div className="form-group-third">
-                            <label>SPI</label>
-                            <select name="barcode_read_a_spi" value={reviewData.barcode_read_a_spi || ''} onChange={handleInputChange}>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                            </select>
-                          </div>
-                          <div className="form-group-third">
-                            <label>Pre-AOI</label>
-                            <select name="barcode_read_a_pre_aoi" value={reviewData.barcode_read_a_pre_aoi || ''} onChange={handleInputChange}>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                            </select>
+                      <div className="barcode-sections-grid">
+                        <div className="form-section-card barcode-card">
+                          <h4 className="form-section-title">Barcode Reads (A-Side)</h4>
+                          <div className="form-grid-row">
+                            <div className="form-group-third">
+                              <label>Laser</label>
+                              <select name="barcode_read_a_layer" value={reviewData.barcode_read_a_layer || ''} onChange={handleInputChange}>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                              </select>
+                            </div>
+                            <div className="form-group-third">
+                              <label>SPI</label>
+                              <select name="barcode_read_a_spi" value={reviewData.barcode_read_a_spi || ''} onChange={handleInputChange}>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                              </select>
+                            </div>
+                            <div className="form-group-third">
+                              <label>Pre-AOI</label>
+                              <select name="barcode_read_a_pre_aoi" value={reviewData.barcode_read_a_pre_aoi || ''} onChange={handleInputChange}>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                              </select>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="form-section-card">
-                        <h4 className="form-section-title">Barcode Reads (B-Side)</h4>
-                        <div className="form-grid-row">
-                          <div className="form-group-third">
-                            <label>Laser</label>
-                            <select name="barcode_read_b_layer" value={reviewData.barcode_read_b_layer || ''} onChange={handleInputChange}>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                            </select>
-                          </div>
-                          <div className="form-group-third">
-                            <label>SPI</label>
-                            <select name="barcode_read_b_spi" value={reviewData.barcode_read_b_spi || ''} onChange={handleInputChange}>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                            </select>
-                          </div>
-                          <div className="form-group-third">
-                            <label>Pre-AOI</label>
-                            <select name="barcode_read_b_pre_aoi" value={reviewData.barcode_read_b_pre_aoi || ''} onChange={handleInputChange}>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                            </select>
+                        <div className="form-section-card barcode-card">
+                          <h4 className="form-section-title">Barcode Reads (B-Side)</h4>
+                          <div className="form-grid-row">
+                            <div className="form-group-third">
+                              <label>Laser</label>
+                              <select name="barcode_read_b_layer" value={reviewData.barcode_read_b_layer || ''} onChange={handleInputChange}>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                              </select>
+                            </div>
+                            <div className="form-group-third">
+                              <label>SPI</label>
+                              <select name="barcode_read_b_spi" value={reviewData.barcode_read_b_spi || ''} onChange={handleInputChange}>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                              </select>
+                            </div>
+                            <div className="form-group-third">
+                              <label>Pre-AOI</label>
+                              <select name="barcode_read_b_pre_aoi" value={reviewData.barcode_read_b_pre_aoi || ''} onChange={handleInputChange}>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                              </select>
+                            </div>
                           </div>
                         </div>
                       </div>
