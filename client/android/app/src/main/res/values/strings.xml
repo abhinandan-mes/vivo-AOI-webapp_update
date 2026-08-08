@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AOI CheckPoint</string>
+    <string name="title_activity_main">AOI CheckPoint</string>
+    <string name="package_name">com.vivo.aoicheckpoint</string>
+    <string name="custom_url_scheme">com.vivo.aoicheckpoint</string>
+</resources>

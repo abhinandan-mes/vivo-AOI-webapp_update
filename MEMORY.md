@@ -559,6 +559,13 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
   * **Admin Information Banner**: Replaced the footnote label in the footer with a highly visible Blue Info Card banner at the top of the body for administrators ("Admins can view but cannot approve"), keeping action footers focused.
   * **Actions Buttons**: Sized, colored, and animated footer buttons with modern transitions, subtle box-shadows, and micro-hover offsets.
 
+### Resolved: Android Mobile App Integration (August 2026)
+* **Capacitor Integration**: Initialized Capacitor in the React client workspace to wrap the application as a native Android project:
+  * Installed `@capacitor/core`, `@capacitor/cli`, and `@capacitor/android` packages.
+  * Created the Capacitor config **[capacitor.config.ts](file:///d:/AOi_check_sheet/client/capacitor.config.ts)** targeting `build` as the web directory and `com.vivo.aoicheckpoint` as the application ID.
+  * Initialized and compiled the native Android studio project folder in `client/android/`.
+  * Configured build sync triggers: static web assets can be compiled and synchronized into the Android project using `npm run build` and `npx cap sync`.
+
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
   * Created `install-service.js` and `uninstall-service.js` setup helpers inside the `server/` directory.
