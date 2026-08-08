@@ -565,6 +565,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
   * Created the Capacitor config **[capacitor.config.ts](file:///d:/AOi_check_sheet/client/capacitor.config.ts)** targeting `build` as the web directory and `com.vivo.aoicheckpoint` as the application ID.
   * Initialized and compiled the native Android studio project folder in `client/android/`.
   * Configured build sync triggers: static web assets can be compiled and synchronized into the Android project using `npm run build` and `npx cap sync`.
+  * **Build Output**: Compiled the native debug package and copied it directly to the system Desktop at `C:\Users\vivoadmin\Desktop\aoi-checkpoint-debug.apk` and the repository root at `D:\AOi_check_sheet\aoi-checkpoint-debug.apk` for easy access.
 
 * **Native Windows Service Migration**:
   * Packaged the Express server into a native Windows Service named **`AOI_Digital_Checksheet`** (managed by `node-windows`).
