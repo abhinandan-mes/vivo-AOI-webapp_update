@@ -187,8 +187,10 @@ export default function PendingModule({ currentUser }) {
     try {
       if (selectedItem.type === 'checklist') {
         await apiService.updateChecklist(selectedItem.id, reviewData);
-      } else {
+      } else if (selectedItem.type === 'checkpoint') {
         await apiService.updateCheckpoint(selectedItem.id, reviewData);
+      } else {
+        await apiService.updateChangeoverChecksheet(selectedItem.id, reviewData);
       }
       handleCloseReview();
       await fetchData();
