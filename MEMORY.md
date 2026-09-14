@@ -658,3 +658,12 @@ The production server on the `vivoadmin` machine is configured to start automati
 * **Backend & Database**: Added full Laser Changeover Module with multi-role approval workflow. Added production_group_leader role which specifically reviews items #1 and #7 on Laser checksheets.
 * **Prisma**: Updated schema.prisma and configured Prisma to output to a secondary directory (client2) to bypass Windows file locking during live updates.
 * **Frontend UI**: Replicated ChangeoverChecksheet.js UI identically for the new Laser module, including matching line/group/date selectors and integrated detailed requirements mapping.
+
+### Resolved: Port Separations & Ghost Cache Corruption (September 2026)
+* **Frontend Dedicated Service**: Created a new dedicated frontend Windows service AOI_Frontend_Service running on port 3000 using http-proxy-middleware in client/server.js. This strictly proxies /api paths to the backend port 5001.
+* **Ghost Cache Fix**: Addressed UI mojibake (e.g. garbled text) and ghosted routing behaviors that persisted on port 5001 by restarting the backend AOI_Digital_Checksheet service. This cleared legacy caching that bypassed Content-Type: charset-utf8 static serving.
+
+### Resolved: Reports Promise Data Fetching Bug (September 2026)
+* **Fixed Crash**: Fixed a Cannot read properties of undefined (reading data) crash in Reports.js caused by an incomplete Promise.all array. Reinserted getLaserChangeoverReports into the request queue to match the 5 destructured variables.
+* **Laser Changeover Padding Fix**: Updated row calculation logic for LaserChangeoverReport to behave like standard changeovers, preventing the UI from padding empty days with Not Filled ghost rows (so the Reports UI strictly filters/shows only actually submitted line data on the selected date).
+* **Document Number Synchronization**: Updated the hardcoded header Document Numbers in ChecksheetHub.js and Reports.js to dynamically stack both AOI and Laser Doc Nos.
