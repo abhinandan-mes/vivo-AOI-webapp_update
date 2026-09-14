@@ -67,7 +67,7 @@ app.use('/api', authenticateToken, functionCheckpointRoutes);
 app.use('/api', authenticateToken, technicianChecklistRoutes);
 app.use('/api', authenticateToken, lineStatusRoutes);
 app.use('/api', authenticateToken, changeoverRoutes);
-app.use('/api', authenticateToken, laserChangeoverRoutes);
+app.use('/api/laser-changeover', authenticateToken, laserChangeoverRoutes);
 app.use('/api', activityLogRoutes);
 
 async function startServer() {
