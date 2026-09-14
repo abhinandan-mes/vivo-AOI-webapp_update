@@ -9,7 +9,6 @@ export const authStorage = {
   getToken: () => localStorage.getItem('aoi_auth_token'),
   setToken: (token) => localStorage.setItem('aoi_auth_token', token),
   clearToken: () => localStorage.removeItem('aoi_auth_token')
-  deleteLaserChangeover: (id) => api.delete(`/laser-changeover/${id}`),
 };
 
 API.interceptors.request.use(config => {
@@ -23,7 +22,7 @@ API.interceptors.response.use(
   error => {
     const isLoginRequest = error.config?.url?.includes('/auth/login');
 
-    // A 401 on the login endpoint means wrong credentials â€” not an expired session.
+    // A 401 on the login endpoint means wrong credentials
     // Only fire the global session-expiry event for all other authenticated routes.
     if (error.response?.status === 401 && !isLoginRequest) {
       authStorage.clearToken();
@@ -77,6 +76,7 @@ export const apiService = {
   getPendingLaserChangeovers: () => API.get('/laser-changeover/pending'),
   updateLaserChangeover: (id, data) => API.put(`/laser-changeover/${id}/review`, data),
   getLaserChangeoverReports: (params) => API.get('/laser-changeover/reports', { params }),
+  deleteLaserChangeover: (id) => API.delete(`/laser-changeover/${id}`),
 
   // Technician Checklist APIs
   createChecklist: (data) => API.post('/checklist', data),
@@ -95,8 +95,6 @@ export const apiService = {
   getAllLines: () => API.get('/lines'),
   getInstalledLines: () => API.get('/lines/installed'),
   updateLineStatus: (line, data) => API.patch(`/lines/${line}`, data)
-  deleteLaserChangeover: (id) => api.delete(`/laser-changeover/${id}`),
 };
 
 export default apiService;
-
