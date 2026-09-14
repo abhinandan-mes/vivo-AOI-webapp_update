@@ -57,7 +57,7 @@ export default function LaserChangeoverChecksheet({ currentUser }) {
       .then(res => {
         const data = res.data.data || [];
         if (data.length > 0) {
-          setInstalledLines(data.map(d => d.line_name));
+          setInstalledLines(data); // FIX: directly use string array, not map d.line_name
         }
       })
       .catch(err => console.error('Error fetching lines:', err))
@@ -131,13 +131,55 @@ export default function LaserChangeoverChecksheet({ currentUser }) {
   ];
 
   const checkItems = [
-    { name: 'prog_name_check', label: language === 'zh' ? '1. 程序名称确认 (与生产机型一致)' : '1. Program Name Confirmation' },
-    { name: 'laser_param_check', label: language === 'zh' ? '2. 镭雕参数确认 (轨道宽度, 条码大小, 功率速度等)' : '2. Laser Parameter Confirmation' },
-    { name: 'duplicate_code_check', label: language === 'zh' ? '3. 镭雕机重码功能确认 (防呆功能开启)' : '3. Laser Machine Duplicate Code Function' },
-    { name: 'pcb_anti_reverse_check', label: language === 'zh' ? '4. PCB防反确认 (优先Mark点防反)' : '4. PCB Anti-Reverse Confirmation' },
-    { name: 'ab_barcode_check', label: language === 'zh' ? '5. AB面条码一致确认' : '5. A/B Side Barcode Consistency' },
-    { name: 'laser_sequence_check', label: language === 'zh' ? '6. 镭雕顺序确认 (区块号追溯一致)' : '6. Laser Carving Sequence Confirmation' },
-    { name: 'laser_position_check', label: language === 'zh' ? '7. 镭雕位置确认 (二维码无偏位)' : '7. Laser Carving Position Confirmation' }
+    { 
+      name: 'prog_name_check', 
+      label: language === 'zh' ? '1. 程序名称确认 (与生产机型一致)' : '1. Program Name Confirmation',
+      description: language === 'zh' 
+        ? '程序名称与生产机型（生产机型底板名称+生产机型底板版本号。镭雕代码后缀带镭雕代码）一致。'
+        : 'The program name is consistent with the production model (production model baseplate name + production model baseplate version number. Radium engraved code suffix with radium engraved code.)'
+    },
+    { 
+      name: 'laser_param_check', 
+      label: language === 'zh' ? '2. 镭雕参数确认 (轨道宽度, 条码大小, 功率速度等)' : '2. Laser Parameter Confirmation',
+      description: language === 'zh' 
+        ? '1. 轨道宽度: 进板轨道宽度比PCBA宽度大0.5mm-1mm; 需要拦截PCBA叠板问题;\n2. 镭雕码尺寸为2mm*2mm; 矩阵类型为12*12 (如有特殊要求尺寸1.5mm*3.2mm，矩阵8*18);\n3. 镭雕码条码位数为10位;\n4. 镭雕功率: 15%-70%, 速度: 300-1000mm/s, 频率: 3-15 kHz (根据PCB实际情况调整);\n5. 镭雕头雕刻内容同步，统一要求: 下头跟随上头;'
+        : '1. Track width: Entrance rail is slightly larger than PCBA width by 0.5mm-1mm; Needs to intercept PCBA stack problem;\n2. Laser engraving code size is 2mm*2mm; Matrix type is 12*12 (Note rectangular barcode size is 1.5mm*3.2mm, matrix 8*18 if required);\n3. Number of barcodes is 10 digits;\n4. Power: 15%-70%, speed: 300-1000mm/s, frequency: 3-15 khz;\n5. Laser head engraving content is synchronized: the lower head follows the upper head;'
+    },
+    { 
+      name: 'duplicate_code_check', 
+      label: language === 'zh' ? '3. 镭雕机重码功能确认 (防呆功能开启)' : '3. Laser Machine Duplicate Code Function',
+      description: language === 'zh' 
+        ? '1. 设备已开启镭雕检测功能；检测次数>=1;\n2. 设备已开启重码检测功能;\n3. 设备已开启镭雕条码读取检测功能。主板和副板优先读取所有条码;'
+        : '1. The device has turned on the laser engraving detection function; Detection number >= 1;\n2. The device has turned on the re-code detection function;\n3. The device has turned on the laser engraving bar code reading detection function. Main board and sub board are given priority to read all codes;'
+    },
+    { 
+      name: 'pcb_anti_reverse_check', 
+      label: language === 'zh' ? '4. PCB防反确认 (优先Mark点防反)' : '4. PCB Anti-Reverse Confirmation',
+      description: language === 'zh' 
+        ? '1. 优先使用Mark点防反;\n2. 无法使用Mark点防反时，使用防反标识。'
+        : '1. First use Mark point anti-reverse;\n2. If unable to use Mark point anti-reverse, use anti-reverse flag.'
+    },
+    { 
+      name: 'ab_barcode_check', 
+      label: language === 'zh' ? '5. AB面条码一致确认' : '5. A/B Side Barcode Consistency',
+      description: language === 'zh' 
+        ? '技术员用扫描枪扫描A面和B面的所有条码，确认各区块的镭雕条码是否一致;'
+        : 'The technician scans all barcodes on side A and side B with a scanner gun to confirm whether the laser engraving barcodes of each block are consistent;'
+    },
+    { 
+      name: 'laser_sequence_check', 
+      label: language === 'zh' ? '6. 镭雕顺序确认 (区块号追溯一致)' : '6. Laser Carving Sequence Confirmation',
+      description: language === 'zh' 
+        ? '全扫A面或B面条码，检查镭雕码所在的PCB区块号是否与MES一致。'
+        : 'Full scan A or B side code, check whether the PCB block number where the laser engraving code is located is consistent with the MES.'
+    },
+    { 
+      name: 'laser_position_check', 
+      label: language === 'zh' ? '7. 镭雕位置确认 (二维码无偏位)' : '7. Laser Carving Position Confirmation',
+      description: language === 'zh' 
+        ? '检查镭雕位置是否与生产说明及工艺文件规定的位置一致。'
+        : 'Check whether the location of the laser engraving is consistent with the production instructions and the location specified in the process documentation.'
+    }
   ];
 
   const isInspector = currentUser?.role === 'inspector';
@@ -257,7 +299,12 @@ export default function LaserChangeoverChecksheet({ currentUser }) {
                 {checkItems.map((item, index) => (
                   <div key={index} className="changeover-item-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #f1f5f9' }}>
                     <div className="item-label" style={{ flex: 1, paddingRight: '20px', color: '#334155', lineHeight: '1.5', fontWeight: '500' }}>
-                      {item.label}
+                      <div style={{ fontSize: '1.05rem', color: '#0f172a' }}>{item.label}</div>
+                      {item.description && (
+                        <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.5rem', whiteSpace: 'pre-line' }}>
+                          {item.description}
+                        </div>
+                      )}
                     </div>
                     <div className="item-input" style={{ width: '150px' }}>
                       <select 

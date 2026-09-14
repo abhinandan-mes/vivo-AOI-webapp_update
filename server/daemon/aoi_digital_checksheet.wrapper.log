@@ -122,3 +122,19 @@ Stacktrace:   在 System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInte
 2026-09-14 14:01:33 - Started 8792
 2026-09-14 14:04:15 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2026-09-14 14:04:15 - Started 2432
+2026-09-14 15:38:58 - Stopping aoi_digital_checksheet.exe
+2026-09-14 15:38:58 - ProcessKill 2432
+2026-09-14 15:38:58 - Found child process: 9232 Name: conhost.exe
+2026-09-14 15:38:58 - Found child process: 2576 Name: node.exe
+2026-09-14 15:38:58 - Stopping process 9232
+2026-09-14 15:38:58 - Send SIGINT 9232
+2026-09-14 15:38:58 - SIGINT to 9232 failed - Killing as fallback
+2026-09-14 15:38:58 - Stopping process 2576
+2026-09-14 15:38:58 - Send SIGINT 2576
+2026-09-14 15:38:58 - SIGINT to 2576 failed - Killing as fallback
+2026-09-14 15:38:58 - Stopping process 2432
+2026-09-14 15:38:58 - Send SIGINT 2432
+2026-09-14 15:38:58 - SIGINT to 2432 failed - Killing as fallback
+2026-09-14 15:38:58 - Finished aoi_digital_checksheet.exe
+2026-09-14 15:38:59 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 15:38:59 - Started 10704
