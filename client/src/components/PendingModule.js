@@ -1083,7 +1083,7 @@ export default function PendingModule({ currentUser }) {
                   {t('cancel')}
                 </button>
                 
-                {isEngineer ? (
+                {(isEngineer || (isGroupLeader && selectedItem?.type === 'laser_changeover')) ? (
                   <div className="engineer-action-buttons">
                     <button className="drawer-btn disapprove" onClick={() => handleApprovalAction('disapprove')}>
                       ❌ {language === 'zh' ? '驳回 (Disapprove)' : 'Disapprove'}
