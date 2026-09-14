@@ -72,7 +72,7 @@ const checkpointGroups = [
   }
 ];
 
-const text = value => value === null || value === undefined || value === '' ? 'â€”' : value;
+const text = value => value === null || value === undefined || value === '' ? '—' : value;
 const dateKey = value => {
   if (!value) return '';
   if (value instanceof Date) {
@@ -183,7 +183,7 @@ export default function Reports({ currentUser }) {
     [t('rep_th_confirmed'), 'confirmation']
   ], [t]);
 
-  // All 25 lines â€” used as fallback and for the full list
+  // All 25 lines — used as fallback and for the full list
   const allLineOptions = useMemo(() => Array.from({ length: 25 }, (_, index) => String(401 + index)), []);
 
   // Line installation statuses fetched from backend
@@ -207,7 +207,7 @@ export default function Reports({ currentUser }) {
   }, [lineStatuses]);
 
   const formatDate = value => {
-    if (!value) return 'â€”';
+    if (!value) return '—';
     let dateStr = '';
     if (typeof value === 'string') {
       const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -217,7 +217,7 @@ export default function Reports({ currentUser }) {
     }
     if (!dateStr) {
       const dateObj = new Date(value);
-      if (isNaN(dateObj.getTime())) return 'â€”';
+      if (isNaN(dateObj.getTime())) return '—';
       const pad = number => String(number).padStart(2, '0');
       dateStr = `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
     }
@@ -229,13 +229,13 @@ export default function Reports({ currentUser }) {
   };
 
   const formatDateTime = value => {
-    if (!value) return 'â€”';
+    if (!value) return '—';
     return new Date(value).toLocaleString(language === 'zh' ? 'zh-CN' : undefined);
   };
 
   const getEngineerDisplay = (id) => {
-    if (!id) return language === 'zh' ? 'ç³»ç»Ÿè‡ªåŠ¨' : 'System (Automatic)';
-    if (id === 'System (Automatic)') return language === 'zh' ? 'ç³»ç»Ÿè‡ªåŠ¨' : 'System (Automatic)';
+    if (!id) return language === 'zh' ? '系统自动' : 'System (Automatic)';
+    if (id === 'System (Automatic)') return language === 'zh' ? '系统自动' : 'System (Automatic)';
     const eng = engineers.find(e => e.username === id);
     return eng ? `${eng.full_name} (${eng.username})` : id;
   };
@@ -245,10 +245,10 @@ export default function Reports({ currentUser }) {
     [t('line'), 'line'],
     [t('group'), 'group_name'],
     [t('shift'), 'shift'],
-    [language === 'zh' ? 'æ¢çº¿ç±»åž‹' : 'Changeover Type', 'changeover_type'],
-    [language === 'zh' ? 'æ–‡æ¡£çŠ¶æ€' : 'Doc Status', 'approval_status'],
-    [language === 'zh' ? 'æœºç§åç§°' : 'Model Name', 'model_name'],
-    [language === 'zh' ? 'æœºç§ä»£ç ' : 'Model Code', 'model_code'],
+    [language === 'zh' ? '换线类型' : 'Changeover Type', 'changeover_type'],
+    [language === 'zh' ? '文档状态' : 'Doc Status', 'approval_status'],
+    [language === 'zh' ? '机种名称' : 'Model Name', 'model_name'],
+    [language === 'zh' ? '机种代码' : 'Model Code', 'model_code'],
     [t('rep_designated_engineer'), 'designated_engineer_id'],
     [t('rep_th_submitted_at'), 'created_at'],
     [t('rep_th_submitted_by'), 'submitted_by']
@@ -256,7 +256,7 @@ export default function Reports({ currentUser }) {
 
   const reportTitle = reportType => 
     reportType === 'checkpoint' ? t('rep_toggle_checkpoint') : 
-    reportType === 'changeover' ? (language === 'zh' ? 'æ¢çº¿è®°å½•è¡¨' : 'Changeover Checksheet') : 
+    reportType === 'changeover' ? (language === 'zh' ? '换线记录表' : 'Changeover Checksheet') : 
     t('rep_toggle_checklist');
 
   const reportFileName = reportType => 
@@ -281,49 +281,49 @@ export default function Reports({ currentUser }) {
       ];
     } else if (reportType === 'laser_changeover') {
       const detailColumns = [
-        [language === 'zh' ? '1. ??????' : '1. Program Name Confirmation', 'prog_name_check'],
-        [language === 'zh' ? '2. ??????' : '2. Laser Parameter Confirmation', 'laser_param_check'],
-        [language === 'zh' ? '3. ?????????' : '3. Laser Machine Duplicate Code Function', 'duplicate_code_check'],
-        [language === 'zh' ? '4. PCB????' : '4. PCB Anti-Reverse Confirmation', 'pcb_anti_reverse_check'],
-        [language === 'zh' ? '5. AB???????' : '5. A/B Side Barcode Consistency', 'ab_barcode_check'],
-        [language === 'zh' ? '6. ??????' : '6. Laser Carving Sequence Confirmation', 'laser_sequence_check'],
-        [language === 'zh' ? '7. ??????' : '7. Laser Carving Position Confirmation', 'laser_position_check']
+        [language === 'zh' ? '1. 程序名称' : '1. Program Name Confirmation', 'prog_name_check'],
+        [language === 'zh' ? '2. 镭雕参数' : '2. Laser Parameter Confirmation', 'laser_param_check'],
+        [language === 'zh' ? '3. 重码功能' : '3. Laser Machine Duplicate Code Function', 'duplicate_code_check'],
+        [language === 'zh' ? '4. PCB防反' : '4. PCB Anti-Reverse Confirmation', 'pcb_anti_reverse_check'],
+        [language === 'zh' ? '5. AB面条码' : '5. A/B Side Barcode Consistency', 'ab_barcode_check'],
+        [language === 'zh' ? '6. 镭雕顺序' : '6. Laser Carving Sequence Confirmation', 'laser_sequence_check'],
+        [language === 'zh' ? '7. 镭雕位置' : '7. Laser Carving Position Confirmation', 'laser_position_check']
       ];
       return [
-        [language === 'zh' ? '???' : 'Line', 'line'],
-        [language === 'zh' ? '??' : 'Group', 'group_name'],
-        [language === 'zh' ? '??' : 'Date', 'date'],
-        [language === 'zh' ? '??' : 'Shift', 'shift'],
-        [language === 'zh' ? '????' : 'Program Name', 'program_name'],
+        [language === 'zh' ? '线体号' : 'Line', 'line'],
+        [language === 'zh' ? '班组' : 'Group', 'group_name'],
+        [language === 'zh' ? '日期' : 'Date', 'date'],
+        [language === 'zh' ? '班别' : 'Shift', 'shift'],
+        [language === 'zh' ? '程序名称' : 'Program Name', 'program_name'],
         ...detailColumns
       ];
     } else if (reportType === 'changeover') {
       const detailColumns = [
-        [language === 'zh' ? '1. SPIé’¢ç½‘åŽç¼€ä¸€è‡´' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
-        [language === 'zh' ? '2. ç¨‹åºå°æ¿åºå·ä¸€è‡´' : '2. Sub-panel Serial Match', 'spi_program_subpanel_serial_match'],
-        [language === 'zh' ? '3. å¤æŸ¥180åº¦æžæ€§' : '3. Recheck PCAB Polarity', 'spi_recheck_pcab_polarity'],
-        [language === 'zh' ? '4. å‚æ•°è®¾ç½®ä¸€è‡´' : '4. Parameter Settings', 'spi_confirm_parameter_settings'],
-        [language === 'zh' ? '5. è¯»ç åŠŸèƒ½å¼€å¯' : '5. Read Barcode On', 'spi_read_barcode_on'],
-        [language === 'zh' ? '6. ECOæ£€æŸ¥è¡¨å†…å®¹' : '6. ECO Checklists', 'pre_aoi_eco_checklists'],
-        [language === 'zh' ? '7. ä¿®æ”¹ç¨‹åºæœºç§' : '7. Modify Program Model', 'pre_aoi_program_model_modify'],
-        [language === 'zh' ? '8. VIæ–°æ–™æµ‹è¯•' : '8. VI New Materia Test', 'pre_aoi_vi_program_new_materia'],
-        [language === 'zh' ? '9. é™åˆ¶ä¸è‰¯æŠ¥è­¦' : '9. Limit Defective Alarm', 'pre_aoi_limit_defective_alarm'],
-        [language === 'zh' ? '10. è£¸æ¿æµ‹è¯•ç¨‹åº' : '10. Bare PCBA Test Program', 'pre_aoi_test_program_bare_pcba'],
-        [language === 'zh' ? '11. Botç¨‹åºåºå·ä¸€è‡´' : '11. Bot Program Serial Match', 'pre_aoi_bot_program_serial_number'],
-        [language === 'zh' ? '12. ç‚‰å‰è¯»ç åŠŸèƒ½å¼€å¯' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
-        [language === 'zh' ? '13a. ç¡®è®¤ç‰©æ–™å·²è´´è£…' : '13a. Confirm Materials Mounted', 'pre_aoi_confirm_materials_mounted'],
-        [language === 'zh' ? '13b. åˆ é™¤å¹¶é‡æ–°ä¼˜åŒ–' : '13b. Delete & Optimize Zones', 'pre_aoi_delete_all_zones'],
-        [language === 'zh' ? '14. ç‚‰åŽAOIè®¾å¤‡æœºç§' : '14. Post-AOI Equipment Model', 'post_aoi_equipment_model'],
-        [language === 'zh' ? '15. ECOæ£€æŸ¥è¡¨å†…å®¹' : '15. Post-AOI ECO Checklists', 'post_aoi_eco_checklists'],
-        [language === 'zh' ? '16. ä¿®æ”¹ç¨‹åºæœºç§' : '16. Post-AOI Modify Program', 'post_aoi_program_model_modify'],
-        [language === 'zh' ? '17. å¤æŸ¥æ ‡å‡†ä»¶' : '17. Recheck Standard Models', 'post_aoi_recheck_chips_standard_models'],
-        [language === 'zh' ? '18. æ‰«æå½“å‰ç”»æ¿' : '18. Scan Board Picture', 'post_aoi_scan_board_picture'],
-        [language === 'zh' ? '19. é™åˆ¶ä¸è‰¯æŠ¥è­¦' : '19. Post-AOI Defective Alarm', 'post_aoi_limit_defective_alarm'],
-        [language === 'zh' ? '20. å¯¹ç§°å±è”½ç½©æžæ€§' : '20. Shield Polarity', 'post_aoi_confirm_polarity_shield'],
-        [language === 'zh' ? '21. Botç¨‹åºåºå·ä¸€è‡´' : '21. Post-AOI Bot Serial Match', 'post_aoi_bot_program_serial_number'],
-        [language === 'zh' ? '22. ALD620æ¬¡æ•°é™åˆ¶' : '22. Registered Standard Times', 'post_aoi_registered_standard_models_times'],
-        [language === 'zh' ? '23. è°ƒæ•´è®¾å¤‡å®½åº¦' : '23. Adjust Widths', 'others_adjust_widths'],
-        [language === 'zh' ? '24. å¢žåŠ æµ‹è¯•æ ‡å‡†æ¡ç ' : '24. Add Test Standard Barcode', 'others_add_test_standard_pcb_barcode'],
+        [language === 'zh' ? '1. SPI钢网后缀一致' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
+        [language === 'zh' ? '2. 程序小板序号一致' : '2. Sub-panel Serial Match', 'spi_program_subpanel_serial_match'],
+        [language === 'zh' ? '3. 复查180度极性' : '3. Recheck PCAB Polarity', 'spi_recheck_pcab_polarity'],
+        [language === 'zh' ? '4. 参数设置一致' : '4. Parameter Settings', 'spi_confirm_parameter_settings'],
+        [language === 'zh' ? '5. 读码功能开启' : '5. Read Barcode On', 'spi_read_barcode_on'],
+        [language === 'zh' ? '6. ECO检查表内容' : '6. ECO Checklists', 'pre_aoi_eco_checklists'],
+        [language === 'zh' ? '7. 修改程序机种' : '7. Modify Program Model', 'pre_aoi_program_model_modify'],
+        [language === 'zh' ? '8. VI新料测试' : '8. VI New Materia Test', 'pre_aoi_vi_program_new_materia'],
+        [language === 'zh' ? '9. 限制不良报警' : '9. Limit Defective Alarm', 'pre_aoi_limit_defective_alarm'],
+        [language === 'zh' ? '10. 裸板测试程序' : '10. Bare PCBA Test Program', 'pre_aoi_test_program_bare_pcba'],
+        [language === 'zh' ? '11. Bot程序序号一致' : '11. Bot Program Serial Match', 'pre_aoi_bot_program_serial_number'],
+        [language === 'zh' ? '12. 炉前读码功能开启' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
+        [language === 'zh' ? '13a. 确认物料已贴装' : '13a. Confirm Materials Mounted', 'pre_aoi_confirm_materials_mounted'],
+        [language === 'zh' ? '13b. 删除并重新优化' : '13b. Delete & Optimize Zones', 'pre_aoi_delete_all_zones'],
+        [language === 'zh' ? '14. 炉后AOI设备机种' : '14. Post-AOI Equipment Model', 'post_aoi_equipment_model'],
+        [language === 'zh' ? '15. ECO检查表内容' : '15. Post-AOI ECO Checklists', 'post_aoi_eco_checklists'],
+        [language === 'zh' ? '16. 修改程序机种' : '16. Post-AOI Modify Program', 'post_aoi_program_model_modify'],
+        [language === 'zh' ? '17. 复查标准件' : '17. Recheck Standard Models', 'post_aoi_recheck_chips_standard_models'],
+        [language === 'zh' ? '18. 扫描当前画板' : '18. Scan Board Picture', 'post_aoi_scan_board_picture'],
+        [language === 'zh' ? '19. 限制不良报警' : '19. Post-AOI Defective Alarm', 'post_aoi_limit_defective_alarm'],
+        [language === 'zh' ? '20. 对称屏蔽罩极性' : '20. Shield Polarity', 'post_aoi_confirm_polarity_shield'],
+        [language === 'zh' ? '21. Bot程序序号一致' : '21. Post-AOI Bot Serial Match', 'post_aoi_bot_program_serial_number'],
+        [language === 'zh' ? '22. ALD620次数限制' : '22. Registered Standard Times', 'post_aoi_registered_standard_models_times'],
+        [language === 'zh' ? '23. 调整设备宽度' : '23. Adjust Widths', 'others_adjust_widths'],
+        [language === 'zh' ? '24. 增加测试标准条码' : '24. Add Test Standard Barcode', 'others_add_test_standard_pcb_barcode'],
         [t('rep_remarks'), 'remarks']
       ];
       return [...changeoverColumns, ...detailColumns];
@@ -342,8 +342,8 @@ export default function Reports({ currentUser }) {
     // Localize options values
     if (key === 'status') {
       if (row[key] === 'Line Stop') return t('cl_status_linestop');
-      if (row[key] === 'Not Filled') return language === 'zh' ? 'æœªæäº¤' : 'Not Filled';
-      if (row[key] === 'Line Not Installed') return language === 'zh' ? 'æœªå®‰è£…' : 'Line Not Installed';
+      if (row[key] === 'Not Filled') return language === 'zh' ? '未提交' : 'Not Filled';
+      if (row[key] === 'Line Not Installed') return language === 'zh' ? '未安装' : 'Line Not Installed';
       return t('cl_status_production');
     }
     if (key === 'shift') {
@@ -359,9 +359,9 @@ export default function Reports({ currentUser }) {
       const val = row[key];
       if (val === true || val === 'true') return 'True';
       if (val === false || val === 'false') return 'False';
-      if (val === 'Yes' || val === 'âˆš') return 'âˆš';
-      if (val === 'No' || val === '\\') return 'Ã—';
-      if (!val && val !== 0) return 'â€”';
+      if (val === 'Yes' || val === '√') return '√';
+      if (val === 'No' || val === '\\') return '×';
+      if (!val && val !== 0) return '—';
     }
     return row[key] ?? '';
   };
@@ -375,14 +375,12 @@ export default function Reports({ currentUser }) {
       apiService.getAllChecklists(),
       apiService.getAllCheckpoints(),
       apiService.getAllChangeoverChecksheets(),
-      apiService.getLaserChangeoverReports(),
       apiService.getEngineers()
     ])
       .then(([checklistRes, checkpointRes, changeoverRes, laserRes, engineersRes]) => {
         setChecklists(checklistRes.data.data || []);
         setCheckpoints(checkpointRes.data.data || []);
         setChangeovers(changeoverRes.data.data || []);
-        setLaserChangeovers(laserRes.data.data || []);
         setEngineers(engineersRes.data.data || []);
       })
       .catch(err => {
@@ -410,7 +408,7 @@ export default function Reports({ currentUser }) {
       if (type === 'checkpoint') {
         await apiService.deleteCheckpoint(id);
       } else if (type === 'laser_changeover') {
-          // await apiService.deleteLaserChangeover(id); // not implemented
+          // await apiService.deleteLaserChangeover(id);
         } else if (type === 'changeover') {
         await apiService.deleteChangeoverChecksheet(id);
       } else {
@@ -458,9 +456,9 @@ export default function Reports({ currentUser }) {
                   date: dateStr,
                   line: line,
                   shift: shift,
-                  group_name: 'â€”',
+                  group_name: '—',
                   status: 'Not Filled',
-                  submitted_by: 'â€”',
+                  submitted_by: '—',
                   created_at: null,
                 });
               }
@@ -625,7 +623,7 @@ export default function Reports({ currentUser }) {
     const dataToExport = selectedRows.length > 0 ? filteredRows.filter(r => selectedRows.includes(r.id)) : filteredRows;
     
     const tableRows = dataToExport.map(row => `
-      <tr>${columns.map(([, key]) => `<td>${escapeHtml(exportValue(row, key, reportType) || 'â€”')}</td>`).join('')}</tr>
+      <tr>${columns.map(([, key]) => `<td>${escapeHtml(exportValue(row, key, reportType) || '—')}</td>`).join('')}</tr>
     `).join('');
 
     printWindow.document.write(`
@@ -647,7 +645,7 @@ export default function Reports({ currentUser }) {
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
               <h1>${escapeHtml(title)}</h1>
-              <p>${language === 'zh' ? 'ç”ŸæˆäºŽ' : 'Generated'} ${escapeHtml(generatedDate)} Â· ${filteredRows.length} ${language === 'zh' ? 'æ¡è®°å½•' : `record${filteredRows.length === 1 ? '' : 's'}`}</p>
+              <p>${language === 'zh' ? '生成于' : 'Generated'} ${escapeHtml(generatedDate)} · ${filteredRows.length} ${language === 'zh' ? '条记录' : `record${filteredRows.length === 1 ? '' : 's'}`}</p>
             </div>
             <div style="font-size: 10px; font-weight: bold; color: #334155;">
               Doc No. - INWJZ1-42026050500004
@@ -722,19 +720,19 @@ export default function Reports({ currentUser }) {
         <div className="summary-card-body">
           <div className="summary-metric-row" style={{ gap: '1rem' }}>
             <div className="summary-metric-item">
-              <span className="metric-label submitted">{language === 'zh' ? 'å·²æäº¤' : 'Submitted'}</span>
+              <span className="metric-label submitted">{language === 'zh' ? '已提交' : 'Submitted'}</span>
               <span className="metric-value submitted">{submittedLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label pending-review">{language === 'zh' ? 'å¾…å®¡æ ¸' : 'Pending Review'}</span>
+              <span className="metric-label pending-review">{language === 'zh' ? '待审核' : 'Pending Review'}</span>
               <span className="metric-value pending-review">{pendingReviewLines.length} <small>/ {submittedLines.length}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label approved">{language === 'zh' ? 'å·²æ‰¹å‡†' : 'Approved'}</span>
+              <span className="metric-label approved">{language === 'zh' ? '已批准' : 'Approved'}</span>
               <span className="metric-value approved">{approvedLines.length} <small>/ {submittedLines.length}</small></span>
             </div>
             <div className="summary-metric-item">
-              <span className="metric-label notfilled">{language === 'zh' ? 'æœªæäº¤' : 'Not Filled'}</span>
+              <span className="metric-label notfilled">{language === 'zh' ? '未提交' : 'Not Filled'}</span>
               <span className="metric-value notfilled">{notFilledLines.length} <small>/ {totalLines}</small></span>
             </div>
             <div className="summary-progress-ring-container">
@@ -761,7 +759,7 @@ export default function Reports({ currentUser }) {
           <div className="summary-line-breakdown">
             <div className="line-breakdown-group">
               <span className="breakdown-label submitted">
-                {language === 'zh' ? 'å·²æäº¤:' : 'Submitted:'}
+                {language === 'zh' ? '已提交:' : 'Submitted:'}
               </span>
               <div className="line-chips-container">
                 {submittedLines.length > 0 ? (
@@ -776,7 +774,7 @@ export default function Reports({ currentUser }) {
 
             <div className="line-breakdown-group">
               <span className="breakdown-label pending-review">
-                {language === 'zh' ? 'å¾…å®¡æ ¸:' : 'Pending Review:'}
+                {language === 'zh' ? '待审核:' : 'Pending Review:'}
               </span>
               <div className="line-chips-container">
                 {pendingReviewLines.length > 0 ? (
@@ -791,7 +789,7 @@ export default function Reports({ currentUser }) {
 
             <div className="line-breakdown-group">
               <span className="breakdown-label approved">
-                {language === 'zh' ? 'å·²æ‰¹å‡†:' : 'Approved:'}
+                {language === 'zh' ? '已批准:' : 'Approved:'}
               </span>
               <div className="line-chips-container">
                 {approvedLines.length > 0 ? (
@@ -806,7 +804,7 @@ export default function Reports({ currentUser }) {
 
             <div className="line-breakdown-group">
               <span className="breakdown-label notfilled">
-                {language === 'zh' ? 'æœªæäº¤:' : 'Not Filled:'}
+                {language === 'zh' ? '未提交:' : 'Not Filled:'}
               </span>
               <div className="line-chips-container">
                 {notFilledLines.length > 0 ? (
@@ -822,7 +820,7 @@ export default function Reports({ currentUser }) {
             {notInstLines && notInstLines.length > 0 && (
               <div className="line-breakdown-group">
                 <span className="breakdown-label not-installed-label">
-                  {language === 'zh' ? 'æœªå®‰è£…:' : 'Not Installed:'}
+                  {language === 'zh' ? '未安装:' : 'Not Installed:'}
                 </span>
                 <div className="line-chips-container">
                   {notInstLines.map(line => (
@@ -844,7 +842,7 @@ export default function Reports({ currentUser }) {
       <div className="reports-heading" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <h1>{t('rep_title')}</h1>
-          <p>{language === 'zh' ? 'å­˜å‚¨åœ¨ç³»ç»ŸåŽå°çš„è¯¦ç»†ç‚¹æ£€æ£€éªŒè®°å½•ã€‚' : 'Detailed records stored in the backend.'}</p>
+          <p>{language === 'zh' ? '存储在系统后台的详细点检检验记录。' : 'Detailed records stored in the backend.'}</p>
         </div>
         <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', textAlign: 'right', marginTop: '6px' }}>
           Doc No. - INWJZ1-42026050500004
@@ -877,37 +875,44 @@ export default function Reports({ currentUser }) {
           className={`toggle-btn ${reportType === 'changeover' ? 'active' : ''}`}
           onClick={() => setReportType('changeover')}
         >
-          {language === 'zh' ? 'æ¢çº¿è®°å½•è¡¨' : 'Changeover Checksheet'}
+          {language === 'zh' ? '换线记录表' : 'Changeover Checksheet'}
+        </button>
+        <button
+          type="button"
+          className={`toggle-btn ${reportType === 'laser_changeover' ? 'active' : ''}`}
+          onClick={() => setReportType('laser_changeover')}
+        >
+          {language === 'zh' ? '镭雕换线' : 'Laser Changeover'}
         </button>
       </div>
 
       <div className="report-filters">
         <label>{t('rep_filter_from')}<input type="date" name="from" value={filters.from} max={filters.to || undefined} onChange={updateFilter} /></label>
         <label>{t('rep_filter_to')}<input type="date" name="to" value={filters.to} min={filters.from || undefined} onChange={updateFilter} /></label>
-        <label>{t('rep_filter_line')}<select name="line" value={filters.line} onChange={updateFilter}><option value="">{language === 'zh' ? 'å…¨éƒ¨çº¿åˆ«' : 'All lines'}</option>{allLineOptions.map(line => <option key={line} value={line}>{line}</option>)}</select></label>
-        <label>{t('rep_filter_shift')}<select name="shift" value={filters.shift} onChange={updateFilter}><option value="">{language === 'zh' ? 'å…¨éƒ¨ç­æ¬¡' : 'All shifts'}</option>{shiftOptions.map(shift => <option key={shift} value={shift}>{shift === 'Day' ? t('day') : t('night')}</option>)}</select></label>
-        <label>{t('rep_filter_group')}<select name="group" value={filters.group} onChange={updateFilter}><option value="">{language === 'zh' ? 'å…¨éƒ¨ç­ç»„' : 'All groups'}</option>{groupOptions.map(group => <option key={group} value={group}>{group}</option>)}</select></label>
+        <label>{t('rep_filter_line')}<select name="line" value={filters.line} onChange={updateFilter}><option value="">{language === 'zh' ? '全部线别' : 'All lines'}</option>{allLineOptions.map(line => <option key={line} value={line}>{line}</option>)}</select></label>
+        <label>{t('rep_filter_shift')}<select name="shift" value={filters.shift} onChange={updateFilter}><option value="">{language === 'zh' ? '全部班次' : 'All shifts'}</option>{shiftOptions.map(shift => <option key={shift} value={shift}>{shift === 'Day' ? t('day') : t('night')}</option>)}</select></label>
+        <label>{t('rep_filter_group')}<select name="group" value={filters.group} onChange={updateFilter}><option value="">{language === 'zh' ? '全部班组' : 'All groups'}</option>{groupOptions.map(group => <option key={group} value={group}>{group}</option>)}</select></label>
         <label>
-          {language === 'zh' ? 'çŠ¶æ€' : 'Status'}
+          {language === 'zh' ? '状态' : 'Status'}
           <select name="status" value={filters.status} onChange={updateFilter}>
-            <option value="">{language === 'zh' ? 'å…¨éƒ¨çŠ¶æ€' : 'All statuses'}</option>
-            <option value="Production">{language === 'zh' ? 'å·²æäº¤(ç”Ÿäº§)' : 'Production'}</option>
-            {reportType !== 'changeover' && <option value="Line Stop">{language === 'zh' ? 'å·²æäº¤(åœçº¿)' : 'Line Stop'}</option>}
-            <option value="Pending Review">{language === 'zh' ? 'å¾…å®¡æ ¸' : 'Pending Review'}</option>
-            <option value="Disapproved">{language === 'zh' ? 'å·²é©³å›ž' : 'Disapproved'}</option>
-            {reportType !== 'changeover' && <option value="Not Filled">{language === 'zh' ? 'æœªæäº¤' : 'Not Filled'}</option>}
+            <option value="">{language === 'zh' ? '全部状态' : 'All statuses'}</option>
+            <option value="Production">{language === 'zh' ? '已提交(生产)' : 'Production'}</option>
+            {reportType !== 'changeover' && <option value="Line Stop">{language === 'zh' ? '已提交(停线)' : 'Line Stop'}</option>}
+            <option value="Pending Review">{language === 'zh' ? '待审核' : 'Pending Review'}</option>
+            <option value="Disapproved">{language === 'zh' ? '已驳回' : 'Disapproved'}</option>
+            {reportType !== 'changeover' && <option value="Not Filled">{language === 'zh' ? '未提交' : 'Not Filled'}</option>}
           </select>
         </label>
         <label>
-          {language === 'zh' ? 'æŽ’åºæ–¹å¼' : 'Sort By'}
+          {language === 'zh' ? '排序方式' : 'Sort By'}
           <select name="sort" value={filters.sort} onChange={updateFilter}>
-            <option value="latest">{language === 'zh' ? 'æœ€æ–°æäº¤' : 'Latest Submissions'}</option>
-            <option value="line_asc">{language === 'zh' ? 'çº¿åˆ«å‡åº' : 'Line Ascending'}</option>
+            <option value="latest">{language === 'zh' ? '最新提交' : 'Latest Submissions'}</option>
+            <option value="line_asc">{language === 'zh' ? '线别升序' : 'Line Ascending'}</option>
           </select>
         </label>
         {hasActiveFilters && (
           <button className="clear-filters" type="button" onClick={() => setFilters({ from: '', to: '', line: '', shift: '', group: '', status: '', sort: 'latest' })}>
-            âœ• {t('clear')}
+            ✕ {t('clear')}
           </button>
         )}
       </div>
@@ -916,7 +921,7 @@ export default function Reports({ currentUser }) {
         <div className="report-meta-bar">
           <span className="result-count-badge">
             {language === 'zh' 
-              ? <span>æ˜¾ç¤ºç¬¬ <strong>{filteredRows.length}</strong> æ¡ï¼Œå…± {rows.length} æ¡è®°å½•</span>
+              ? <span>显示第 <strong>{filteredRows.length}</strong> 条，共 {rows.length} 条记录</span>
               : <span>Showing <strong>{filteredRows.length}</strong> of {rows.length} entries</span>
             }
           </span>
@@ -955,7 +960,7 @@ export default function Reports({ currentUser }) {
       )}
       {loading && <div className="report-state">{t('rep_loading')}</div>}
       {error && <div className="report-state error">{t('error')}: {error}</div>}
-      {!loading && !error && rows.length === 0 && <div className="report-state">{language === 'zh' ? 'æš‚æ— å·²æ  äº¤çš„æ£€æŸ¥è®°å½•ã€‚' : 'No records have been submitted yet.'}</div>}
+      {!loading && !error && rows.length === 0 && <div className="report-state">{language === 'zh' ? '暂无已提交的检查记录。' : 'No records have been submitted yet.'}</div>}
       {!loading && !error && rows.length > 0 && filteredRows.length === 0 && <div className="report-state">{t('rep_empty')}</div>}
       {!loading && !error && filteredRows.length > 0 && (
         <div className="report-table-wrap">
@@ -976,46 +981,46 @@ export default function Reports({ currentUser }) {
           <div className="modal-content submit-confirm-modal">
             <div className="confirm-modal-icon-wrapper">
               <div className="confirm-modal-icon">
-                ðŸ“¥
+                📥
               </div>
             </div>
             
             <div className="confirm-modal-header">
-              <h2>{language === 'zh' ? 'ç¡®è®¤å¯¼å‡ºæ•°æ®' : 'Confirm Data Export'}</h2>
-              <p>{language === 'zh' ? 'è¯·æ ¸å¯¹ä»¥ä¸‹å¯¼å‡ºé…ç½®ï¼Œç¡®è®¤æ— è¯¯åŽä¸‹è½½æ–‡ä»¶' : 'Please verify the following export configurations before downloading'}</p>
+              <h2>{language === 'zh' ? '确认导出数据' : 'Confirm Data Export'}</h2>
+              <p>{language === 'zh' ? '请核对以下导出配置，确认无误后下载文件' : 'Please verify the following export configurations before downloading'}</p>
             </div>
 
             <div className="confirm-details-table">
               <div className="confirm-detail-item">
-                <span className="confirm-detail-label">{language === 'zh' ? 'æŠ¥è¡¨ç±»åž‹' : 'Report Type'}</span>
+                <span className="confirm-detail-label">{language === 'zh' ? '报表类型' : 'Report Type'}</span>
                 <span className="confirm-detail-value">{reportTitle(reportType)}</span>
               </div>
               <div className="confirm-detail-item">
-                <span className="confirm-detail-label">{language === 'zh' ? 'æ–‡ä»¶æ ¼å¼' : 'File Format'}</span>
+                <span className="confirm-detail-label">{language === 'zh' ? '文件格式' : 'File Format'}</span>
                 <span className="confirm-detail-value" style={{ fontWeight: 'bold', color: '#415fff' }}>{exportConfirm.format.toUpperCase()}</span>
               </div>
               <div className="confirm-detail-item">
-                <span className="confirm-detail-label">{language === 'zh' ? 'ç­›é€‰è®°å½•æ•°' : 'Filtered Records'}</span>
-                <span className="confirm-detail-value" style={{ color: '#027a48', fontWeight: 600 }}>{filteredRows.length} {language === 'zh' ? 'æ¡' : 'records'}</span>
+                <span className="confirm-detail-label">{language === 'zh' ? '筛选记录数' : 'Filtered Records'}</span>
+                <span className="confirm-detail-value" style={{ color: '#027a48', fontWeight: 600 }}>{filteredRows.length} {language === 'zh' ? '条' : 'records'}</span>
               </div>
               <div className="confirm-detail-item">
-                <span className="confirm-detail-label">{language === 'zh' ? 'çº¿åˆ«ç­›é€‰' : 'Line Filter'}</span>
-                <span className="confirm-detail-value">{filters.line || (language === 'zh' ? 'å…¨éƒ¨' : 'All')}</span>
+                <span className="confirm-detail-label">{language === 'zh' ? '线别筛选' : 'Line Filter'}</span>
+                <span className="confirm-detail-value">{filters.line || (language === 'zh' ? '全部' : 'All')}</span>
               </div>
               <div className="confirm-detail-item">
-                <span className="confirm-detail-label">{language === 'zh' ? 'ç­æ¬¡ç­›é€‰' : 'Shift Filter'}</span>
+                <span className="confirm-detail-label">{language === 'zh' ? '班次筛选' : 'Shift Filter'}</span>
                 <span className="confirm-detail-value">
-                  {filters.shift ? (filters.shift === 'Day' ? t('day') : t('night')) : (language === 'zh' ? 'å…¨éƒ¨' : 'All')}
+                  {filters.shift ? (filters.shift === 'Day' ? t('day') : t('night')) : (language === 'zh' ? '全部' : 'All')}
                 </span>
               </div>
               <div className="confirm-detail-item">
-                <span className="confirm-detail-label">{language === 'zh' ? 'ç­ç»„ç­›é€‰' : 'Group Filter'}</span>
-                <span className="confirm-detail-value">{filters.group || (language === 'zh' ? 'å…¨éƒ¨' : 'All')}</span>
+                <span className="confirm-detail-label">{language === 'zh' ? '班组筛选' : 'Group Filter'}</span>
+                <span className="confirm-detail-value">{filters.group || (language === 'zh' ? '全部' : 'All')}</span>
               </div>
               <div className="confirm-detail-item" style={{ gridColumn: 'span 2' }}>
-                <span className="confirm-detail-label">{language === 'zh' ? 'æ—¥æœŸèŒƒå›´' : 'Date Range'}</span>
+                <span className="confirm-detail-label">{language === 'zh' ? '日期范围' : 'Date Range'}</span>
                 <span className="confirm-detail-value" style={{ fontSize: '0.88rem' }}>
-                  {filters.from || 'â€”'} {language === 'zh' ? 'è‡³' : 'to'} {filters.to || 'â€”'}
+                  {filters.from || '—'} {language === 'zh' ? '至' : 'to'} {filters.to || '—'}
                 </span>
               </div>
             </div>
@@ -1026,14 +1031,14 @@ export default function Reports({ currentUser }) {
                 className="confirm-btn-cancel" 
                 onClick={() => setExportConfirm({ show: false, format: '' })}
               >
-                {language === 'zh' ? 'å–æ¶ˆ' : 'Cancel'}
+                {language === 'zh' ? '取消' : 'Cancel'}
               </button>
               <button 
                 type="button" 
                 className="confirm-btn-submit-active"
                 onClick={executeExport}
               >
-                {language === 'zh' ? 'ç¡®è®¤ä¸‹è½½' : 'Download File'}
+                {language === 'zh' ? '确认下载' : 'Download File'}
               </button>
             </div>
           </div>
@@ -1042,16 +1047,16 @@ export default function Reports({ currentUser }) {
 
       <ConfirmModal
         isOpen={!!deleteConfirm}
-        title={language === 'zh' ? 'åˆ é™¤è®°å½•' : 'Delete Record'}
+        title={language === 'zh' ? '删除记录' : 'Delete Record'}
         message={
           language === 'zh'
-            ? 'æ‚¨ç¡®å®šè¦åˆ é™¤æ­¤æ¡ç‚¹æ£€è®°å½•å—ï¼Ÿæ­¤æ“ä½œå°†æ°¸ä¹…ç§»é™¤è¯¥æ¡æ•°æ®ä¸”æ— æ³•æ’¤é”€ï¼'
+            ? '您确定要删除此条点检记录吗？此操作将永久移除该条数据且无法撤销！'
             : 'Are you sure you want to delete this record? This action will permanently remove it and cannot be undone!'
         }
         onConfirm={executeDelete}
         onCancel={() => setDeleteConfirm(null)}
-        confirmText={language === 'zh' ? 'ç¡®è®¤åˆ é™¤' : 'Delete'}
-        cancelText={language === 'zh' ? 'å–æ¶ˆ' : 'Cancel'}
+        confirmText={language === 'zh' ? '确认删除' : 'Delete'}
+        cancelText={language === 'zh' ? '取消' : 'Cancel'}
         type="danger"
       />
     </section>
@@ -1073,9 +1078,9 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
   const formatValue = (val) => {
     if (val === true || val === 'true') return 'True';
     if (val === false || val === 'false') return 'False';
-    if (val === 'Yes' || val === 'âˆš') return 'âˆš';
+    if (val === 'Yes' || val === '√') return '√';
     if (val === 'No' || val === '\\') return '\\';
-    if (!val) return 'â€”';
+    if (!val) return '—';
     return val;
   };
 
@@ -1108,7 +1113,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               const diffs = JSON.parse(row.engineer_modified_fields);
               const hasMod = diffs.some(d => fields.includes(d.field));
               if (hasMod) {
-                return <span style={{ marginLeft: '4px', color: '#eab308', fontSize: '0.8rem' }} title={language === 'zh' ? 'å·¥ç¨‹å¸ˆå·²ä¿®æ”¹' : 'Modified by Engineer'}>âœï¸</span>;
+                return <span style={{ marginLeft: '4px', color: '#eab308', fontSize: '0.8rem' }} title={language === 'zh' ? '工程师已修改' : 'Modified by Engineer'}>✏️</span>;
               }
             } catch(e) {}
             return null;
@@ -1116,10 +1121,10 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
 
           const renderCheckBadge = (value, fieldName) => {
             if (!value) return null;
-            const isOk = ['Yes', 'âˆš', 'True'].includes(value);
+            const isOk = ['Yes', '√', 'True'].includes(value);
             return (
               <span className={`status-badge-inline ${isOk ? 'ok' : 'fail'}`} title={fieldName}>
-                {isOk ? 'âˆš' : '\\'}
+                {isOk ? '√' : '\\'}
               </span>
             );
           };
@@ -1144,28 +1149,28 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : row.shift)}</td>
               <td>
                 <span className="line-tag" style={{ background: '#f3e8ff', color: '#7e22ce', border: '1px solid #d8b4fe' }}>
-                  {row.changeover_type || 'â€”'}
+                  {row.changeover_type || '—'}
                 </span>
               </td>
               <td>
                 {(() => {
                   if (row.status === 'Not Filled') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                      {language === 'zh' ? 'æœªæäº¤' : 'Not Filled'}
+                      {language === 'zh' ? '未提交' : 'Not Filled'}
                     </span>;
                   }
                   if (row.approval_status === 'ENG_PENDING') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
-                      â³ {language === 'zh' ? 'å¾…å®¡æ ¸' : 'Review'}
+                      ⏳ {language === 'zh' ? '待审核' : 'Review'}
                     </span>;
                   }
                   if (row.approval_status === 'DISAPPROVED') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                      âŒ {language === 'zh' ? 'è¢«é©³å›ž' : 'Disapproved'}
+                      ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
                     </span>;
                   }
                   return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
-                    ðŸŸ¢ {language === 'zh' ? 'å·²æ‰¹å‡†' : 'Approved'}
+                    🟢 {language === 'zh' ? '已批准' : 'Approved'}
                   </span>;
                 })()}
               </td>
@@ -1181,12 +1186,12 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                 
                 return (
                   <td key={key}>
-                    {row.status === 'Not Filled' || isLineStop ? 'â€”' : (
+                    {row.status === 'Not Filled' || isLineStop ? '—' : (
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        {['Yes', 'No', 'âˆš', '\\', '/', 'N/A'].includes(row[key]) ? (
+                        {['Yes', 'No', '√', '\\', '/', 'N/A'].includes(row[key]) ? (
                           renderCheckBadge(row[key], label)
                         ) : (
-                          <span>{key === 'created_at' ? formatDateTime(row[key]) : (row[key] || 'â€”')}</span>
+                          <span>{key === 'created_at' ? formatDateTime(row[key]) : (row[key] || '—')}</span>
                         )}
                         {renderModifyIndicator([key])}
                       </div>
@@ -1201,9 +1206,9 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                     type="button"
                     className="btn-delete-report-row" 
                     onClick={() => onDelete(row.id, 'changeover')}
-                    title={language === 'zh' ? 'åˆ é™¤è®°å½•' : 'Delete Record'}
+                    title={language === 'zh' ? '删除记录' : 'Delete Record'}
                   >
-                    ðŸ—‘ï¸
+                    🗑️
                   </button>
                 </td>
               )}
@@ -1218,7 +1223,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                 <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', textAlign: 'left', background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02)' }}>
                   <div>
                     <strong style={{ display: 'block', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? 'æŒ‡å®šå·¥ç¨‹å¸ˆ' : 'Designated Engineer'}
+                      {language === 'zh' ? '指定工程师' : 'Designated Engineer'}
                     </strong>
                     <span style={{ fontSize: '1rem', fontWeight: 600, color: '#0f172a' }}>
                       {getEngineerDisplay(row.designated_engineer_id)}
@@ -1226,59 +1231,59 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                   </div>
                   <div>
                     <strong style={{ display: 'block', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? 'æŠ€æœ¯å‘˜å¤‡æ³¨' : 'Technician Remarks'}
+                      {language === 'zh' ? '技术员备注' : 'Technician Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.remarks || 'â€”'}
+                      {row.remarks || '—'}
                     </span>
                   </div>
                   <div>
                     <strong style={{ display: 'block', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? 'å·¥ç¨‹å¸ˆå®¡æ ¸å¤‡æ³¨' : 'Engineer Remarks'}
+                      {language === 'zh' ? '工程师审核备注' : 'Engineer Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.engineer_remarks || 'â€”'}
+                      {row.engineer_remarks || '—'}
                     </span>
                   </div>
                   
                   {/* Show the 24 Changeover Check Items */}
                   <div style={{ gridColumn: 'span 3', borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
                     <strong style={{ display: 'block', color: '#0f172a', fontSize: '0.9rem', marginBottom: '1.25rem', fontWeight: 700 }}>
-                      {language === 'zh' ? 'ðŸ“‹ æ¢çº¿æ£€æŸ¥é¡¹ç›®æ˜Žç»†' : 'ðŸ“‹ Changeover Check Items Details'}
+                      {language === 'zh' ? '📋 换线检查项目明细' : '📋 Changeover Check Items Details'}
                     </strong>
                     
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
                       {[
-                        [language === 'zh' ? '1. SPIé’¢ç½‘åŽç¼€ååŒ¹é…' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
-                        [language === 'zh' ? '2. SPIç¨‹åºè¿žæ¿æµæ°´å·åŒ¹é…' : '2. SPI Subpanel Match', 'spi_program_subpanel_serial_match'],
-                        [language === 'zh' ? '3. SPIå¤æµ‹180åº¦æžæ€§' : '3. SPI Recheck Polarity', 'spi_recheck_pcab_polarity'],
-                        [language === 'zh' ? '4. SPIå‚æ•°è®¾ç½®ç¡®è®¤' : '4. SPI Parameter Check', 'spi_confirm_parameter_settings'],
-                        [language === 'zh' ? '5. SPIæ‰«ç åŠŸèƒ½å¼€å¯' : '5. SPI Read Barcode', 'spi_read_barcode_on'],
-                        [language === 'zh' ? '6. ç‚‰å‰ECOç¡®è®¤' : '6. Pre-AOI ECO', 'pre_aoi_eco_checklists'],
-                        [language === 'zh' ? '7. ç‚‰å‰ç¨‹åºæœºç§ç¡®è®¤' : '7. Pre-AOI Program Model', 'pre_aoi_program_model_modify'],
-                        [language === 'zh' ? '8. ç‚‰å‰æ–°ç‰©æ–™æµ‹è¯•' : '8. Pre-AOI New Material', 'pre_aoi_vi_program_new_materia'],
-                        [language === 'zh' ? '9. ç‚‰å‰è¿žæµæŠ¥è­¦' : '9. Pre-AOI Alarm Limit', 'pre_aoi_limit_defective_alarm'],
-                        [language === 'zh' ? '10. ç‚‰å‰è£¸æ¿æµ‹è¯•' : '10. Pre-AOI Bare Board', 'pre_aoi_test_program_bare_pcba'],
-                        [language === 'zh' ? '11. ç‚‰å‰BOTè¿žæ¿æµæ°´å·' : '11. Pre-AOI Bot Subpanel', 'pre_aoi_bot_program_serial_number'],
-                        [language === 'zh' ? '12. ç‚‰å‰æ‰«ç åŠŸèƒ½å¼€å¯' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
-                        [language === 'zh' ? '13a. ç‚‰å‰ç‰©æ–™ç¡®è®¤' : '13a. Pre-AOI Mount Confirm', 'pre_aoi_confirm_materials_mounted'],
-                        [language === 'zh' ? '13b. ç‚‰å‰åˆ é™¤æ‰€æœ‰æ¡†' : '13b. Pre-AOI Delete Zones', 'pre_aoi_delete_all_zones'],
-                        [language === 'zh' ? '14. ç‚‰åŽè®¾å¤‡åž‹å·' : '14. Post-AOI Equipment', 'post_aoi_equipment_model'],
-                        [language === 'zh' ? '15. ç‚‰åŽECOç¡®è®¤' : '15. Post-AOI ECO', 'post_aoi_eco_checklists'],
-                        [language === 'zh' ? '16. ç‚‰åŽç¨‹åºæœºç§ç¡®è®¤' : '16. Post-AOI Program Model', 'post_aoi_program_model_modify'],
-                        [language === 'zh' ? '17. ç‚‰åŽå¤æµ‹èŠ¯ç‰‡/æ ‡å‡†ä»¶' : '17. Post-AOI Recheck Chips', 'post_aoi_recheck_chips_standard_models'],
-                        [language === 'zh' ? '18. ç‚‰åŽæ‰«ææ•´æ¿å›¾ç‰‡' : '18. Post-AOI Scan Board', 'post_aoi_scan_board_picture'],
-                        [language === 'zh' ? '19. ç‚‰åŽè¿žæµæŠ¥è­¦' : '19. Post-AOI Alarm Limit', 'post_aoi_limit_defective_alarm'],
-                        [language === 'zh' ? '20. ç‚‰åŽå±è”½ç½©æžæ€§' : '20. Post-AOI Shield Polarity', 'post_aoi_confirm_polarity_shield'],
-                        [language === 'zh' ? '21. ç‚‰åŽBOTè¿žæ¿æµæ°´å·' : '21. Post-AOI Bot Subpanel', 'post_aoi_bot_program_serial_number'],
-                        [language === 'zh' ? '22. ç‚‰åŽæ ‡å‡†ä»¶æ¬¡æ•°' : '22. Post-AOI Standard Times', 'post_aoi_registered_standard_models_times'],
-                        [language === 'zh' ? '23. è®¾å¤‡å¯¼è½¨å®½åº¦' : '23. Others Width Adjust', 'others_adjust_widths'],
-                        [language === 'zh' ? '24. PCBæ‰«ç æ ‡å‡†' : '24. Others PCB Barcode', 'others_add_test_standard_pcb_barcode']
+                        [language === 'zh' ? '1. SPI钢网后缀名匹配' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
+                        [language === 'zh' ? '2. SPI程序连板流水号匹配' : '2. SPI Subpanel Match', 'spi_program_subpanel_serial_match'],
+                        [language === 'zh' ? '3. SPI复测180度极性' : '3. SPI Recheck Polarity', 'spi_recheck_pcab_polarity'],
+                        [language === 'zh' ? '4. SPI参数设置确认' : '4. SPI Parameter Check', 'spi_confirm_parameter_settings'],
+                        [language === 'zh' ? '5. SPI扫码功能开启' : '5. SPI Read Barcode', 'spi_read_barcode_on'],
+                        [language === 'zh' ? '6. 炉前ECO确认' : '6. Pre-AOI ECO', 'pre_aoi_eco_checklists'],
+                        [language === 'zh' ? '7. 炉前程序机种确认' : '7. Pre-AOI Program Model', 'pre_aoi_program_model_modify'],
+                        [language === 'zh' ? '8. 炉前新物料测试' : '8. Pre-AOI New Material', 'pre_aoi_vi_program_new_materia'],
+                        [language === 'zh' ? '9. 炉前连流报警' : '9. Pre-AOI Alarm Limit', 'pre_aoi_limit_defective_alarm'],
+                        [language === 'zh' ? '10. 炉前裸板测试' : '10. Pre-AOI Bare Board', 'pre_aoi_test_program_bare_pcba'],
+                        [language === 'zh' ? '11. 炉前BOT连板流水号' : '11. Pre-AOI Bot Subpanel', 'pre_aoi_bot_program_serial_number'],
+                        [language === 'zh' ? '12. 炉前扫码功能开启' : '12. Pre-AOI Read Barcode', 'pre_aoi_read_barcode_on'],
+                        [language === 'zh' ? '13a. 炉前物料确认' : '13a. Pre-AOI Mount Confirm', 'pre_aoi_confirm_materials_mounted'],
+                        [language === 'zh' ? '13b. 炉前删除所有框' : '13b. Pre-AOI Delete Zones', 'pre_aoi_delete_all_zones'],
+                        [language === 'zh' ? '14. 炉后设备型号' : '14. Post-AOI Equipment', 'post_aoi_equipment_model'],
+                        [language === 'zh' ? '15. 炉后ECO确认' : '15. Post-AOI ECO', 'post_aoi_eco_checklists'],
+                        [language === 'zh' ? '16. 炉后程序机种确认' : '16. Post-AOI Program Model', 'post_aoi_program_model_modify'],
+                        [language === 'zh' ? '17. 炉后复测芯片/标准件' : '17. Post-AOI Recheck Chips', 'post_aoi_recheck_chips_standard_models'],
+                        [language === 'zh' ? '18. 炉后扫描整板图片' : '18. Post-AOI Scan Board', 'post_aoi_scan_board_picture'],
+                        [language === 'zh' ? '19. 炉后连流报警' : '19. Post-AOI Alarm Limit', 'post_aoi_limit_defective_alarm'],
+                        [language === 'zh' ? '20. 炉后屏蔽罩极性' : '20. Post-AOI Shield Polarity', 'post_aoi_confirm_polarity_shield'],
+                        [language === 'zh' ? '21. 炉后BOT连板流水号' : '21. Post-AOI Bot Subpanel', 'post_aoi_bot_program_serial_number'],
+                        [language === 'zh' ? '22. 炉后标准件次数' : '22. Post-AOI Standard Times', 'post_aoi_registered_standard_models_times'],
+                        [language === 'zh' ? '23. 设备导轨宽度' : '23. Others Width Adjust', 'others_adjust_widths'],
+                        [language === 'zh' ? '24. PCB扫码标准' : '24. Others PCB Barcode', 'others_add_test_standard_pcb_barcode']
                       ].map(([label, key]) => (
                         <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #f1f5f9', fontSize: '0.85rem' }}>
                           <span style={{ color: '#475569', fontWeight: 500 }}>{label}</span>
-                          <span style={{ fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '6px', background: ['âœ”ï¸', 'Yes', 'True', 'âˆš'].includes(row[key]) ? '#d1fae5' : ['âŒ', 'No', '\\'].includes(row[key]) ? '#fee2e2' : 'transparent', color: ['âœ”ï¸', 'Yes', 'True', 'âˆš'].includes(row[key]) ? '#047857' : ['âŒ', 'No', '\\'].includes(row[key]) ? '#b91c1c' : '#475569' }}>
-                            {row[key] || 'â€”'}
+                          <span style={{ fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '6px', background: ['✔️', 'Yes', 'True', '√'].includes(row[key]) ? '#d1fae5' : ['❌', 'No', '\\'].includes(row[key]) ? '#fee2e2' : 'transparent', color: ['✔️', 'Yes', 'True', '√'].includes(row[key]) ? '#047857' : ['❌', 'No', '\\'].includes(row[key]) ? '#b91c1c' : '#475569' }}>
+                            {row[key] || '—'}
                           </span>
                         </div>
                       ))}
@@ -1288,7 +1293,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                   {row.engineer_modified_fields && (
                     <div style={{ gridColumn: 'span 3', borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
                       <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>
-                        {language === 'zh' ? 'âš ï¸ å·¥ç¨‹å¸ˆä¿®æ”¹å†…å®¹è®°å½•' : 'âš ï¸ Engineer Modification History'}
+                        {language === 'zh' ? '⚠️ 工程师修改内容记录' : '⚠️ Engineer Modification History'}
                       </strong>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
                         {(() => {
@@ -1298,7 +1303,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                               <div key={index} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.6rem 1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 2px 8px rgba(15,23,42,0.02)' }}>
                                 <span style={{ fontWeight: 700, color: '#0f172a' }}>{getFieldLabel(diff.field)}:</span>
                                 <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontStyle: 'italic' }}>{formatValue(diff.from)}</span>
-                                <span style={{ color: '#3b82f6', fontWeight: 900 }}>â†’</span>
+                                <span style={{ color: '#3b82f6', fontWeight: 900 }}>→</span>
                                 <strong style={{ color: '#16a34a', background: '#f0fdf4', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{formatValue(diff.to)}</strong>
                               </div>
                             ));
@@ -1326,40 +1331,40 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
   const totalColSpan = isSuperAdmin ? 8 : 7;
 
   const renderLineStatus = (status) => {
-    if (status === 'Not Filled' || status === 'Line Not Installed') return 'â€”';
+    if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
     if (status === 'Line Stop') {
       return (
         <span className="status-mark" style={{ minWidth: '85px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-          ðŸ›‘ {language === 'zh' ? 'åœçº¿' : 'Stop'}
+          🛑 {language === 'zh' ? '停线' : 'Stop'}
         </span>
       );
     }
     return (
       <span className="status-mark checked" style={{ minWidth: '85px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
-        ðŸŸ¢ {language === 'zh' ? 'ç”Ÿäº§' : 'Production'}
+        🟢 {language === 'zh' ? '生产' : 'Production'}
       </span>
     );
   };
 
   const getFieldLabel = (field) => {
     const zhLabels = {
-      pre_aoi_program_full_name: 'Pre-AOI å®Œæ•´ç¨‹åºå',
-      stencil_serial_no_b_side: 'é’¢ç½‘ç¼–å· Bé¢',
-      stencil_serial_no_a_side: 'é’¢ç½‘ç¼–å· Aé¢',
-      barcode_read_a_layer: 'Aé¢ Laser æ¡ç è¯»å–',
-      barcode_read_a_spi: 'Aé¢ SPI æ¡ç è¯»å–',
-      barcode_read_a_pre_aoi: 'Aé¢ Pre-AOI æ¡ç è¯»å–',
-      barcode_read_b_layer: 'Bé¢ Laser æ¡ç è¯»å–',
-      barcode_read_b_spi: 'Bé¢ SPI æ¡ç è¯»å–',
-      barcode_read_b_pre_aoi: 'Bé¢ Pre-AOI æ¡ç è¯»å–',
-      workorder_info_pre_aoi: 'Pre-AOI å·¥å•ä¿¡æ¯',
-      workorder_info_post_aoi: 'Post-AOI å·¥å•ä¿¡æ¯',
-      aoi_scan_tools_workorder_traceability: 'æ‰«ç å·¥å…·å·¥å•è¿½æº¯',
-      status: 'çº¿åˆ«çŠ¶æ€',
-      responsible_person: 'è´£ä»»äºº',
-      time: 'æ£€æµ‹æ—¶é—´',
-      remarks: 'æŠ€æœ¯å‘˜å¤‡æ³¨',
-      designated_engineer_id: 'æŒ‡å®šå·¥ç¨‹å¸ˆ'
+      pre_aoi_program_full_name: 'Pre-AOI 完整程序名',
+      stencil_serial_no_b_side: '钢网编号 B面',
+      stencil_serial_no_a_side: '钢网编号 A面',
+      barcode_read_a_layer: 'A面 Laser 条码读取',
+      barcode_read_a_spi: 'A面 SPI 条码读取',
+      barcode_read_a_pre_aoi: 'A面 Pre-AOI 条码读取',
+      barcode_read_b_layer: 'B面 Laser 条码读取',
+      barcode_read_b_spi: 'B面 SPI 条码读取',
+      barcode_read_b_pre_aoi: 'B面 Pre-AOI 条码读取',
+      workorder_info_pre_aoi: 'Pre-AOI 工单信息',
+      workorder_info_post_aoi: 'Post-AOI 工单信息',
+      aoi_scan_tools_workorder_traceability: '扫码工具工单追溯',
+      status: '线别状态',
+      responsible_person: '责任人',
+      time: '检测时间',
+      remarks: '技术员备注',
+      designated_engineer_id: '指定工程师'
     };
 
     const enLabels = {
@@ -1391,9 +1396,9 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
   };
 
   const formatValue = (val) => {
-    if (val === '' || val === null || val === undefined) return 'â€”';
-    if (val === 'Line Stop') return language === 'zh' ? 'åœçº¿' : 'Line Stop';
-    if (val === 'Production') return language === 'zh' ? 'ç”Ÿäº§' : 'Production';
+    if (val === '' || val === null || val === undefined) return '—';
+    if (val === 'Line Stop') return language === 'zh' ? '停线' : 'Line Stop';
+    if (val === 'Production') return language === 'zh' ? '生产' : 'Production';
     return String(val);
   };
 
@@ -1409,13 +1414,13 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             aria-label="Select all"
           />
         </th>
-        <th className="sticky-date">{language === 'zh' ? 'çº¿åˆ«ä¸Žæ—¥æœŸ' : 'Line & Date'}</th>
-        <th>{language === 'zh' ? 'çº¿åˆ«çŠ¶æ€' : 'Line Status'}</th>
-        <th>{language === 'zh' ? 'æ–‡æ¡£çŠ¶æ€' : 'Doc Status'}</th>
-        <th>{language === 'zh' ? 'æäº¤ä¸Žå®¡æ‰¹è®°å½•' : 'Audit Timeline'}</th>
-        <th>{language === 'zh' ? 'è´£ä»»äººä¸Žæ£€æµ‹æ—¶é—´' : 'Responsible & Time'}</th>
-        <th>{language === 'zh' ? 'åŠŸèƒ½æ£€æµ‹é€šè¿‡çŽ‡' : 'Function Checks'}</th>
-        {isSuperAdmin && <th style={{ textAlign: 'center' }}>{language === 'zh' ? 'æ“ä½œ' : 'Actions'}</th>}
+        <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
+        <th>{language === 'zh' ? '线别状态' : 'Line Status'}</th>
+        <th>{language === 'zh' ? '文档状态' : 'Doc Status'}</th>
+        <th>{language === 'zh' ? '提交与审批记录' : 'Audit Timeline'}</th>
+        <th>{language === 'zh' ? '责任人与检测时间' : 'Responsible & Time'}</th>
+        <th>{language === 'zh' ? '功能检测通过率' : 'Function Checks'}</th>
+        {isSuperAdmin && <th style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
       </tr>
     </thead>
     <tbody>{rows.flatMap(row => {
@@ -1429,7 +1434,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
           if (!isMod) return null;
           return (
             <span 
-              title={language === 'zh' ? 'å·¥ç¨‹å¸ˆä¿®æ”¹è¿‡æ­¤é¡¹' : 'Modified by Engineer'} 
+              title={language === 'zh' ? '工程师修改过此项' : 'Modified by Engineer'} 
               style={{ 
                 display: 'inline-flex', 
                 alignItems: 'center', 
@@ -1446,7 +1451,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                 whiteSpace: 'nowrap'
               }}
             >
-              âœï¸ {language === 'zh' ? 'å·²ä¿®æ”¹' : 'Edited'}
+              ✏️ {language === 'zh' ? '已修改' : 'Edited'}
             </span>
           );
         } catch(e) {
@@ -1494,36 +1499,36 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             {(() => {
               if (row.status === 'Line Not Installed') {
                 return <span className="status-mark" style={{ minWidth: '95px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>
-                  {language === 'zh' ? 'æœªå®‰è£…' : 'Not Installed'}
+                  {language === 'zh' ? '未安装' : 'Not Installed'}
                 </span>;
               }
               if (row.status === 'Not Filled') {
                 return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                  {language === 'zh' ? 'æœªæäº¤' : 'Not Filled'}
+                  {language === 'zh' ? '未提交' : 'Not Filled'}
                 </span>;
               }
               if (row.approval_status === 'ENG_PENDING') {
                 return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
-                  â³ {language === 'zh' ? 'å¾…å®¡æ ¸' : 'Review'}
+                  ⏳ {language === 'zh' ? '待审核' : 'Review'}
                 </span>;
               }
               if (row.approval_status === 'DISAPPROVED') {
                 return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                  âŒ {language === 'zh' ? 'è¢«é©³å›ž' : 'Disapproved'}
+                  ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
                 </span>;
               }
               return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
-                ðŸŸ¢ {language === 'zh' ? 'å·²æ‰¹å‡†' : 'Approved'}
+                🟢 {language === 'zh' ? '已批准' : 'Approved'}
               </span>;
             })()}
             {renderModifyIndicator(['status'])}
           </td>
           <td>
-            {row.status === 'Not Filled' ? 'â€”' : (
+            {row.status === 'Not Filled' ? '—' : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
                 {row.submitted_by && (
                   <span style={{ color: '#334155' }}>
-                    ðŸ‘¤ <strong>{language === 'zh' ? 'æäº¤' : 'Sub'}:</strong> {row.submitted_by} 
+                    👤 <strong>{language === 'zh' ? '提交' : 'Sub'}:</strong> {row.submitted_by} 
                     <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '0.3rem' }}>
                       ({formatDateTime(row.created_at)})
                     </span>
@@ -1531,7 +1536,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                 )}
                 {row.approval_status === 'APPROVED' && (
                   <span style={{ color: '#166534', fontWeight: 500 }}>
-                    âœ“ <strong>{language === 'zh' ? 'å®¡æ‰¹' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                    ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
                     <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
                       ({formatDateTime(row.updated_at)})
                     </span>
@@ -1539,7 +1544,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                 )}
                 {row.approval_status === 'DISAPPROVED' && (
                   <span style={{ color: '#b91c1c', fontWeight: 500 }}>
-                    âœ— <strong>{language === 'zh' ? 'é©³å›ž' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                    ✗ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
                     <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
                       ({formatDateTime(row.updated_at)})
                     </span>
@@ -1549,24 +1554,24 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             )}
           </td>
           <td>
-            {row.status === 'Not Filled' ? 'â€”' : (
+            {row.status === 'Not Filled' ? '—' : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', fontSize: '0.82rem' }}>
                 <span style={{ color: '#334155', fontWeight: 600 }}>
                   {row.responsible_person}
                   {renderModifyIndicator(['responsible_person'])}
                 </span>
                 <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
-                  ðŸ•’ {row.time}
+                  🕒 {row.time}
                   {renderModifyIndicator(['time'])}
                 </span>
               </div>
             )}
           </td>
           <td>
-            {row.status === 'Not Filled' ? 'â€”' : (
+            {row.status === 'Not Filled' ? '—' : (
               row.status === 'Line Stop' ? (
                 <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                  ðŸ›‘ {t('cl_status_linestop')}
+                  🛑 {t('cl_status_linestop')}
                 </span>
               ) : (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -1574,7 +1579,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                     <div style={{ width: `${(passedChecks / totalChecks) * 100}%`, height: '100%', background: passedChecks === totalChecks ? '#10b981' : '#f59e0b' }}></div>
                   </div>
                   <span style={{ fontSize: '0.82rem', fontWeight: 700, color: passedChecks === totalChecks ? '#059669' : '#d97706' }}>
-                    {passedChecks}/{totalChecks} {language === 'zh' ? 'é¡¹é€šè¿‡' : 'Passed'}
+                    {passedChecks}/{totalChecks} {language === 'zh' ? '项通过' : 'Passed'}
                   </span>
                   {renderModifyIndicator(checkpointColumns.map(c => c.key))}
                 </div>
@@ -1587,9 +1592,9 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                 type="button"
                 className="btn-delete-report-row" 
                 onClick={() => onDelete(row.id, 'checkpoint')}
-                title={language === 'zh' ? 'åˆ é™¤è®°å½•' : 'Delete Record'}
+                title={language === 'zh' ? '删除记录' : 'Delete Record'}
               >
-                ðŸ—‘ï¸
+                🗑️
               </button>
             </td>
           )}
@@ -1604,7 +1609,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', textAlign: 'left' }}>
               <div>
                 <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
-                  {language === 'zh' ? 'æŒ‡å®šå·¥ç¨‹å¸ˆ' : 'Designated Engineer'}
+                  {language === 'zh' ? '指定工程师' : 'Designated Engineer'}
                 </strong>
                 <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
                   {getEngineerDisplay(row.designated_engineer_id)}
@@ -1612,24 +1617,24 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
               </div>
               <div>
                 <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
-                  {language === 'zh' ? 'æŠ€æœ¯å‘˜å¤‡æ³¨' : 'Technician Remarks'}
+                  {language === 'zh' ? '技术员备注' : 'Technician Remarks'}
                 </strong>
                 <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                  {row.remarks || 'â€”'}
+                  {row.remarks || '—'}
                 </span>
               </div>
               <div>
                 <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
-                  {language === 'zh' ? 'å·¥ç¨‹å¸ˆå®¡æ ¸å¤‡æ³¨' : 'Engineer Remarks'}
+                  {language === 'zh' ? '工程师审核备注' : 'Engineer Remarks'}
                 </strong>
                 <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                  {row.engineer_remarks || 'â€”'}
+                  {row.engineer_remarks || '—'}
                 </span>
               </div>
               {row.engineer_modified_fields && (
                 <div style={{ gridColumn: 'span 3', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
                   <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>
-                    {language === 'zh' ? 'âš ï¸ å·¥ç¨‹å¸ˆä¿®æ”¹å†…å®¹è®°å½•' : 'âš ï¸ Engineer Modification History'}
+                    {language === 'zh' ? '⚠️ 工程师修改内容记录' : '⚠️ Engineer Modification History'}
                   </strong>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
                     {(() => {
@@ -1639,7 +1644,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                           <div key={index} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.6rem 1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 2px 8px rgba(15,23,42,0.02)' }}>
                             <span style={{ fontWeight: 700, color: '#0f172a' }}>{getFieldLabel(diff.field)}:</span>
                             <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontStyle: 'italic' }}>{formatValue(diff.from)}</span>
-                            <span style={{ color: '#3b82f6', fontWeight: 900 }}>â†’</span>
+                            <span style={{ color: '#3b82f6', fontWeight: 900 }}>→</span>
                             <strong style={{ color: '#16a34a', background: '#f0fdf4', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{formatValue(diff.to)}</strong>
                           </div>
                         ));
@@ -1653,7 +1658,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
               {row.status !== 'Line Stop' && (
                 <div style={{ gridColumn: 'span 3', borderTop: '1px solid #e2e8f0', paddingTop: '1.2rem', marginTop: '0.5rem' }}>
                   <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.8rem', letterSpacing: '0.05em' }}>
-                    {language === 'zh' ? 'è¯¦ç»†åŠŸèƒ½æ£€æµ‹ç»“æžœ' : 'Detailed Function Check Results'}
+                    {language === 'zh' ? '详细功能检测结果' : 'Detailed Function Check Results'}
                   </strong>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
                     {checkpointGroups.map(group => {
@@ -1669,7 +1674,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                                 <div key={pos.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
                                   <span style={{ color: '#64748b' }}>{t('cp_th_' + pos.key)}</span>
                                   <span className={`status-mark ${checkVal ? 'checked' : 'not-checked'}`} style={{ minWidth: '40px', padding: '0.1rem 0.35rem', fontSize: '0.72rem', borderRadius: '4px' }}>
-                                    {checkVal ? 'âœ“' : 'âœ—'}
+                                    {checkVal ? '✓' : '✗'}
                                   </span>
                                 </div>
                               );
@@ -1696,40 +1701,40 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
   const totalColSpan = isSuperAdmin ? 10 : 9;
 
   const renderLineStatus = (status) => {
-    if (status === 'Not Filled' || status === 'Line Not Installed') return 'â€”';
+    if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
     if (status === 'Line Stop') {
       return (
         <span className="status-mark" style={{ minWidth: '85px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-          ðŸ›‘ {language === 'zh' ? 'åœçº¿' : 'Stop'}
+          🛑 {language === 'zh' ? '停线' : 'Stop'}
         </span>
       );
     }
     return (
       <span className="status-mark checked" style={{ minWidth: '85px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
-        ðŸŸ¢ {language === 'zh' ? 'ç”Ÿäº§' : 'Production'}
+        🟢 {language === 'zh' ? '生产' : 'Production'}
       </span>
     );
   };
 
   const getFieldLabel = (field) => {
     const zhLabels = {
-      pre_aoi_program_full_name: 'Pre-AOI å®Œæ•´ç¨‹åºå',
-      stencil_serial_no_b_side: 'é’¢ç½‘ç¼–å· Bé¢',
-      stencil_serial_no_a_side: 'é’¢ç½‘ç¼–å· Aé¢',
-      barcode_read_a_layer: 'Aé¢ Laser æ¡ç è¯»å–',
-      barcode_read_a_spi: 'Aé¢ SPI æ¡ç è¯»å–',
-      barcode_read_a_pre_aoi: 'Aé¢ Pre-AOI æ¡ç è¯»å–',
-      barcode_read_b_layer: 'Bé¢ Laser æ¡ç è¯»å–',
-      barcode_read_b_spi: 'Bé¢ SPI æ¡ç è¯»å–',
-      barcode_read_b_pre_aoi: 'Bé¢ Pre-AOI æ¡ç è¯»å–',
-      workorder_info_pre_aoi: 'Pre-AOI å·¥å•ä¿¡æ¯',
-      workorder_info_post_aoi: 'Post-AOI å·¥å•ä¿¡æ¯',
-      aoi_scan_tools_workorder_traceability: 'æ‰«ç å·¥å…·å·¥å•è¿½æº¯',
-      status: 'çº¿åˆ«çŠ¶æ€',
-      responsible_person: 'è´£ä»»äºº',
-      time: 'æ£€æµ‹æ—¶é—´',
-      remarks: 'æŠ€æœ¯å‘˜å¤‡æ³¨',
-      designated_engineer_id: 'æŒ‡å®šå·¥ç¨‹å¸ˆ'
+      pre_aoi_program_full_name: 'Pre-AOI 完整程序名',
+      stencil_serial_no_b_side: '钢网编号 B面',
+      stencil_serial_no_a_side: '钢网编号 A面',
+      barcode_read_a_layer: 'A面 Laser 条码读取',
+      barcode_read_a_spi: 'A面 SPI 条码读取',
+      barcode_read_a_pre_aoi: 'A面 Pre-AOI 条码读取',
+      barcode_read_b_layer: 'B面 Laser 条码读取',
+      barcode_read_b_spi: 'B面 SPI 条码读取',
+      barcode_read_b_pre_aoi: 'B面 Pre-AOI 条码读取',
+      workorder_info_pre_aoi: 'Pre-AOI 工单信息',
+      workorder_info_post_aoi: 'Post-AOI 工单信息',
+      aoi_scan_tools_workorder_traceability: '扫码工具工单追溯',
+      status: '线别状态',
+      responsible_person: '责任人',
+      time: '检测时间',
+      remarks: '技术员备注',
+      designated_engineer_id: '指定工程师'
     };
 
     const enLabels = {
@@ -1761,9 +1766,9 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
   };
 
   const formatValue = (val) => {
-    if (val === '' || val === null || val === undefined) return 'â€”';
-    if (val === 'Line Stop') return language === 'zh' ? 'åœçº¿' : 'Line Stop';
-    if (val === 'Production') return language === 'zh' ? 'ç”Ÿäº§' : 'Production';
+    if (val === '' || val === null || val === undefined) return '—';
+    if (val === 'Line Stop') return language === 'zh' ? '停线' : 'Line Stop';
+    if (val === 'Production') return language === 'zh' ? '生产' : 'Production';
     return String(val);
   };
 
@@ -1771,7 +1776,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
     const isYes = val === 'Yes';
     return (
       <span className={`mini-check-badge ${isYes ? 'yes' : 'no'}`} style={{ whiteSpace: 'nowrap' }}>
-        {isYes ? 'âœ“' : 'âœ—'} {label}
+        {isYes ? '✓' : '✗'} {label}
       </span>
     );
   };
@@ -1789,14 +1794,14 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
               aria-label="Select all"
             />
           </th>
-          <th className="sticky-date">{language === 'zh' ? 'çº¿åˆ«ä¸Žæ—¥æœŸ' : 'Line & Date'}</th>
-          <th>{language === 'zh' ? 'çº¿åˆ«çŠ¶æ€' : 'Line Status'}</th>
-          <th>{language === 'zh' ? 'æ–‡æ¡£çŠ¶æ€' : 'Doc Status'}</th>
-          <th>{language === 'zh' ? 'æäº¤ä¸Žå®¡æ‰¹è®°å½•' : 'Audit Timeline'}</th>
-          <th>{language === 'zh' ? 'ç¨‹åºä¸Žé’¢ç½‘ä¿¡æ¯' : 'Program & Tooling'}</th>
-          <th>{language === 'zh' ? 'æ¡ç æ ¡éªŒ' : 'Barcode Verifications'}</th>
-          <th>{language === 'zh' ? 'å·¥å•ä¸Žè¿½æº¯' : 'Workorders & Traceability'}</th>
-          {isSuperAdmin && <th style={{ textAlign: 'center' }}>{language === 'zh' ? 'æ“ä½œ' : 'Actions'}</th>}
+          <th className="sticky-date">{language === 'zh' ? '线别与日期' : 'Line & Date'}</th>
+          <th>{language === 'zh' ? '线别状态' : 'Line Status'}</th>
+          <th>{language === 'zh' ? '文档状态' : 'Doc Status'}</th>
+          <th>{language === 'zh' ? '提交与审批记录' : 'Audit Timeline'}</th>
+          <th>{language === 'zh' ? '程序与钢网信息' : 'Program & Tooling'}</th>
+          <th>{language === 'zh' ? '条码校验' : 'Barcode Verifications'}</th>
+          <th>{language === 'zh' ? '工单与追溯' : 'Workorders & Traceability'}</th>
+          {isSuperAdmin && <th style={{ textAlign: 'center' }}>{language === 'zh' ? '操作' : 'Actions'}</th>}
         </tr>
       </thead>
       <tbody>
@@ -1812,7 +1817,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
               if (!isMod) return null;
               return (
                 <span 
-                  title={language === 'zh' ? 'å·¥ç¨‹å¸ˆä¿®æ”¹è¿‡æ­¤é¡¹' : 'Modified by Engineer'} 
+                  title={language === 'zh' ? '工程师修改过此项' : 'Modified by Engineer'} 
                   style={{ 
                     display: 'inline-flex', 
                     alignItems: 'center', 
@@ -1829,7 +1834,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  âœï¸ {language === 'zh' ? 'å·²ä¿®æ”¹' : 'Edited'}
+                  ✏️ {language === 'zh' ? '已修改' : 'Edited'}
                 </span>
               );
             } catch(e) {
@@ -1874,36 +1879,36 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 {(() => {
                   if (row.status === 'Line Not Installed') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1', fontStyle: 'italic' }}>
-                      {language === 'zh' ? 'æœªå®‰è£…' : 'Not Installed'}
+                      {language === 'zh' ? '未安装' : 'Not Installed'}
                     </span>;
                   }
                   if (row.status === 'Not Filled') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                      {language === 'zh' ? 'æœªæäº¤' : 'Not Filled'}
+                      {language === 'zh' ? '未提交' : 'Not Filled'}
                     </span>;
                   }
                   if (row.approval_status === 'ENG_PENDING') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a', fontWeight: 700 }}>
-                      â³ {language === 'zh' ? 'å¾…å®¡æ ¸' : 'Review'}
+                      ⏳ {language === 'zh' ? '待审核' : 'Review'}
                     </span>;
                   }
                   if (row.approval_status === 'DISAPPROVED') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
-                      âŒ {language === 'zh' ? 'è¢«é©³å›ž' : 'Disapproved'}
+                      ❌ {language === 'zh' ? '被驳回' : 'Disapproved'}
                     </span>;
                   }
                   return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>
-                    ðŸŸ¢ {language === 'zh' ? 'å·²æ‰¹å‡†' : 'Approved'}
+                    🟢 {language === 'zh' ? '已批准' : 'Approved'}
                   </span>;
                 })()}
                 {renderModifyIndicator(['status'])}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
                     {row.submitted_by && (
                       <span style={{ color: '#334155' }}>
-                        ðŸ‘¤ <strong>{language === 'zh' ? 'æäº¤' : 'Sub'}:</strong> {row.submitted_by} 
+                        👤 <strong>{language === 'zh' ? '提交' : 'Sub'}:</strong> {row.submitted_by} 
                         <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '0.3rem' }}>
                           ({formatDateTime(row.created_at)})
                         </span>
@@ -1911,7 +1916,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     )}
                     {row.approval_status === 'APPROVED' && (
                       <span style={{ color: '#166534', fontWeight: 500 }}>
-                        âœ“ <strong>{language === 'zh' ? 'å®¡æ‰¹' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                        ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
                         <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
                           ({formatDateTime(row.updated_at)})
                         </span>
@@ -1919,7 +1924,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     )}
                     {row.approval_status === 'DISAPPROVED' && (
                       <span style={{ color: '#b91c1c', fontWeight: 500 }}>
-                        âœ— <strong>{language === 'zh' ? 'é©³å›ž' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                        ✗ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
                         <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
                           ({formatDateTime(row.updated_at)})
                         </span>
@@ -1929,19 +1934,19 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 )}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   isLineStop ? (
                     <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      ðŸ›‘ {t('cl_status_linestop')}
+                      🛑 {t('cl_status_linestop')}
                     </span>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
                       <span style={{ color: '#0f172a', fontWeight: 700 }} title={row.pre_aoi_program_full_name}>
-                        ðŸ’» {row.pre_aoi_program_full_name ? (row.pre_aoi_program_full_name.length > 22 ? `${row.pre_aoi_program_full_name.substring(0, 20)}...` : row.pre_aoi_program_full_name) : 'â€”'}
+                        💻 {row.pre_aoi_program_full_name ? (row.pre_aoi_program_full_name.length > 22 ? `${row.pre_aoi_program_full_name.substring(0, 20)}...` : row.pre_aoi_program_full_name) : '—'}
                         {renderModifyIndicator(['pre_aoi_program_full_name'])}
                       </span>
                       <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
-                        ðŸ”§ A-Stencil: <strong>{row.stencil_serial_no_a_side || 'â€”'}</strong> | B-Stencil: <strong>{row.stencil_serial_no_b_side || 'â€”'}</strong>
+                        🔧 A-Stencil: <strong>{row.stencil_serial_no_a_side || '—'}</strong> | B-Stencil: <strong>{row.stencil_serial_no_b_side || '—'}</strong>
                         {renderModifyIndicator(['stencil_serial_no_a_side', 'stencil_serial_no_b_side'])}
                       </span>
                     </div>
@@ -1949,10 +1954,10 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 )}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   isLineStop ? (
                     <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      ðŸ›‘ {t('cl_status_linestop')}
+                      🛑 {t('cl_status_linestop')}
                     </span>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', fontSize: '0.78rem' }}>
@@ -1975,19 +1980,19 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 )}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   isLineStop ? (
                     <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      ðŸ›‘ {t('cl_status_linestop')}
+                      🛑 {t('cl_status_linestop')}
                     </span>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
                       <span style={{ color: '#334155' }}>
-                        Pre-WO: <strong>{row.workorder_info_pre_aoi || 'â€”'}</strong> | Post-WO: <strong>{row.workorder_info_post_aoi || 'â€”'}</strong>
+                        Pre-WO: <strong>{row.workorder_info_pre_aoi || '—'}</strong> | Post-WO: <strong>{row.workorder_info_post_aoi || '—'}</strong>
                         {renderModifyIndicator(['workorder_info_pre_aoi', 'workorder_info_post_aoi'])}
                       </span>
                       <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
-                        Traceability: <strong>{row.aoi_scan_tools_workorder_traceability || 'â€”'}</strong>
+                        Traceability: <strong>{row.aoi_scan_tools_workorder_traceability || '—'}</strong>
                         {renderModifyIndicator(['aoi_scan_tools_workorder_traceability'])}
                       </span>
                     </div>
@@ -2000,9 +2005,9 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                     type="button"
                     className="btn-delete-report-row" 
                     onClick={() => onDelete(row.id, 'checklist')}
-                    title={language === 'zh' ? 'åˆ é™¤è®°å½•' : 'Delete Record'}
+                    title={language === 'zh' ? '删除记录' : 'Delete Record'}
                   >
-                    ðŸ—‘ï¸
+                    🗑️
                   </button>
                 </td>
               )}
@@ -2017,15 +2022,15 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 <div className="expansion-details-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', textAlign: 'left' }}>
                   <div>
                     <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? 'ç¡®è®¤äººç­¾å' : 'Confirmation Signature'}
+                      {language === 'zh' ? '确认人签名' : 'Confirmation Signature'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
-                      {row.confirmation || 'â€”'}
+                      {row.confirmation || '—'}
                     </span>
                   </div>
                   <div>
                     <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? 'æŒ‡å®šå·¥ç¨‹å¸ˆ' : 'Designated Engineer'}
+                      {language === 'zh' ? '指定工程师' : 'Designated Engineer'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
                       {getEngineerDisplay(row.designated_engineer_id)}
@@ -2033,24 +2038,24 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                   </div>
                   <div>
                     <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? 'æŠ€æœ¯å‘˜å¤‡æ³¨' : 'Technician Remarks'}
+                      {language === 'zh' ? '技术员备注' : 'Technician Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.remarks || 'â€”'}
+                      {row.remarks || '—'}
                     </span>
                   </div>
                   <div>
                     <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
-                      {language === 'zh' ? 'å·¥ç¨‹å¸ˆå®¡æ ¸å¤‡æ³¨' : 'Engineer Remarks'}
+                      {language === 'zh' ? '工程师审核备注' : 'Engineer Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.engineer_remarks || 'â€”'}
+                      {row.engineer_remarks || '—'}
                     </span>
                   </div>
                   {row.engineer_modified_fields && (
                     <div style={{ gridColumn: 'span 4', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
                       <strong style={{ display: 'block', color: '#b91c1c', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.05em' }}>
-                        {language === 'zh' ? 'âš ï¸ å·¥ç¨‹å¸ˆä¿®æ”¹å†…å®¹è®°å½•' : 'âš ï¸ Engineer Modification History'}
+                        {language === 'zh' ? '⚠️ 工程师修改内容记录' : '⚠️ Engineer Modification History'}
                       </strong>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
                         {(() => {
@@ -2060,7 +2065,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                               <div key={index} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.6rem 1rem', borderRadius: '12px', fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 2px 8px rgba(15,23,42,0.02)' }}>
                                 <span style={{ fontWeight: 700, color: '#0f172a' }}>{getFieldLabel(diff.field)}:</span>
                                 <span style={{ textDecoration: 'line-through', color: '#94a3b8', fontStyle: 'italic' }}>{formatValue(diff.from)}</span>
-                                <span style={{ color: '#3b82f6', fontWeight: 900 }}>â†’</span>
+                                <span style={{ color: '#3b82f6', fontWeight: 900 }}>→</span>
                                 <strong style={{ color: '#16a34a', background: '#f0fdf4', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{formatValue(diff.to)}</strong>
                               </div>
                             ));
@@ -2087,8 +2092,8 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
   const allSelected = rows.length > 0 && selectedRows.length === rows.length;
   
   const renderBool = (val) => {
-    if (val === true || val === 'true') return <span style={{ color: '#16a34a' }}>âœ“</span>;
-    if (val === false || val === 'false') return <span style={{ color: '#dc2626' }}>âŒ</span>;
+    if (val === true || val === 'true') return <span style={{ color: '#16a34a' }}>✓</span>;
+    if (val === false || val === 'false') return <span style={{ color: '#dc2626' }}>❌</span>;
     return val;
   };
 
@@ -2099,28 +2104,28 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
           <th>
             <input type="checkbox" checked={allSelected} onChange={(e) => onSelectAll(e.target.checked, rows)} />
           </th>
-          <th>{language === 'zh' ? 'çº¿ä½“å·' : 'Line'}</th>
-          <th>{language === 'zh' ? 'ç­ç»„' : 'Group'}</th>
-          <th>{language === 'zh' ? 'æ—¥æœŸ' : 'Date'}</th>
-          <th>{language === 'zh' ? 'ç­åˆ«' : 'Shift'}</th>
-          <th>{language === 'zh' ? 'ç¨‹åºåç§°' : 'Program Name'}</th>
-          <th>{language === 'zh' ? 'æäº¤äºº' : 'Submitted By'}</th>
-          <th>{language === 'zh' ? 'çŠ¶æ€' : 'Status'}</th>
+          <th>{language === 'zh' ? '线体号' : 'Line'}</th>
+          <th>{language === 'zh' ? '班组' : 'Group'}</th>
+          <th>{language === 'zh' ? '日期' : 'Date'}</th>
+          <th>{language === 'zh' ? '班别' : 'Shift'}</th>
+          <th>{language === 'zh' ? '程序名称' : 'Program Name'}</th>
+          <th>{language === 'zh' ? '提交人' : 'Submitted By'}</th>
+          <th>{language === 'zh' ? '状态' : 'Status'}</th>
           
-          <th>{language === 'zh' ? '1. ç¨‹åºåç§°' : '1. Prog Name'}</th>
-          <th>{language === 'zh' ? '2. é•­é›•å‚æ•°' : '2. Laser Param'}</th>
-          <th>{language === 'zh' ? '3. é‡ç åŠŸèƒ½' : '3. Dup Code'}</th>
-          <th>{language === 'zh' ? '4. PCBé˜²å' : '4. Anti-Reverse'}</th>
-          <th>{language === 'zh' ? '5. ABæ¡ç ä¸€è‡´' : '5. A/B Barcode'}</th>
-          <th>{language === 'zh' ? '6. é•­é›•é¡ºåº' : '6. Sequence'}</th>
-          <th>{language === 'zh' ? '7. é•­é›•ä½ç½®' : '7. Position'}</th>
+          <th>{language === 'zh' ? '1. 程序名称' : '1. Prog Name'}</th>
+          <th>{language === 'zh' ? '2. 镭雕参数' : '2. Laser Param'}</th>
+          <th>{language === 'zh' ? '3. 重码功能' : '3. Dup Code'}</th>
+          <th>{language === 'zh' ? '4. PCB防反' : '4. Anti-Reverse'}</th>
+          <th>{language === 'zh' ? '5. AB条码一致' : '5. A/B Barcode'}</th>
+          <th>{language === 'zh' ? '6. 镭雕顺序' : '6. Sequence'}</th>
+          <th>{language === 'zh' ? '7. 镭雕位置' : '7. Position'}</th>
 
-          <th>{language === 'zh' ? 'å·¥ç¨‹å¸ˆ' : 'Engineer'}</th>
-          <th>{language === 'zh' ? 'å·¥ç¨‹å¸ˆå®¡æ ¸æ—¶é—´' : 'ENG Review Time'}</th>
-          <th>{language === 'zh' ? 'ç»„é•¿å®¡æ‰¹' : 'GL Approval'}</th>
-          <th>{language === 'zh' ? 'ç»„é•¿å®¡æ‰¹æ—¶é—´' : 'GL Review Time'}</th>
+          <th>{language === 'zh' ? '工程师' : 'Engineer'}</th>
+          <th>{language === 'zh' ? '工程师审核时间' : 'ENG Review Time'}</th>
+          <th>{language === 'zh' ? '组长审批' : 'GL Approval'}</th>
+          <th>{language === 'zh' ? '组长审批时间' : 'GL Review Time'}</th>
           
-          {isSuperAdmin && <th>{language === 'zh' ? 'æ“ä½œ' : 'Actions'}</th>}
+          {isSuperAdmin && <th>{language === 'zh' ? '操作' : 'Actions'}</th>}
         </tr>
       </thead>
       <tbody>
@@ -2164,7 +2169,7 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
               {isSuperAdmin && (
                 <td>
                   <button className="delete-btn" onClick={() => onDelete(row.id, 'laser_changeover')} title={t('delete')}>
-                    ðŸ—‘ï¸
+                    🗑️
                   </button>
                 </td>
               )}
@@ -2175,4 +2180,3 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
     </table>
   );
 }
-
