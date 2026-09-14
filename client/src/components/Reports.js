@@ -620,9 +620,15 @@ export default function Reports({ currentUser }) {
           </style>
         </head>
         <body>
-          <h2 style="font-size: 14px; margin: 0 0 8px; color: #334155;">Doc No. - INWJZ1-42026050500004</h2>
-          <h1>${escapeHtml(title)}</h1>
-          <p>${language === 'zh' ? '生成于' : 'Generated'} ${escapeHtml(generatedDate)} · ${filteredRows.length} ${language === 'zh' ? '条记录' : `record${filteredRows.length === 1 ? '' : 's'}`}</p>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h1>${escapeHtml(title)}</h1>
+              <p>${language === 'zh' ? '生成于' : 'Generated'} ${escapeHtml(generatedDate)} · ${filteredRows.length} ${language === 'zh' ? '条记录' : `record${filteredRows.length === 1 ? '' : 's'}`}</p>
+            </div>
+            <div style="font-size: 10px; font-weight: bold; color: #334155;">
+              Doc No. - INWJZ1-42026050500004
+            </div>
+          </div>
           <table>
             <thead><tr>${columns.map(([label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr></thead>
             <tbody>${tableRows}</tbody>
@@ -811,11 +817,13 @@ export default function Reports({ currentUser }) {
 
   return (
     <section className="reports-container">
-      <div className="reports-heading">
+      <div className="reports-heading" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', marginBottom: '4px' }}>Doc No. - INWJZ1-42026050500004</div>
           <h1>{t('rep_title')}</h1>
           <p>{language === 'zh' ? '存储在系统后台的详细点检检验记录。' : 'Detailed records stored in the backend.'}</p>
+        </div>
+        <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', textAlign: 'right', marginTop: '6px' }}>
+          Doc No. - INWJZ1-42026050500004
         </div>
       </div>
 
