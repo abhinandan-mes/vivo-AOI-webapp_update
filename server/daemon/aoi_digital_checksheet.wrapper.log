@@ -120,3 +120,5 @@ Stacktrace:   在 System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInte
 2026-09-14 14:01:31 - Finished aoi_digital_checksheet.exe
 2026-09-14 14:01:33 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2026-09-14 14:01:33 - Started 8792
+2026-09-14 14:04:15 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 14:04:15 - Started 2432
