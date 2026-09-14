@@ -375,7 +375,8 @@ export default function Reports({ currentUser }) {
       apiService.getAllChecklists(),
       apiService.getAllCheckpoints(),
       apiService.getAllChangeoverChecksheets(),
-      apiService.getEngineers()
+        apiService.getLaserChangeoverReports(),
+        apiService.getEngineers()
     ])
       .then(([checklistRes, checkpointRes, changeoverRes, laserRes, engineersRes]) => {
         setChecklists(checklistRes.data.data || []);
