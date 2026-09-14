@@ -3738,3 +3738,792 @@ The column `aoi_changeover_checksheet.dynamic_data` does not exist in the curren
   },
   clientVersion: '6.19.3'
 }
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:118:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:116:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:134:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+node:internal/modules/cjs/loader:1572
+  throw err;
+  ^
+
+Error: Cannot find module 'express-validator'
+Require stack:
+- d:\AOi_check_sheet\server\controllers\LaserChangeoverController.js
+- d:\AOi_check_sheet\server\routes\laserChangeover.js
+- d:\AOi_check_sheet\server\server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1568:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1122:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1146:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1173:12)
+    at Module._load (node:internal/modules/cjs/loader:1345:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\controllers\LaserChangeoverController.js:2:30)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'd:\\AOi_check_sheet\\server\\controllers\\LaserChangeoverController.js',
+    'd:\\AOi_check_sheet\\server\\routes\\laserChangeover.js',
+    'd:\\AOi_check_sheet\\server\\server.js'
+  ]
+}
+
+Node.js v26.4.0
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+node:internal/modules/cjs/loader:1572
+  throw err;
+  ^
+
+Error: Cannot find module 'express-validator'
+Require stack:
+- d:\AOi_check_sheet\server\controllers\LaserChangeoverController.js
+- d:\AOi_check_sheet\server\routes\laserChangeover.js
+- d:\AOi_check_sheet\server\server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1568:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1122:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1146:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1173:12)
+    at Module._load (node:internal/modules/cjs/loader:1345:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\controllers\LaserChangeoverController.js:2:30)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'd:\\AOi_check_sheet\\server\\controllers\\LaserChangeoverController.js',
+    'd:\\AOi_check_sheet\\server\\routes\\laserChangeover.js',
+    'd:\\AOi_check_sheet\\server\\server.js'
+  ]
+}
+
+Node.js v26.4.0
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+node:internal/modules/cjs/loader:1572
+  throw err;
+  ^
+
+Error: Cannot find module 'express-validator'
+Require stack:
+- d:\AOi_check_sheet\server\controllers\LaserChangeoverController.js
+- d:\AOi_check_sheet\server\routes\laserChangeover.js
+- d:\AOi_check_sheet\server\server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1568:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1122:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1146:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1173:12)
+    at Module._load (node:internal/modules/cjs/loader:1345:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.require (node:internal/modules/cjs/loader:1689:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (d:\AOi_check_sheet\server\controllers\LaserChangeoverController.js:2:30)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'd:\\AOi_check_sheet\\server\\controllers\\LaserChangeoverController.js',
+    'd:\\AOi_check_sheet\\server\\routes\\laserChangeover.js',
+    'd:\\AOi_check_sheet\\server\\server.js'
+  ]
+}
+
+Node.js v26.4.0

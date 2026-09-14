@@ -2,15 +2,19 @@ const express = require('express');
 const router = express.Router();
 const laserController = require('../controllers/LaserChangeoverController');
 const { requireRoles } = require('../middleware/auth');
-const { body } = require('express-validator');
 
-const validateSubmit = [
-  body('line').notEmpty().withMessage('Line is required'),
-  body('program_name').notEmpty().withMessage('Program Name is required'),
-  body('date').isISO8601().withMessage('Valid date required'),
-  body('shift').notEmpty().withMessage('Shift is required'),
-  body('submitted_by').notEmpty()
-];
+const validateSubmit = (req, res, next) => {
+  const { line, program_name, date, shift, submitted_by } = req.body;
+  const errors = [];
+  if (!line) errors.push({ msg: 'Line is required' });
+  if (!program_name) errors.push({ msg: 'Program Name is required' });
+  if (!date || isNaN(Date.parse(date))) errors.push({ msg: 'Valid date required' });
+  if (!shift) errors.push({ msg: 'Shift is required' });
+  if (!submitted_by) errors.push({ msg: 'Submitted by is required' });
+  
+  if (errors.length > 0) return res.status(400).json({ errors });
+  next();
+};
 
 router.post('/', requireRoles(['technician', 'engineer', 'super_admin']), validateSubmit, laserController.createChecksheet);
 router.get('/pending', requireRoles(['engineer', 'admin', 'super_admin', 'production_group_leader']), laserController.getPending);

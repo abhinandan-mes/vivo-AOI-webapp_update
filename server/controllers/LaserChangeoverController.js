@@ -1,9 +1,6 @@
 const LaserChangeover = require('../models/LaserChangeover');
-const { validationResult } = require('express-validator');
 
 exports.createChecksheet = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
   try {
     const data = { ...req.body };
