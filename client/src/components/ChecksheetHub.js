@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import TechnicianChecklist from './TechnicianChecklist';
 import FunctionCheckpoint from './FunctionCheckpoint';
 import ChangeoverChecksheet from './ChangeoverChecksheet';
+import LaserChangeoverChecksheet from './LaserChangeoverChecksheet';
 import './ChecksheetHub.css';
 
 export default function ChecksheetHub({ user }) {
@@ -57,7 +58,13 @@ export default function ChecksheetHub({ user }) {
             className={`checksheet-tab-btn ${activeTab === 'changeover' ? 'active' : ''}`}
             onClick={() => handleTabChange('changeover')}
           >
-            ⇄ {language === 'zh' ? '换线记录表' : 'Changeover Checksheet'}
+            ⇄ {language === 'zh' ? '换线记录表' : 'Changeover'}
+          </button>
+          <button 
+            className={`checksheet-tab-btn ${activeTab === 'laser_changeover' ? 'active' : ''}`}
+            onClick={() => handleTabChange('laser_changeover')}
+          >
+            🔆 {language === 'zh' ? '镭雕换线表' : 'Laser Changeover'}
           </button>
         </div>
       </div>
@@ -66,6 +73,7 @@ export default function ChecksheetHub({ user }) {
         {activeTab === 'checklist' && <TechnicianChecklist currentUser={user} />}
         {activeTab === 'checkpoint' && <FunctionCheckpoint currentUser={user} />}
         {activeTab === 'changeover' && <ChangeoverChecksheet currentUser={user} />}
+        {activeTab === 'laser_changeover' && <LaserChangeoverChecksheet currentUser={user} />}
       </div>
     </div>
   );

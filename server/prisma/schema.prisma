@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client"
 }
 
 model AoiFunctionCheckpoint {
@@ -213,4 +214,45 @@ model AoiChangeoverChecksheet {
   @@index([date])
   @@index([line])
   @@map("aoi_changeover_checksheet")
+}
+
+model LaserChangeoverChecksheet {
+  id                               Int      @id @default(autoincrement())
+  line                             String?  @db.VarChar(50)
+  program_name                     String?  @db.VarChar(255)
+  date                             DateTime @db.Date
+  shift                            String   @db.VarChar(50)
+  
+  prog_name_check                  Boolean?
+  laser_param_check                Boolean?
+  duplicate_code_check             Boolean?
+  pcb_anti_reverse_check           Boolean?
+  ab_barcode_check                 Boolean?
+  laser_sequence_check             Boolean?
+  laser_position_check             Boolean?
+
+  grp_ldr_prog_name_check          Boolean?
+  grp_ldr_laser_position_check     Boolean?
+
+  status                           String?  @default("Production") @db.VarChar(50)
+  approval_status                  String?  @default("ENG_PENDING") @db.VarChar(50)
+  
+  designated_engineer_id           String?  @db.VarChar(100)
+  designated_group_leader_id       String?  @db.VarChar(100)
+  
+  remarks                          String?  @db.VarChar(1000)
+  engineer_remarks                 String?  @db.VarChar(1000)
+  pd_remarks                       String?  @db.VarChar(1000)
+  
+  submitted_by                     String?  @db.VarChar(150)
+  engineer_signature               String?  @db.VarChar(150)
+  group_leader_signature           String?  @db.VarChar(150)
+  
+  created_at                       DateTime @default(now()) @db.Timestamp(6)
+  updated_at                       DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([date])
+  @@index([shift])
+  @@index([line])
+  @@map("laser_changeover_checksheet")
 }

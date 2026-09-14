@@ -11,6 +11,7 @@ const technicianChecklistRoutes = require('./routes/technicianChecklist');
 const activityLogRoutes = require('./routes/activityLog');
 const lineStatusRoutes = require('./routes/lineStatus');
 const changeoverRoutes = require('./routes/changeoverChecksheet');
+const laserChangeoverRoutes = require('./routes/laserChangeover');
 const { authenticateToken } = require('./middleware/auth');
 
 const app = express();
@@ -66,6 +67,7 @@ app.use('/api', authenticateToken, functionCheckpointRoutes);
 app.use('/api', authenticateToken, technicianChecklistRoutes);
 app.use('/api', authenticateToken, lineStatusRoutes);
 app.use('/api', authenticateToken, changeoverRoutes);
+app.use('/api', authenticateToken, laserChangeoverRoutes);
 app.use('/api', activityLogRoutes);
 
 async function startServer() {

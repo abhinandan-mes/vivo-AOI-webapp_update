@@ -71,6 +71,12 @@ export const apiService = {
   deleteChangeoverChecksheet: (id) => API.delete(`/changeover/${id}`),
   getPendingChangeoverChecksheets: () => API.get('/changeover/pending'),
 
+  // Laser Changeover Checksheet APIs
+  createLaserChangeover: (data) => API.post('/laser-changeover', data),
+  getPendingLaserChangeovers: () => API.get('/laser-changeover/pending'),
+  updateLaserChangeover: (id, data) => API.put(`/laser-changeover/${id}/review`, data),
+  getLaserChangeoverReports: (params) => API.get('/laser-changeover/reports', { params }),
+
   // Technician Checklist APIs
   createChecklist: (data) => API.post('/checklist', data),
   getAllChecklists: () => API.get('/checklist'),

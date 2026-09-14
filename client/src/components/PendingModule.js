@@ -6,10 +6,12 @@ import './PendingModule.css';
 
 export default function PendingModule({ currentUser }) {
   const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState('checklist'); // 'checklist' | 'checkpoint'
+  const isGroupLeaderInitial = currentUser?.role === 'production_group_leader';
+  const [activeTab, setActiveTab] = useState(isGroupLeaderInitial ? 'laser_changeover' : 'checklist'); // 'checklist' | 'checkpoint' | 'changeover' | 'laser_changeover'
   const [checklists, setChecklists] = useState([]);
   const [checkpoints, setCheckpoints] = useState([]);
   const [changeovers, setChangeovers] = useState([]);
+  const [laserChangeovers, setLaserChangeovers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [engineers, setEngineers] = useState([]);
@@ -18,6 +20,7 @@ export default function PendingModule({ currentUser }) {
   const [selectedItem, setSelectedItem] = useState(null); // checklist or checkpoint record
   const [reviewData, setReviewData] = useState({});
   const [engineerRemarks, setEngineerRemarks] = useState('');
+  const [pdRemarks, setPdRemarks] = useState('');
   
   // Modals state
   const [confirmModal, setConfirmModal] = useState({
@@ -30,6 +33,7 @@ export default function PendingModule({ currentUser }) {
 
   const isEngineer = currentUser?.role === 'engineer';
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
+  const isGroupLeader = currentUser?.role === 'production_group_leader';
 
   const formatDate = (value) => {
     if (!value) return '—';
@@ -65,15 +69,17 @@ export default function PendingModule({ currentUser }) {
     setLoading(true);
     setError('');
     try {
-      const [resChecklists, resCheckpoints, resChangeovers, resEngs] = await Promise.all([
-        apiService.getPendingChecklists(),
-        apiService.getPendingCheckpoints(),
-        apiService.getPendingChangeoverChecksheets(),
-        apiService.getEngineers()
+      const [resChecklists, resCheckpoints, resChangeovers, resLaser, resEngs] = await Promise.all([
+        apiService.getPendingChecklists().catch(() => ({ data: { data: [] } })),
+        apiService.getPendingCheckpoints().catch(() => ({ data: { data: [] } })),
+        apiService.getPendingChangeoverChecksheets().catch(() => ({ data: { data: [] } })),
+        apiService.getPendingLaserChangeovers().catch(() => ({ data: { data: [] } })),
+        apiService.getEngineers().catch(() => ({ data: { data: [] } }))
       ]);
       setChecklists(resChecklists.data.data || []);
       setCheckpoints(resCheckpoints.data.data || []);
       setChangeovers(resChangeovers.data.data || []);
+      setLaserChangeovers(resLaser.data.data || []);
       setEngineers(resEngs.data.data || []);
     } catch (err) {
       console.error('Error fetching pending items:', err);
@@ -149,15 +155,18 @@ export default function PendingModule({ currentUser }) {
       const payload = {
         ...reviewData,
         action,
-        engineer_remarks: engineerRemarks
+        engineer_remarks: engineerRemarks,
+        pd_remarks: pdRemarks
       };
 
       if (selectedItem.type === 'checklist') {
         await apiService.updateChecklist(selectedItem.id, payload);
       } else if (selectedItem.type === 'checkpoint') {
         await apiService.updateCheckpoint(selectedItem.id, payload);
-      } else {
+      } else if (selectedItem.type === 'changeover') {
         await apiService.updateChangeoverChecksheet(selectedItem.id, payload);
+      } else if (selectedItem.type === 'laser_changeover') {
+        await apiService.updateLaserChangeover(selectedItem.id, payload);
       }
       
       handleCloseReview();
@@ -275,26 +284,37 @@ export default function PendingModule({ currentUser }) {
       {error && <div className="pending-error-banner">{error}</div>}
 
       <div className="pending-tabs">
+        {!isGroupLeader && (
+          <>
+            <button 
+              className={`pending-tab-btn ${activeTab === 'checklist' ? 'active' : ''}`}
+              onClick={() => setActiveTab('checklist')}
+            >
+              📄 {t('rep_toggle_checklist')}
+              {checklists.length > 0 && <span className="tab-badge">{checklists.length}</span>}
+            </button>
+            <button 
+              className={`pending-tab-btn ${activeTab === 'checkpoint' ? 'active' : ''}`}
+              onClick={() => setActiveTab('checkpoint')}
+            >
+              ⚙️ {t('rep_toggle_checkpoint')}
+              {checkpoints.length > 0 && <span className="tab-badge">{checkpoints.length}</span>}
+            </button>
+            <button 
+              className={`pending-tab-btn ${activeTab === 'changeover' ? 'active' : ''}`}
+              onClick={() => setActiveTab('changeover')}
+            >
+              ⇄ {language === 'zh' ? '换线记录表' : 'Changeover Checks'}
+              {changeovers.length > 0 && <span className="tab-badge">{changeovers.length}</span>}
+            </button>
+          </>
+        )}
         <button 
-          className={`pending-tab-btn ${activeTab === 'checklist' ? 'active' : ''}`}
-          onClick={() => setActiveTab('checklist')}
+          className={`pending-tab-btn ${activeTab === 'laser_changeover' ? 'active' : ''}`}
+          onClick={() => setActiveTab('laser_changeover')}
         >
-          📄 {t('rep_toggle_checklist')}
-          {checklists.length > 0 && <span className="tab-badge">{checklists.length}</span>}
-        </button>
-        <button 
-          className={`pending-tab-btn ${activeTab === 'checkpoint' ? 'active' : ''}`}
-          onClick={() => setActiveTab('checkpoint')}
-        >
-          ⚙️ {t('rep_toggle_checkpoint')}
-          {checkpoints.length > 0 && <span className="tab-badge">{checkpoints.length}</span>}
-        </button>
-        <button 
-          className={`pending-tab-btn ${activeTab === 'changeover' ? 'active' : ''}`}
-          onClick={() => setActiveTab('changeover')}
-        >
-          ⇄ {language === 'zh' ? '换线记录表' : 'Changeover Checks'}
-          {changeovers.length > 0 && <span className="tab-badge">{changeovers.length}</span>}
+          🔆 {language === 'zh' ? '镭雕换线表' : 'Laser Changeovers'}
+          {laserChangeovers.length > 0 && <span className="tab-badge">{laserChangeovers.length}</span>}
         </button>
       </div>
 
@@ -465,6 +485,52 @@ export default function PendingModule({ currentUser }) {
                               ✏️ {language === 'zh' ? '修改重提' : 'Edit & Resubmit'}
                             </button>
                           )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          ) : activeTab === 'laser_changeover' ? (
+            laserChangeovers.length === 0 ? (
+              <div className="pending-empty-state">
+                <span className="empty-icon">✓</span>
+                <p>{language === 'zh' ? '暂无待处理镭雕换线表！' : 'No pending laser changeovers found!'}</p>
+              </div>
+            ) : (
+              <div className="table-responsive">
+                <table className="reports-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>{language === 'zh' ? '线体号' : 'Line'}</th>
+                      <th>{language === 'zh' ? '程序名称' : 'Program Name'}</th>
+                      <th>{language === 'zh' ? '日期' : 'Date'}</th>
+                      <th>{language === 'zh' ? '班别' : 'Shift'}</th>
+                      <th>{language === 'zh' ? '提交人' : 'Submitted By'}</th>
+                      <th>{language === 'zh' ? '状态' : 'Status'}</th>
+                      <th>{language === 'zh' ? '操作' : 'Action'}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {laserChangeovers.map((item) => (
+                      <tr key={item.id}>
+                        <td>#{item.id}</td>
+                        <td>{item.line}</td>
+                        <td>{item.program_name}</td>
+                        <td>{formatDate(item.date)}</td>
+                        <td>{item.shift}</td>
+                        <td>{item.submitted_by}</td>
+                        <td>
+                          <span className={`status-badge ${item.approval_status === 'APPROVED' ? 'status-approved' : item.approval_status === 'REJECTED' ? 'status-rejected' : 'status-pending'}`}>
+                            {item.approval_status}
+                          </span>
+                        </td>
+                        <td>
+                          <button className="pending-action-btn view" onClick={() => handleOpenReview(item, 'laser_changeover')}>
+                            👀 {language === 'zh' ? '处理' : 'Review'}
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -879,6 +945,72 @@ export default function PendingModule({ currentUser }) {
                       </div>
                     </div>
                   </div>
+                ) : selectedItem?.type === 'laser_changeover' ? (
+                  <div className="laser-changeover-editor">
+                    <div className="form-section-card">
+                      <h4 className="form-section-title">{language === 'zh' ? '基础信息' : 'Basic Info'}</h4>
+                      <div className="form-grid-row">
+                        <div className="form-group-half">
+                          <label>{language === 'zh' ? '程序名称 (Program Name)' : 'Program Name'}</label>
+                          <input type="text" name="program_name" value={reviewData.program_name || ''} onChange={handleInputChange} disabled={isGroupLeader} />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="form-section-card highlighted-section">
+                      <h4 className="form-section-title">{language === 'zh' ? '点检项目' : 'Check Items'}</h4>
+                      
+                      <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <input type="checkbox" name="prog_name_check" checked={reviewData.prog_name_check || false} onChange={handleInputChange} disabled={isGroupLeader} />
+                        {language === 'zh' ? '1. 程序名称确认 (与生产机型一致)' : '1. Program Name Confirmation'}
+                      </label>
+                      <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <input type="checkbox" name="laser_param_check" checked={reviewData.laser_param_check || false} onChange={handleInputChange} disabled={isGroupLeader} />
+                        {language === 'zh' ? '2. 镭雕参数确认 (轨道宽度, 条码大小, 功率速度等)' : '2. Laser Parameter Confirmation'}
+                      </label>
+                      <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <input type="checkbox" name="duplicate_code_check" checked={reviewData.duplicate_code_check || false} onChange={handleInputChange} disabled={isGroupLeader} />
+                        {language === 'zh' ? '3. 镭雕机重码功能确认 (防呆功能开启)' : '3. Laser Machine Duplicate Code Function'}
+                      </label>
+                      <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <input type="checkbox" name="pcb_anti_reverse_check" checked={reviewData.pcb_anti_reverse_check || false} onChange={handleInputChange} disabled={isGroupLeader} />
+                        {language === 'zh' ? '4. PCB防反确认 (优先Mark点防反)' : '4. PCB Anti-Reverse Confirmation'}
+                      </label>
+                      <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <input type="checkbox" name="ab_barcode_check" checked={reviewData.ab_barcode_check || false} onChange={handleInputChange} disabled={isGroupLeader} />
+                        {language === 'zh' ? '5. AB面条码一致确认' : '5. A/B Side Barcode Consistency'}
+                      </label>
+                      <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <input type="checkbox" name="laser_sequence_check" checked={reviewData.laser_sequence_check || false} onChange={handleInputChange} disabled={isGroupLeader} />
+                        {language === 'zh' ? '6. 镭雕顺序确认 (区块号追溯一致)' : '6. Laser Carving Sequence Confirmation'}
+                      </label>
+                      <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <input type="checkbox" name="laser_position_check" checked={reviewData.laser_position_check || false} onChange={handleInputChange} disabled={isGroupLeader} />
+                        {language === 'zh' ? '7. 镭雕位置确认 (二维码无偏位)' : '7. Laser Carving Position Confirmation'}
+                      </label>
+                    </div>
+
+                    {isGroupLeader && (
+                      <div className="form-section-card" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', marginTop: '1.5rem' }}>
+                        <h4 className="form-section-title" style={{ color: '#166534' }}>{language === 'zh' ? '组长审批确认 (PD Approval)' : 'Group Leader Verification'}</h4>
+                        <div style={{ padding: '0.5rem 0' }}>
+                          <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0', fontWeight: 'bold' }}>
+                            <input type="checkbox" name="grp_ldr_prog_name_check" checked={reviewData.grp_ldr_prog_name_check || false} onChange={(e) => {
+                              handleInputChange(e);
+                              setPdRemarks(pdRemarks); // Force render
+                            }} />
+                            {language === 'zh' ? '确认: 1. 程序名称确认' : 'Verify: 1. Program Name'}
+                          </label>
+                          <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0', fontWeight: 'bold' }}>
+                            <input type="checkbox" name="grp_ldr_laser_position_check" checked={reviewData.grp_ldr_laser_position_check || false} onChange={(e) => {
+                              handleInputChange(e);
+                            }} />
+                            {language === 'zh' ? '确认: 7. 镭雕位置确认' : 'Verify: 7. Laser Position'}
+                          </label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ) : null}
               </div>
 
@@ -890,7 +1022,7 @@ export default function PendingModule({ currentUser }) {
                       {language === 'zh' ? '工程师审批备注 *' : 'Engineer Approval/Disapproval Remarks *'}
                     </label>
                     <textarea
-                      placeholder={language === 'zh' ? '在此处输入审批 or 驳回备注（驳回为必选项）...' : 'Enter approval or rejection remarks (mandatory for disapproval)...'}
+                      placeholder={language === 'zh' ? '输入审批或驳回备注 (驳回必填)...' : 'Enter approval or rejection remarks (mandatory for disapproval)...'}
                       value={engineerRemarks}
                       onChange={(e) => setEngineerRemarks(e.target.value)}
                       disabled={isAdmin && !isEngineer}
@@ -904,6 +1036,33 @@ export default function PendingModule({ currentUser }) {
                         marginTop: '0.5rem',
                         outline: 'none',
                         background: (isAdmin && !isEngineer) ? '#f8fafc' : '#fff'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Group Leader Remarks Block */}
+              {isGroupLeader && (
+                <div className="engineer-remarks-section" style={{ marginTop: '2rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
+                  <div className="form-group-full">
+                    <label style={{ fontWeight: 700, color: '#0f172a' }}>
+                      {language === 'zh' ? 'PD 备注 (PD Remarks)' : 'PD Remarks'}
+                    </label>
+                    <textarea
+                      placeholder={language === 'zh' ? '输入备注信息...' : 'Enter PD remarks...'}
+                      value={pdRemarks}
+                      onChange={(e) => setPdRemarks(e.target.value)}
+                      style={{
+                        width: '100%',
+                        minHeight: '80px',
+                        padding: '0.8rem',
+                        borderRadius: '10px',
+                        border: '1px solid #cbd5e1',
+                        fontSize: '0.9rem',
+                        marginTop: '0.5rem',
+                        outline: 'none',
+                        background: '#fff'
                       }}
                     />
                   </div>

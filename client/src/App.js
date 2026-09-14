@@ -70,14 +70,19 @@ function App() {
     let isMounted = true;
     const fetchPending = async () => {
       try {
-        const [checklistsRes, checkpointsRes, changeoversRes] = await Promise.all([
-          apiService.getPendingChecklists(),
-          apiService.getPendingCheckpoints(),
-          apiService.getPendingChangeoverChecksheets()
+        const [checklistsRes, checkpointsRes, changeoversRes, laserRes] = await Promise.all([
+          apiService.getPendingChecklists().catch(() => ({ data: { data: [] } })),
+          apiService.getPendingCheckpoints().catch(() => ({ data: { data: [] } })),
+          apiService.getPendingChangeoverChecksheets().catch(() => ({ data: { data: [] } })),
+          apiService.getPendingLaserChangeovers().catch(() => ({ data: { data: [] } }))
         ]);
         if (isMounted) {
-          const total = (checklistsRes.data.data?.length || 0) + (checkpointsRes.data.data?.length || 0) + (changeoversRes.data.data?.length || 0);
-          setPendingCount(total);
+          const count = 
+            (checklistsRes.data.data?.length || 0) + 
+            (checkpointsRes.data.data?.length || 0) + 
+            (changeoversRes.data.data?.length || 0) +
+            (laserRes.data.data?.length || 0);
+          setPendingCount(count);
         }
       } catch (err) {
         console.error('Error fetching pending count:', err);

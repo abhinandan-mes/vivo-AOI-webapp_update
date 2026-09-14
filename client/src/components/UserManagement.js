@@ -44,8 +44,9 @@ export default function UserManagement({ currentUser }) {
   const baseRoleOptions = useMemo(() => [
     { value: 'inspector', label: t('um_role_inspector') },
     { value: 'technician', label: t('um_role_technician') },
-    { value: 'engineer', label: t('um_role_engineer') }
-  ], [t]);
+    { value: 'engineer', label: t('um_role_engineer') },
+    { value: 'production_group_leader', label: language === 'zh' ? '生产组长' : 'Production Group Leader' }
+  ], [t, language]);
 
   const roleOptions = useMemo(() => {
     if (isSuperAdmin) {

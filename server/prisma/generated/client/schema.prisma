@@ -1,0 +1,258 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+model AoiFunctionCheckpoint {
+  id                 Int      @id @default(autoincrement())
+  line               String?  @db.VarChar(50)
+  group_name         String?  @db.VarChar(100)
+  date               DateTime @db.Date
+  shift              String   @db.VarChar(50)
+  responsible_person String?  @db.VarChar(100)
+  time               String?  @db.VarChar(50)
+  submitted_by       String?  @db.VarChar(150)
+  status             String?  @default("Production") @db.VarChar(50)
+
+  // 30+ boolean fields
+  laser_barcode_before_bot         Boolean?
+  laser_barcode_before_top         Boolean?
+  laser_barcode_after_bot          Boolean?
+  laser_barcode_after_top          Boolean?
+  laser_pcb_text_before            Boolean?
+  laser_pcb_text_after             Boolean?
+  spi_barcode_before_bot           Boolean?
+  spi_barcode_before_top           Boolean?
+  spi_barcode_after_bot            Boolean?
+  spi_barcode_after_top            Boolean?
+  spi_mes_before_bot               Boolean?
+  spi_mes_before_top               Boolean?
+  spi_mes_after_bot                Boolean?
+  spi_mes_after_top                Boolean?
+  pre_aoi_barcode_before_bot       Boolean?
+  pre_aoi_barcode_before_top       Boolean?
+  pre_aoi_barcode_after_bot        Boolean?
+  pre_aoi_barcode_after_top        Boolean?
+  post_aoi_barcode_before_bot      Boolean?
+  post_aoi_barcode_before_top      Boolean?
+  post_aoi_barcode_after_bot       Boolean?
+  post_aoi_barcode_after_top       Boolean?
+  password_function_pre_aoi_before Boolean?
+  password_function_pre_aoi_after  Boolean?
+  spi_fov_before                   Boolean?
+  spi_fov_after                    Boolean?
+  pre_aoi_fov_before               Boolean?
+  pre_aoi_fov_after                Boolean?
+  post_aoi_fov_before              Boolean?
+  post_aoi_fov_after               Boolean?
+  pre_aoi_spc_before               Boolean?
+  pre_aoi_spc_after                Boolean?
+
+  approval_status          String? @default("ENG_PENDING") @db.VarChar(50)
+  designated_engineer_id   String? @db.VarChar(100)
+  remarks                  String? @db.VarChar(1000)
+  engineer_remarks         String? @db.VarChar(1000)
+  engineer_modified_fields String? @db.Text
+  original_technician_data String? @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([date])
+  @@index([shift])
+  @@index([line])
+  @@map("aoi_function_checkpoint")
+}
+
+model AoiTechnicianChecklist {
+  id                                    Int      @id @default(autoincrement())
+  line                                  String?  @db.VarChar(50)
+  group_name                            String?  @db.VarChar(100)
+  date                                  DateTime @db.Date
+  shift                                 String   @db.VarChar(50)
+  pre_aoi_program_full_name             String?  @db.VarChar(255)
+  stencil_serial_no_b_side              String?  @db.VarChar(100)
+  stencil_serial_no_a_side              String?  @db.VarChar(100)
+  barcode_read_a_layer                  String?  @db.VarChar(50)
+  barcode_read_a_spi                    String?  @db.VarChar(50)
+  barcode_read_a_pre_aoi                String?  @db.VarChar(50)
+  barcode_read_b_layer                  String?  @db.VarChar(50)
+  barcode_read_b_spi                    String?  @db.VarChar(50)
+  barcode_read_b_pre_aoi                String?  @db.VarChar(50)
+  workorder_info_pre_aoi                String?  @db.VarChar(255)
+  workorder_info_post_aoi               String?  @db.VarChar(255)
+  aoi_scan_tools_workorder_traceability String?  @db.VarChar(255)
+  confirmation                          String?  @db.VarChar(50)
+  submitted_by                          String?  @db.VarChar(150)
+  status                                String?  @default("Production") @db.VarChar(50)
+
+  approval_status          String? @default("ENG_PENDING") @db.VarChar(50)
+  designated_engineer_id   String? @db.VarChar(100)
+  remarks                  String? @db.VarChar(1000)
+  engineer_remarks         String? @db.VarChar(1000)
+  engineer_modified_fields String? @db.Text
+  original_technician_data String? @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([date])
+  @@index([line])
+  @@map("aoi_technician_checklist")
+}
+
+model AppUser {
+  id            Int          @id @default(autoincrement())
+  username      String       @unique @db.VarChar(100)
+  password_hash String       @db.VarChar(255)
+  full_name     String       @db.VarChar(150)
+  role          String       @default("operator") @db.VarChar(50)
+  email         String?      @db.VarChar(150)
+  phone         String?      @db.VarChar(50)
+  created_at    DateTime     @default(now()) @db.Timestamp(6)
+  updated_at    DateTime     @default(now()) @updatedAt @db.Timestamp(6)
+  sessions      AppSession[]
+
+  @@map("app_users")
+}
+
+model AppSession {
+  session_id  String    @id @db.Uuid
+  user_id     Int
+  public_ip   String?   @db.VarChar(100)
+  login_time  DateTime  @default(now()) @db.Timestamp(6)
+  logout_time DateTime? @db.Timestamp(6)
+  status      String    @default("active") @db.VarChar(50)
+  user        AppUser   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("app_sessions")
+}
+
+model AppActivityLog {
+  id            Int      @id @default(autoincrement())
+  activity_type String   @db.VarChar(100)
+  username      String   @db.VarChar(100)
+  public_ip     String?  @db.VarChar(100)
+  details       String?  @db.Text
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([created_at])
+  @@index([activity_type])
+  @@map("app_activity_logs")
+}
+
+model LineStatus {
+  id           Int      @id @default(autoincrement())
+  line         String   @unique @db.VarChar(20)
+  is_installed Boolean  @default(true)
+  updated_by   String?  @db.VarChar(100)
+  updated_at   DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@map("line_status")
+}
+
+model AoiChangeoverChecksheet {
+  id              Int      @id @default(autoincrement())
+  line            String?  @db.VarChar(50)
+  group_name      String?  @db.VarChar(100)
+  date            DateTime @db.Date
+  shift           String   @db.VarChar(50)
+  model_name      String?  @db.VarChar(255)
+  model_code      String?  @db.VarChar(100)
+  changeover_type String?  @db.VarChar(50)
+
+  // SPI Location (1-5)
+  spi_steel_stencil_suffix_match    String? @db.VarChar(50)
+  spi_program_subpanel_serial_match String? @db.VarChar(50)
+  spi_recheck_pcab_polarity         String? @db.VarChar(50)
+  spi_confirm_parameter_settings    String? @db.VarChar(50)
+  spi_read_barcode_on               String? @db.VarChar(50)
+
+  // Pre AOI Location (6-13b)
+  pre_aoi_eco_checklists            String? @db.VarChar(50)
+  pre_aoi_program_model_modify      String? @db.VarChar(50)
+  pre_aoi_vi_program_new_materia    String? @db.VarChar(50)
+  pre_aoi_limit_defective_alarm     String? @db.VarChar(50)
+  pre_aoi_test_program_bare_pcba    String? @db.VarChar(50)
+  pre_aoi_bot_program_serial_number String? @db.VarChar(50)
+  pre_aoi_read_barcode_on           String? @db.VarChar(50)
+  pre_aoi_confirm_materials_mounted String? @db.VarChar(50)
+  pre_aoi_delete_all_zones          String? @db.VarChar(50)
+
+  // Post-AOI Location (14-22)
+  post_aoi_equipment_model                  String? @db.VarChar(255)
+  post_aoi_eco_checklists                   String? @db.VarChar(50)
+  post_aoi_program_model_modify             String? @db.VarChar(50)
+  post_aoi_recheck_chips_standard_models    String? @db.VarChar(50)
+  post_aoi_scan_board_picture               String? @db.VarChar(50)
+  post_aoi_limit_defective_alarm            String? @db.VarChar(50)
+  post_aoi_confirm_polarity_shield          String? @db.VarChar(50)
+  post_aoi_bot_program_serial_number        String? @db.VarChar(50)
+  post_aoi_registered_standard_models_times String? @db.VarChar(50)
+
+  // Others (23-24)
+  others_adjust_widths                 String? @db.VarChar(50)
+  others_add_test_standard_pcb_barcode String? @db.VarChar(50)
+
+  submitted_by             String? @db.VarChar(150)
+  status                   String? @default("Production") @db.VarChar(50)
+  approval_status          String? @default("ENG_PENDING") @db.VarChar(50)
+  designated_engineer_id   String? @db.VarChar(100)
+  remarks                  String? @db.VarChar(1000)
+  engineer_remarks         String? @db.VarChar(1000)
+  engineer_modified_fields String? @db.Text
+  original_technician_data String? @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([date])
+  @@index([line])
+  @@map("aoi_changeover_checksheet")
+}
+
+model LaserChangeoverChecksheet {
+  id           Int      @id @default(autoincrement())
+  line         String?  @db.VarChar(50)
+  program_name String?  @db.VarChar(255)
+  date         DateTime @db.Date
+  shift        String   @db.VarChar(50)
+
+  prog_name_check        Boolean?
+  laser_param_check      Boolean?
+  duplicate_code_check   Boolean?
+  pcb_anti_reverse_check Boolean?
+  ab_barcode_check       Boolean?
+  laser_sequence_check   Boolean?
+  laser_position_check   Boolean?
+
+  grp_ldr_prog_name_check      Boolean?
+  grp_ldr_laser_position_check Boolean?
+
+  status          String? @default("Production") @db.VarChar(50)
+  approval_status String? @default("ENG_PENDING") @db.VarChar(50)
+
+  designated_engineer_id     String? @db.VarChar(100)
+  designated_group_leader_id String? @db.VarChar(100)
+
+  remarks          String? @db.VarChar(1000)
+  engineer_remarks String? @db.VarChar(1000)
+  pd_remarks       String? @db.VarChar(1000)
+
+  submitted_by           String? @db.VarChar(150)
+  engineer_signature     String? @db.VarChar(150)
+  group_leader_signature String? @db.VarChar(150)
+
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([date])
+  @@index([shift])
+  @@index([line])
+  @@map("laser_changeover_checksheet")
+}

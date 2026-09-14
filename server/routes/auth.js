@@ -95,9 +95,9 @@ router.post('/auth/create-user', authenticateToken, requireRoles(['super_admin',
 
     let allowedRoles = [];
     if (req.user.role === 'super_admin') {
-      allowedRoles = ['super_admin', 'admin', 'inspector', 'technician', 'engineer'];
+      allowedRoles = ['super_admin', 'admin', 'inspector', 'technician', 'engineer', 'production_group_leader'];
     } else if (req.user.role === 'admin') {
-      allowedRoles = ['inspector', 'technician', 'engineer'];
+      allowedRoles = ['inspector', 'technician', 'engineer', 'production_group_leader'];
     } else if (req.user.role === 'engineer') {
       allowedRoles = ['inspector', 'technician'];
     }
@@ -255,8 +255,8 @@ router.put('/auth/users/:id', authenticateToken, validateUpdateUser, async (req,
         return res.status(403).json({ success: false, error: 'You cannot change your own role' });
       }
       const allowedRoles = req.user.role === 'super_admin'
-        ? ['super_admin', 'admin', 'inspector', 'technician', 'engineer']
-        : ['inspector', 'technician', 'engineer'];
+        ? ['super_admin', 'admin', 'inspector', 'technician', 'engineer', 'production_group_leader']
+        : ['inspector', 'technician', 'engineer', 'production_group_leader'];
       if (!allowedRoles.includes(role)) {
         return res.status(403).json({ success: false, error: 'You are not allowed to assign that role' });
       }
