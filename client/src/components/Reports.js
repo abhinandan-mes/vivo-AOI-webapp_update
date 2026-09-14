@@ -72,7 +72,7 @@ const checkpointGroups = [
   }
 ];
 
-const text = value => value === null || value === undefined || value === '' ? 'â€”' : value;
+const text = value => value === null || value === undefined || value === '' ? '—' : value;
 const dateKey = value => {
   if (!value) return '';
   if (value instanceof Date) {
@@ -183,7 +183,7 @@ export default function Reports({ currentUser }) {
     [t('rep_th_confirmed'), 'confirmation']
   ], [t]);
 
-  // All 25 lines â€” used as fallback and for the full list
+  // All 25 lines — used as fallback and for the full list
   const allLineOptions = useMemo(() => Array.from({ length: 25 }, (_, index) => String(401 + index)), []);
 
   // Line installation statuses fetched from backend
@@ -207,7 +207,7 @@ export default function Reports({ currentUser }) {
   }, [lineStatuses]);
 
   const formatDate = value => {
-    if (!value) return 'â€”';
+    if (!value) return '—';
     let dateStr = '';
     if (typeof value === 'string') {
       const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -217,7 +217,7 @@ export default function Reports({ currentUser }) {
     }
     if (!dateStr) {
       const dateObj = new Date(value);
-      if (isNaN(dateObj.getTime())) return 'â€”';
+      if (isNaN(dateObj.getTime())) return '—';
       const pad = number => String(number).padStart(2, '0');
       dateStr = `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
     }
@@ -229,7 +229,7 @@ export default function Reports({ currentUser }) {
   };
 
   const formatDateTime = value => {
-    if (!value) return 'â€”';
+    if (!value) return '—';
     return new Date(value).toLocaleString(language === 'zh' ? 'zh-CN' : undefined);
   };
 
@@ -361,7 +361,7 @@ export default function Reports({ currentUser }) {
       if (val === false || val === 'false') return 'False';
       if (val === 'Yes' || val === 'âˆš') return 'âˆš';
       if (val === 'No' || val === '\\') return 'Ã—';
-      if (!val && val !== 0) return 'â€”';
+      if (!val && val !== 0) return '—';
     }
     return row[key] ?? '';
   };
@@ -458,9 +458,9 @@ export default function Reports({ currentUser }) {
                   date: dateStr,
                   line: line,
                   shift: shift,
-                  group_name: 'â€”',
+                  group_name: '—',
                   status: 'Not Filled',
-                  submitted_by: 'â€”',
+                  submitted_by: '—',
                   created_at: null,
                 });
               }
@@ -625,7 +625,7 @@ export default function Reports({ currentUser }) {
     const dataToExport = selectedRows.length > 0 ? filteredRows.filter(r => selectedRows.includes(r.id)) : filteredRows;
     
     const tableRows = dataToExport.map(row => `
-      <tr>${columns.map(([, key]) => `<td>${escapeHtml(exportValue(row, key, reportType) || 'â€”')}</td>`).join('')}</tr>
+      <tr>${columns.map(([, key]) => `<td>${escapeHtml(exportValue(row, key, reportType) || '—')}</td>`).join('')}</tr>
     `).join('');
 
     printWindow.document.write(`
@@ -1024,7 +1024,7 @@ export default function Reports({ currentUser }) {
               <div className="confirm-detail-item" style={{ gridColumn: 'span 2' }}>
                 <span className="confirm-detail-label">{language === 'zh' ? 'æ—¥æœŸèŒƒå›´' : 'Date Range'}</span>
                 <span className="confirm-detail-value" style={{ fontSize: '0.88rem' }}>
-                  {filters.from || 'â€”'} {language === 'zh' ? 'è‡³' : 'to'} {filters.to || 'â€”'}
+                  {filters.from || '—'} {language === 'zh' ? 'è‡³' : 'to'} {filters.to || '—'}
                 </span>
               </div>
             </div>
@@ -1084,7 +1084,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
     if (val === false || val === 'false') return 'False';
     if (val === 'Yes' || val === 'âˆš') return 'âˆš';
     if (val === 'No' || val === '\\') return '\\';
-    if (!val) return 'â€”';
+    if (!val) return '—';
     return val;
   };
 
@@ -1153,7 +1153,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : row.shift)}</td>
               <td>
                 <span className="line-tag" style={{ background: '#f3e8ff', color: '#7e22ce', border: '1px solid #d8b4fe' }}>
-                  {row.changeover_type || 'â€”'}
+                  {row.changeover_type || '—'}
                 </span>
               </td>
               <td>
@@ -1190,12 +1190,12 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                 
                 return (
                   <td key={key}>
-                    {row.status === 'Not Filled' || isLineStop ? 'â€”' : (
+                    {row.status === 'Not Filled' || isLineStop ? '—' : (
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         {['Yes', 'No', 'âˆš', '\\', '/', 'N/A'].includes(row[key]) ? (
                           renderCheckBadge(row[key], label)
                         ) : (
-                          <span>{key === 'created_at' ? formatDateTime(row[key]) : (row[key] || 'â€”')}</span>
+                          <span>{key === 'created_at' ? formatDateTime(row[key]) : (row[key] || '—')}</span>
                         )}
                         {renderModifyIndicator([key])}
                       </div>
@@ -1238,7 +1238,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                       {language === 'zh' ? 'æŠ€æœ¯å‘˜å¤‡æ³¨' : 'Technician Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.remarks || 'â€”'}
+                      {row.remarks || '—'}
                     </span>
                   </div>
                   <div>
@@ -1246,7 +1246,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                       {language === 'zh' ? 'å·¥ç¨‹å¸ˆå®¡æ ¸å¤‡æ³¨' : 'Engineer Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.engineer_remarks || 'â€”'}
+                      {row.engineer_remarks || '—'}
                     </span>
                   </div>
                   
@@ -1256,7 +1256,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                       {language === 'zh' ? 'ðŸ“‹ æ¢çº¿æ£€æŸ¥é¡¹ç›®æ˜Žç»†' : 'ðŸ“‹ Changeover Check Items Details'}
                     </strong>
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(aut✗fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
                       {[
                         [language === 'zh' ? '1. SPIé’¢ç½‘åŽç¼€ååŒ¹é…' : '1. SPI Stencil Match', 'spi_steel_stencil_suffix_match'],
                         [language === 'zh' ? '2. SPIç¨‹åºè¿žæ¿æµæ°´å·åŒ¹é…' : '2. SPI Subpanel Match', 'spi_program_subpanel_serial_match'],
@@ -1287,7 +1287,7 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
                         <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #f1f5f9', fontSize: '0.85rem' }}>
                           <span style={{ color: '#475569', fontWeight: 500 }}>{label}</span>
                           <span style={{ fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '6px', background: ['âœ”ï¸', 'Yes', 'True', 'âˆš'].includes(row[key]) ? '#d1fae5' : ['âŒ', 'No', '\\'].includes(row[key]) ? '#fee2e2' : 'transparent', color: ['âœ”ï¸', 'Yes', 'True', 'âˆš'].includes(row[key]) ? '#047857' : ['âŒ', 'No', '\\'].includes(row[key]) ? '#b91c1c' : '#475569' }}>
-                            {row[key] || 'â€”'}
+                            {row[key] || '—'}
                           </span>
                         </div>
                       ))}
@@ -1335,7 +1335,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
   const totalColSpan = isSuperAdmin ? 8 : 7;
 
   const renderLineStatus = (status) => {
-    if (status === 'Not Filled' || status === 'Line Not Installed') return 'â€”';
+    if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
     if (status === 'Line Stop') {
       return (
         <span className="status-mark" style={{ minWidth: '85px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
@@ -1400,7 +1400,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
   };
 
   const formatValue = (val) => {
-    if (val === '' || val === null || val === undefined) return 'â€”';
+    if (val === '' || val === null || val === undefined) return '—';
     if (val === 'Line Stop') return language === 'zh' ? 'åœçº¿' : 'Line Stop';
     if (val === 'Production') return language === 'zh' ? 'ç”Ÿäº§' : 'Production';
     return String(val);
@@ -1528,7 +1528,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             {renderModifyIndicator(['status'])}
           </td>
           <td>
-            {row.status === 'Not Filled' ? 'â€”' : (
+            {row.status === 'Not Filled' ? '—' : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
                 {row.submitted_by && (
                   <span style={{ color: '#334155' }}>
@@ -1558,7 +1558,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             )}
           </td>
           <td>
-            {row.status === 'Not Filled' ? 'â€”' : (
+            {row.status === 'Not Filled' ? '—' : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', fontSize: '0.82rem' }}>
                 <span style={{ color: '#334155', fontWeight: 600 }}>
                   {row.responsible_person}
@@ -1572,7 +1572,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
             )}
           </td>
           <td>
-            {row.status === 'Not Filled' ? 'â€”' : (
+            {row.status === 'Not Filled' ? '—' : (
               row.status === 'Line Stop' ? (
                 <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                   ðŸ›‘ {t('cl_status_linestop')}
@@ -1624,7 +1624,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                   {language === 'zh' ? 'æŠ€æœ¯å‘˜å¤‡æ³¨' : 'Technician Remarks'}
                 </strong>
                 <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                  {row.remarks || 'â€”'}
+                  {row.remarks || '—'}
                 </span>
               </div>
               <div>
@@ -1632,7 +1632,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                   {language === 'zh' ? 'å·¥ç¨‹å¸ˆå®¡æ ¸å¤‡æ³¨' : 'Engineer Remarks'}
                 </strong>
                 <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                  {row.engineer_remarks || 'â€”'}
+                  {row.engineer_remarks || '—'}
                 </span>
               </div>
               {row.engineer_modified_fields && (
@@ -1664,7 +1664,7 @@ function CheckpointReport({ rows, checkpointColumns, checkpointGroups, t, langua
                   <strong style={{ display: 'block', color: '#475569', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.8rem', letterSpacing: '0.05em' }}>
                     {language === 'zh' ? 'è¯¦ç»†åŠŸèƒ½æ£€æµ‹ç»“æžœ' : 'Detailed Function Check Results'}
                   </strong>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(aut✗fill, minmax(280px, 1fr))', gap: '1rem' }}>
                     {checkpointGroups.map(group => {
                       return (
                         <div key={group.prefix} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '0.85rem', boxShadow: '0 2px 8px rgba(0,0,0,0.01)' }}>
@@ -1705,7 +1705,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
   const totalColSpan = isSuperAdmin ? 10 : 9;
 
   const renderLineStatus = (status) => {
-    if (status === 'Not Filled' || status === 'Line Not Installed') return 'â€”';
+    if (status === 'Not Filled' || status === 'Line Not Installed') return '—';
     if (status === 'Line Stop') {
       return (
         <span className="status-mark" style={{ minWidth: '85px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>
@@ -1770,7 +1770,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
   };
 
   const formatValue = (val) => {
-    if (val === '' || val === null || val === undefined) return 'â€”';
+    if (val === '' || val === null || val === undefined) return '—';
     if (val === 'Line Stop') return language === 'zh' ? 'åœçº¿' : 'Line Stop';
     if (val === 'Production') return language === 'zh' ? 'ç”Ÿäº§' : 'Production';
     return String(val);
@@ -1908,7 +1908,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 {renderModifyIndicator(['status'])}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
                     {row.submitted_by && (
                       <span style={{ color: '#334155' }}>
@@ -1938,7 +1938,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 )}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   isLineStop ? (
                     <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                       ðŸ›‘ {t('cl_status_linestop')}
@@ -1946,11 +1946,11 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
                       <span style={{ color: '#0f172a', fontWeight: 700 }} title={row.pre_aoi_program_full_name}>
-                        ðŸ’» {row.pre_aoi_program_full_name ? (row.pre_aoi_program_full_name.length > 22 ? `${row.pre_aoi_program_full_name.substring(0, 20)}...` : row.pre_aoi_program_full_name) : 'â€”'}
+                        ðŸ’» {row.pre_aoi_program_full_name ? (row.pre_aoi_program_full_name.length > 22 ? `${row.pre_aoi_program_full_name.substring(0, 20)}...` : row.pre_aoi_program_full_name) : '—'}
                         {renderModifyIndicator(['pre_aoi_program_full_name'])}
                       </span>
                       <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
-                        ðŸ”§ A-Stencil: <strong>{row.stencil_serial_no_a_side || 'â€”'}</strong> | B-Stencil: <strong>{row.stencil_serial_no_b_side || 'â€”'}</strong>
+                        ðŸ”§ A-Stencil: <strong>{row.stencil_serial_no_a_side || '—'}</strong> | B-Stencil: <strong>{row.stencil_serial_no_b_side || '—'}</strong>
                         {renderModifyIndicator(['stencil_serial_no_a_side', 'stencil_serial_no_b_side'])}
                       </span>
                     </div>
@@ -1958,7 +1958,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 )}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   isLineStop ? (
                     <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                       ðŸ›‘ {t('cl_status_linestop')}
@@ -1984,7 +1984,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                 )}
               </td>
               <td>
-                {row.status === 'Not Filled' ? 'â€”' : (
+                {row.status === 'Not Filled' ? '—' : (
                   isLineStop ? (
                     <span style={{ background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
                       ðŸ›‘ {t('cl_status_linestop')}
@@ -1992,11 +1992,11 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', fontSize: '0.82rem' }}>
                       <span style={{ color: '#334155' }}>
-                        Pre-WO: <strong>{row.workorder_info_pre_aoi || 'â€”'}</strong> | Post-WO: <strong>{row.workorder_info_post_aoi || 'â€”'}</strong>
+                        Pre-WO: <strong>{row.workorder_info_pre_aoi || '—'}</strong> | Post-WO: <strong>{row.workorder_info_post_aoi || '—'}</strong>
                         {renderModifyIndicator(['workorder_info_pre_aoi', 'workorder_info_post_aoi'])}
                       </span>
                       <span style={{ color: '#64748b', fontSize: '0.78rem' }}>
-                        Traceability: <strong>{row.aoi_scan_tools_workorder_traceability || 'â€”'}</strong>
+                        Traceability: <strong>{row.aoi_scan_tools_workorder_traceability || '—'}</strong>
                         {renderModifyIndicator(['aoi_scan_tools_workorder_traceability'])}
                       </span>
                     </div>
@@ -2029,7 +2029,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                       {language === 'zh' ? 'ç¡®è®¤äººç­¾å' : 'Confirmation Signature'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
-                      {row.confirmation || 'â€”'}
+                      {row.confirmation || '—'}
                     </span>
                   </div>
                   <div>
@@ -2045,7 +2045,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                       {language === 'zh' ? 'æŠ€æœ¯å‘˜å¤‡æ³¨' : 'Technician Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.remarks || 'â€”'}
+                      {row.remarks || '—'}
                     </span>
                   </div>
                   <div>
@@ -2053,7 +2053,7 @@ function ChecklistReport({ rows, checklistColumns, t, language, formatDate, form
                       {language === 'zh' ? 'å·¥ç¨‹å¸ˆå®¡æ ¸å¤‡æ³¨' : 'Engineer Remarks'}
                     </strong>
                     <span style={{ fontSize: '0.95rem', color: '#334155' }}>
-                      {row.engineer_remarks || 'â€”'}
+                      {row.engineer_remarks || '—'}
                     </span>
                   </div>
                   {row.engineer_modified_fields && (
@@ -2098,7 +2098,7 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
   const renderBool = (val) => {
     if (val === true || val === 'true') return <span className="status-badge-inline ok" title="Passed">âœ”ï¸</span>;
     if (val === false || val === 'false') return <span className="status-badge-inline fail" title="Failed">âŒ</span>;
-    return <span style={{ color: '#9ca3af' }}>â€”</span>;
+    return <span style={{ color: '#9ca3af' }}>—</span>;
   };
 
   return (
@@ -2141,7 +2141,7 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
       <tbody>
         {rows.length === 0 ? (
           <tr>
-            <td colSpan={isSuperAdmin ? 20 : 19} className="no-data-cell" style={{ textAlign: 'center', padding: '2rem' }}>
+            <td colSpan={isSuperAdmin ? 20 : 19} className="n✗data-cell" style={{ textAlign: 'center', padding: '2rem' }}>
               {t('rep_no_data')}
             </td>
           </tr>
@@ -2157,8 +2157,8 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
                 />
               </td>
               <td style={{ fontWeight: 600 }}>{formatDate(row.date)}</td>
-              <td><span className="line-tag">{row.line || 'â€”'}</span></td>
-              <td><span className="shift-tag">{row.group_name || 'â€”'}</span></td>
+              <td><span className="line-tag">{row.line || '—'}</span></td>
+              <td><span className="shift-tag">{row.group_name || '—'}</span></td>
               <td>{row.shift === 'Day' ? t('day') : (row.shift === 'Night' ? t('night') : row.shift)}</td>
               <td>
                 {(() => {
@@ -2171,10 +2171,10 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
                   if (row.approval_status === 'DISAPPROVED' || row.approval_status === 'REJECTED') {
                     return <span className="status-mark" style={{ minWidth: '95px', background: '#fff5f5', color: '#e53e3e', border: '1px solid #fed7d7', fontWeight: 700 }}>âŒ {language === 'zh' ? 'å·²é©³å›ž' : 'Rejected'}</span>;
                   }
-                  return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>âœ… {language === 'zh' ? 'å·²é€šè¿‡' : 'Approved'}</span>;
+                  return <span className="status-mark checked" style={{ minWidth: '95px', background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', fontWeight: 700 }}>✅ {language === 'zh' ? 'å·²é€šè¿‡' : 'Approved'}</span>;
                 })()}
               </td>
-              <td>{row.program_name || 'â€”'}</td>
+              <td>{row.program_name || '—'}</td>
               
               <td style={{ textAlign: 'center' }}>{renderBool(row.prog_name_check)}</td>
               <td style={{ textAlign: 'center' }}>{renderBool(row.laser_param_check)}</td>
@@ -2184,11 +2184,11 @@ function LaserChangeoverReport({ rows, t, language, formatDate, formatDateTime, 
               <td style={{ textAlign: 'center' }}>{renderBool(row.laser_sequence_check)}</td>
               <td style={{ textAlign: 'center' }}>{renderBool(row.laser_position_check)}</td>
 
-              <td>{row.submitted_by || 'â€”'}</td>
+              <td>{row.submitted_by || '—'}</td>
               <td>{getEngineerDisplay(row.designated_engineer_id)}</td>
-              <td>{row.approval_status !== 'ENG_PENDING' ? formatDateTime(row.updated_at) : 'â€”'}</td>
-              <td>{row.group_leader_signature || 'â€”'}</td>
-              <td>{row.approval_status === 'APPROVED' ? formatDateTime(row.updated_at) : 'â€”'}</td>
+              <td>{row.approval_status !== 'ENG_PENDING' ? formatDateTime(row.updated_at) : '—'}</td>
+              <td>{row.group_leader_signature || '—'}</td>
+              <td>{row.approval_status === 'APPROVED' ? formatDateTime(row.updated_at) : '—'}</td>
 
               {isSuperAdmin && (
                 <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>

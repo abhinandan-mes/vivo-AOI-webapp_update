@@ -890,7 +890,7 @@ export default function PendingModule({ currentUser }) {
                         </div>
                         <div className="form-group-half">
                           <label>{language === 'zh' ? '检测时间' : 'Check Time'}</label>
-                          <input type="time" name="time" value={reviewData.time || ''} onChange={handleInputChange} />
+                          <input type="time" name="to" value={reviewData.time || ''} onChange={handleInputChange} />
                         </div>
                         <div className="form-group-half">
                           <label>{language === 'zh' ? '指定工程师' : 'Designated Engineer'}</label>
