@@ -667,3 +667,7 @@ The production server on the `vivoadmin` machine is configured to start automati
 * **Fixed Crash**: Fixed a Cannot read properties of undefined (reading data) crash in Reports.js caused by an incomplete Promise.all array. Reinserted getLaserChangeoverReports into the request queue to match the 5 destructured variables.
 * **Laser Changeover Padding Fix**: Updated row calculation logic for LaserChangeoverReport to behave like standard changeovers, preventing the UI from padding empty days with Not Filled ghost rows (so the Reports UI strictly filters/shows only actually submitted line data on the selected date).
 * **Document Number Synchronization**: Updated the hardcoded header Document Numbers in ChecksheetHub.js and Reports.js to dynamically stack both AOI and Laser Doc Nos.
+
+### Resolved: Laser Changeover Report UI Refactoring (September 2026)
+* **Expandable Details Row**: Refactored the LaserChangeoverReport component to perfectly match the ChangeoverReport styling. Removed the 7 individual laser check columns from the primary table view and moved them into a clean, grid-based expandable row that opens when clicking a table row.
+* **Simplified Main Table**: Replaced the cluttered main table columns (ENG Review Time, GL Review Time, etc.) with a simplified high-level view containing only DATE, LINE, GROUP, SHIFT, DOC STATUS, PROGRAM NAME, DESIGNATED ENGINEER, SUBMITTED AT, and SUBMITTED BY to match the requested reporting aesthetic.
