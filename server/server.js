@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
@@ -70,18 +69,6 @@ app.use('/api', authenticateToken, lineStatusRoutes);
 app.use('/api', authenticateToken, changeoverRoutes);
 app.use('/api/laser-changeover', authenticateToken, laserChangeoverRoutes);
 app.use('/api', activityLogRoutes);
-
-
-// Serve static files from React frontend
-app.use(express.static(path.join(__dirname, '../client/build')));
-
-// Catch-all route to serve React app for non-API requests (React Router support)
-app.get('*', (req, res) => {
-  if (req.path.startsWith('/api')) {
-    return res.status(404).json({ error: 'API route not found' });
-  }
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
 
 async function startServer() {
   await initializeDatabase();
