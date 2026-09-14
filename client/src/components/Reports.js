@@ -375,12 +375,14 @@ export default function Reports({ currentUser }) {
       apiService.getAllChecklists(),
       apiService.getAllCheckpoints(),
       apiService.getAllChangeoverChecksheets(),
+      apiService.getLaserChangeoverReports(),
       apiService.getEngineers()
     ])
       .then(([checklistRes, checkpointRes, changeoverRes, laserRes, engineersRes]) => {
         setChecklists(checklistRes.data.data || []);
         setCheckpoints(checkpointRes.data.data || []);
         setChangeovers(changeoverRes.data.data || []);
+        setLaserChangeovers(laserRes.data.data || []);
         setEngineers(engineersRes.data.data || []);
       })
       .catch(err => {
@@ -501,7 +503,7 @@ export default function Reports({ currentUser }) {
         return String(a.shift).localeCompare(String(b.shift));
       }
     });
-  }, [reportType, checklists, checkpoints, allLineOptions, notInstalledLines, filters.sort]);
+  }, [reportType, checklists, checkpoints, changeovers, laserChangeovers, allLineOptions, notInstalledLines, filters.sort]);
 
   const filteredRows = useMemo(() => rows.filter(row => {
     const date = dateKey(row.date);
@@ -849,7 +851,7 @@ export default function Reports({ currentUser }) {
         </div>
       </div>
 
-      {/* â”€â”€ Summary Dashboard Panel â”€â”€ */}
+      {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard">
         {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techPendingReviewLines, techApprovedLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
         {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcPendingReviewLines, funcApprovedLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
