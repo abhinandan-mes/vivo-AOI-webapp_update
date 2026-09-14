@@ -114,3 +114,13 @@ exports.getReports = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+exports.deleteRecord = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await LaserChangeover.delete(Number(id));
+    res.json({ message: 'Record deleted successfully' });
+  } catch (error) {
+    console.error("Delete laser changeover error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};

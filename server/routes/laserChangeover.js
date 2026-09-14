@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const router = express.Router();
 const laserController = require('../controllers/LaserChangeoverController');
 const { requireRoles } = require('../middleware/auth');
@@ -22,4 +22,6 @@ router.get('/pending', requireRoles(['engineer', 'admin', 'super_admin', 'produc
 router.put('/:id/review', requireRoles(['engineer', 'production_group_leader', 'super_admin']), laserController.reviewChecksheet);
 router.get('/reports', laserController.getReports);
 
+router.delete('/:id', requireRoles(['super_admin']), laserController.deleteRecord);
 module.exports = router;
+

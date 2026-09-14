@@ -1,4 +1,4 @@
-const prisma = require('../config/db');
+﻿const prisma = require('../config/db');
 
 class LaserChangeover {
   static async create(data) {
@@ -41,6 +41,13 @@ class LaserChangeover {
       data
     });
   }
+
+  static async delete(id) {
+    return prisma.laserChangeoverChecksheet.delete({
+      where: { id }
+    });
+  }
 }
 
 module.exports = LaserChangeover;
+
