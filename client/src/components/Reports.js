@@ -381,7 +381,8 @@ export default function Reports({ currentUser }) {
         setChecklists(checklistRes.data.data || []);
         setCheckpoints(checkpointRes.data.data || []);
         setChangeovers(changeoverRes.data.data || []);
-        setEngineers(engineersRes.data.data || []);
+          setLaserChangeovers(laserRes.data.data || []);
+          setEngineers(engineersRes.data.data || []);
       })
       .catch(err => {
         setError(err.message);
