@@ -36,7 +36,8 @@ export default function ChecksheetHub({ user }) {
           <p className="checksheet-subtitle">{language === 'zh' ? '提交及管理您的日常点检和保养表单。' : 'Submit and manage your daily checksheets and function checkpoints.'}</p>
         </div>
         <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', textAlign: 'right', marginTop: '6px' }}>
-          Doc No. - INWJZ1-42026050500004
+          <div>AOI & SPI Doc No. - INWJZ1-42026050500004</div>
+          <div>Laser Doc No. - WJZD00-2021020100003</div>
         </div>
       </div>
 
