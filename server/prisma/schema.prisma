@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/client"
+  output   = "./generated/client2"
 }
 
 model AoiFunctionCheckpoint {
@@ -219,6 +219,7 @@ model AoiChangeoverChecksheet {
 model LaserChangeoverChecksheet {
   id                               Int      @id @default(autoincrement())
   line                             String?  @db.VarChar(50)
+  group_name                       String?  @db.VarChar(50)
   program_name                     String?  @db.VarChar(255)
   date                             DateTime @db.Date
   shift                            String   @db.VarChar(50)

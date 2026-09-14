@@ -10335,6 +10335,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetMinAggregateOutputType = {
     id: number | null
     line: string | null
+    group_name: string | null
     program_name: string | null
     date: Date | null
     shift: string | null
@@ -10364,6 +10365,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetMaxAggregateOutputType = {
     id: number | null
     line: string | null
+    group_name: string | null
     program_name: string | null
     date: Date | null
     shift: string | null
@@ -10393,6 +10395,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetCountAggregateOutputType = {
     id: number
     line: number
+    group_name: number
     program_name: number
     date: number
     shift: number
@@ -10432,6 +10435,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetMinAggregateInputType = {
     id?: true
     line?: true
+    group_name?: true
     program_name?: true
     date?: true
     shift?: true
@@ -10461,6 +10465,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetMaxAggregateInputType = {
     id?: true
     line?: true
+    group_name?: true
     program_name?: true
     date?: true
     shift?: true
@@ -10490,6 +10495,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetCountAggregateInputType = {
     id?: true
     line?: true
+    group_name?: true
     program_name?: true
     date?: true
     shift?: true
@@ -10606,6 +10612,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetGroupByOutputType = {
     id: number
     line: string | null
+    group_name: string | null
     program_name: string | null
     date: Date
     shift: string
@@ -10654,6 +10661,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     line?: boolean
+    group_name?: boolean
     program_name?: boolean
     date?: boolean
     shift?: boolean
@@ -10683,6 +10691,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     line?: boolean
+    group_name?: boolean
     program_name?: boolean
     date?: boolean
     shift?: boolean
@@ -10712,6 +10721,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     line?: boolean
+    group_name?: boolean
     program_name?: boolean
     date?: boolean
     shift?: boolean
@@ -10741,6 +10751,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetSelectScalar = {
     id?: boolean
     line?: boolean
+    group_name?: boolean
     program_name?: boolean
     date?: boolean
     shift?: boolean
@@ -10767,7 +10778,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type LaserChangeoverChecksheetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "line" | "program_name" | "date" | "shift" | "prog_name_check" | "laser_param_check" | "duplicate_code_check" | "pcb_anti_reverse_check" | "ab_barcode_check" | "laser_sequence_check" | "laser_position_check" | "grp_ldr_prog_name_check" | "grp_ldr_laser_position_check" | "status" | "approval_status" | "designated_engineer_id" | "designated_group_leader_id" | "remarks" | "engineer_remarks" | "pd_remarks" | "submitted_by" | "engineer_signature" | "group_leader_signature" | "created_at" | "updated_at", ExtArgs["result"]["laserChangeoverChecksheet"]>
+  export type LaserChangeoverChecksheetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "line" | "group_name" | "program_name" | "date" | "shift" | "prog_name_check" | "laser_param_check" | "duplicate_code_check" | "pcb_anti_reverse_check" | "ab_barcode_check" | "laser_sequence_check" | "laser_position_check" | "grp_ldr_prog_name_check" | "grp_ldr_laser_position_check" | "status" | "approval_status" | "designated_engineer_id" | "designated_group_leader_id" | "remarks" | "engineer_remarks" | "pd_remarks" | "submitted_by" | "engineer_signature" | "group_leader_signature" | "created_at" | "updated_at", ExtArgs["result"]["laserChangeoverChecksheet"]>
 
   export type $LaserChangeoverChecksheetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "LaserChangeoverChecksheet"
@@ -10775,6 +10786,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       line: string | null
+      group_name: string | null
       program_name: string | null
       date: Date
       shift: string
@@ -11224,6 +11236,7 @@ export namespace Prisma {
   interface LaserChangeoverChecksheetFieldRefs {
     readonly id: FieldRef<"LaserChangeoverChecksheet", 'Int'>
     readonly line: FieldRef<"LaserChangeoverChecksheet", 'String'>
+    readonly group_name: FieldRef<"LaserChangeoverChecksheet", 'String'>
     readonly program_name: FieldRef<"LaserChangeoverChecksheet", 'String'>
     readonly date: FieldRef<"LaserChangeoverChecksheet", 'DateTime'>
     readonly shift: FieldRef<"LaserChangeoverChecksheet", 'String'>
@@ -11819,6 +11832,7 @@ export namespace Prisma {
   export const LaserChangeoverChecksheetScalarFieldEnum: {
     id: 'id',
     line: 'line',
+    group_name: 'group_name',
     program_name: 'program_name',
     date: 'date',
     shift: 'shift',
@@ -12888,6 +12902,7 @@ export namespace Prisma {
     NOT?: LaserChangeoverChecksheetWhereInput | LaserChangeoverChecksheetWhereInput[]
     id?: IntFilter<"LaserChangeoverChecksheet"> | number
     line?: StringNullableFilter<"LaserChangeoverChecksheet"> | string | null
+    group_name?: StringNullableFilter<"LaserChangeoverChecksheet"> | string | null
     program_name?: StringNullableFilter<"LaserChangeoverChecksheet"> | string | null
     date?: DateTimeFilter<"LaserChangeoverChecksheet"> | Date | string
     shift?: StringFilter<"LaserChangeoverChecksheet"> | string
@@ -12917,6 +12932,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetOrderByWithRelationInput = {
     id?: SortOrder
     line?: SortOrderInput | SortOrder
+    group_name?: SortOrderInput | SortOrder
     program_name?: SortOrderInput | SortOrder
     date?: SortOrder
     shift?: SortOrder
@@ -12949,6 +12965,7 @@ export namespace Prisma {
     OR?: LaserChangeoverChecksheetWhereInput[]
     NOT?: LaserChangeoverChecksheetWhereInput | LaserChangeoverChecksheetWhereInput[]
     line?: StringNullableFilter<"LaserChangeoverChecksheet"> | string | null
+    group_name?: StringNullableFilter<"LaserChangeoverChecksheet"> | string | null
     program_name?: StringNullableFilter<"LaserChangeoverChecksheet"> | string | null
     date?: DateTimeFilter<"LaserChangeoverChecksheet"> | Date | string
     shift?: StringFilter<"LaserChangeoverChecksheet"> | string
@@ -12978,6 +12995,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetOrderByWithAggregationInput = {
     id?: SortOrder
     line?: SortOrderInput | SortOrder
+    group_name?: SortOrderInput | SortOrder
     program_name?: SortOrderInput | SortOrder
     date?: SortOrder
     shift?: SortOrder
@@ -13015,6 +13033,7 @@ export namespace Prisma {
     NOT?: LaserChangeoverChecksheetScalarWhereWithAggregatesInput | LaserChangeoverChecksheetScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"LaserChangeoverChecksheet"> | number
     line?: StringNullableWithAggregatesFilter<"LaserChangeoverChecksheet"> | string | null
+    group_name?: StringNullableWithAggregatesFilter<"LaserChangeoverChecksheet"> | string | null
     program_name?: StringNullableWithAggregatesFilter<"LaserChangeoverChecksheet"> | string | null
     date?: DateTimeWithAggregatesFilter<"LaserChangeoverChecksheet"> | Date | string
     shift?: StringWithAggregatesFilter<"LaserChangeoverChecksheet"> | string
@@ -14197,6 +14216,7 @@ export namespace Prisma {
 
   export type LaserChangeoverChecksheetCreateInput = {
     line?: string | null
+    group_name?: string | null
     program_name?: string | null
     date: Date | string
     shift: string
@@ -14226,6 +14246,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetUncheckedCreateInput = {
     id?: number
     line?: string | null
+    group_name?: string | null
     program_name?: string | null
     date: Date | string
     shift: string
@@ -14254,6 +14275,7 @@ export namespace Prisma {
 
   export type LaserChangeoverChecksheetUpdateInput = {
     line?: NullableStringFieldUpdateOperationsInput | string | null
+    group_name?: NullableStringFieldUpdateOperationsInput | string | null
     program_name?: NullableStringFieldUpdateOperationsInput | string | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     shift?: StringFieldUpdateOperationsInput | string
@@ -14283,6 +14305,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     line?: NullableStringFieldUpdateOperationsInput | string | null
+    group_name?: NullableStringFieldUpdateOperationsInput | string | null
     program_name?: NullableStringFieldUpdateOperationsInput | string | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     shift?: StringFieldUpdateOperationsInput | string
@@ -14312,6 +14335,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetCreateManyInput = {
     id?: number
     line?: string | null
+    group_name?: string | null
     program_name?: string | null
     date: Date | string
     shift: string
@@ -14340,6 +14364,7 @@ export namespace Prisma {
 
   export type LaserChangeoverChecksheetUpdateManyMutationInput = {
     line?: NullableStringFieldUpdateOperationsInput | string | null
+    group_name?: NullableStringFieldUpdateOperationsInput | string | null
     program_name?: NullableStringFieldUpdateOperationsInput | string | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     shift?: StringFieldUpdateOperationsInput | string
@@ -14369,6 +14394,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     line?: NullableStringFieldUpdateOperationsInput | string | null
+    group_name?: NullableStringFieldUpdateOperationsInput | string | null
     program_name?: NullableStringFieldUpdateOperationsInput | string | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     shift?: StringFieldUpdateOperationsInput | string
@@ -15171,6 +15197,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetCountOrderByAggregateInput = {
     id?: SortOrder
     line?: SortOrder
+    group_name?: SortOrder
     program_name?: SortOrder
     date?: SortOrder
     shift?: SortOrder
@@ -15204,6 +15231,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetMaxOrderByAggregateInput = {
     id?: SortOrder
     line?: SortOrder
+    group_name?: SortOrder
     program_name?: SortOrder
     date?: SortOrder
     shift?: SortOrder
@@ -15233,6 +15261,7 @@ export namespace Prisma {
   export type LaserChangeoverChecksheetMinOrderByAggregateInput = {
     id?: SortOrder
     line?: SortOrder
+    group_name?: SortOrder
     program_name?: SortOrder
     date?: SortOrder
     shift?: SortOrder

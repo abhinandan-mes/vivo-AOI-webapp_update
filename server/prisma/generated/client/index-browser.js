@@ -291,6 +291,7 @@ exports.Prisma.AoiChangeoverChecksheetScalarFieldEnum = {
 exports.Prisma.LaserChangeoverChecksheetScalarFieldEnum = {
   id: 'id',
   line: 'line',
+  group_name: 'group_name',
   program_name: 'program_name',
   date: 'date',
   shift: 'shift',

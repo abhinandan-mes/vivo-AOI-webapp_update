@@ -4,9 +4,10 @@ const laserController = require('../controllers/LaserChangeoverController');
 const { requireRoles } = require('../middleware/auth');
 
 const validateSubmit = (req, res, next) => {
-  const { line, program_name, date, shift, submitted_by } = req.body;
+  const { line, group_name, program_name, date, shift, submitted_by } = req.body;
   const errors = [];
   if (!line) errors.push({ msg: 'Line is required' });
+  if (!group_name) errors.push({ msg: 'Group is required' });
   if (!program_name) errors.push({ msg: 'Program Name is required' });
   if (!date || isNaN(Date.parse(date))) errors.push({ msg: 'Valid date required' });
   if (!shift) errors.push({ msg: 'Shift is required' });

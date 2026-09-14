@@ -4,6 +4,7 @@ import apiService from '../services/api';
 import './FunctionCheckpoint.css'; 
 
 const ALL_LINE_OPTIONS = Array.from({ length: 25 }, (_, index) => String(401 + index));
+const groupOptions = ['A', 'B', 'C'];
 
 const getShiftAndDate = (now = new Date()) => {
   const hours = now.getHours();
@@ -29,6 +30,7 @@ export default function LaserChangeoverChecksheet({ currentUser }) {
   
   const [formData, setFormData] = useState({
     line: '',
+    group_name: '',
     program_name: '',
     date: initialTime.date,
     shift: initialTime.shift,
@@ -84,6 +86,7 @@ export default function LaserChangeoverChecksheet({ currentUser }) {
     try {
       const payload = {
         line: formData.line,
+        group_name: formData.group_name,
         program_name: formData.program_name,
         date: formData.date,
         shift: formData.shift,
@@ -173,6 +176,20 @@ export default function LaserChangeoverChecksheet({ currentUser }) {
                     ? <option disabled>Loading...</option>
                     : installedLines.map(line => <option key={line} value={line}>{line}</option>)
                   }
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="group-select">{t('cp_group_req')}</label>
+                <select 
+                  id="group-select" 
+                  name="group_name" 
+                  value={formData.group_name} 
+                  onChange={handleInputChange} 
+                  required
+                >
+                  <option value="">{t('cp_group_placeholder')}</option>
+                  {groupOptions.map(group => <option key={group} value={group}>{group}</option>)}
                 </select>
               </div>
 
@@ -295,7 +312,7 @@ export default function LaserChangeoverChecksheet({ currentUser }) {
                 type="submit" 
                 className="submit-btn" 
                 disabled={loading}
-                style={{ width: '100%', padding: '1rem', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer' }}
+                style={{ width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #3b82f6, #2563eb)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 4px 6px rgba(59, 130, 246, 0.2)' }}
               >
                 {loading 
                   ? (language === 'zh' ? '提交中...' : 'Submitting...') 

@@ -505,6 +505,7 @@ export default function PendingModule({ currentUser }) {
                     <tr>
                       <th>ID</th>
                       <th>{language === 'zh' ? '线体号' : 'Line'}</th>
+                      <th>{language === 'zh' ? '班组' : 'Group'}</th>
                       <th>{language === 'zh' ? '程序名称' : 'Program Name'}</th>
                       <th>{language === 'zh' ? '日期' : 'Date'}</th>
                       <th>{language === 'zh' ? '班别' : 'Shift'}</th>
@@ -518,6 +519,7 @@ export default function PendingModule({ currentUser }) {
                       <tr key={item.id}>
                         <td>#{item.id}</td>
                         <td>{item.line}</td>
+                        <td>{item.group_name}</td>
                         <td>{item.program_name}</td>
                         <td>{formatDate(item.date)}</td>
                         <td>{item.shift}</td>
@@ -950,6 +952,10 @@ export default function PendingModule({ currentUser }) {
                     <div className="form-section-card">
                       <h4 className="form-section-title">{language === 'zh' ? '基础信息' : 'Basic Info'}</h4>
                       <div className="form-grid-row">
+                        <div className="form-group-half">
+                          <label>{language === 'zh' ? '班组 (Group)' : 'Group'}</label>
+                          <input type="text" name="group_name" value={reviewData.group_name || ''} onChange={handleInputChange} disabled={isGroupLeader} />
+                        </div>
                         <div className="form-group-half">
                           <label>{language === 'zh' ? '程序名称 (Program Name)' : 'Program Name'}</label>
                           <input type="text" name="program_name" value={reviewData.program_name || ''} onChange={handleInputChange} disabled={isGroupLeader} />
