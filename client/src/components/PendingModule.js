@@ -482,10 +482,19 @@ export default function PendingModule({ currentUser }) {
           <div className="pending-drawer-content" onClick={e => e.stopPropagation()}>
             <div className="drawer-header" style={{ background: '#fff', borderBottom: '1px solid #e2e8f0' }}>
               <div className="drawer-header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
-                <h2>
-                  {selectedItem.type === 'checklist' ? t('rep_toggle_checklist') : t('rep_toggle_checkpoint')} 
-                  {language === 'zh' ? ' - 待办处理' : ' - Review Form'}
-                </h2>
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', marginBottom: '4px' }}>
+                    Doc No. - {selectedItem.doc_no || 'INWJZ1-42026050500004'}
+                  </div>
+                  <h2>
+                    {selectedItem.type === 'checklist' 
+                      ? t('rep_toggle_checklist') 
+                      : selectedItem.type === 'checkpoint' 
+                      ? t('rep_toggle_checkpoint') 
+                      : (language === 'zh' ? '换线记录表' : 'Changeover Checks')} 
+                    {language === 'zh' ? ' - 待办处理' : ' - Review Form'}
+                  </h2>
+                </div>
                 <button className="close-drawer-btn" onClick={handleCloseReview}>✕</button>
               </div>
             </div>

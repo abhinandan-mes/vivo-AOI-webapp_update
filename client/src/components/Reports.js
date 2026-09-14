@@ -620,6 +620,7 @@ export default function Reports({ currentUser }) {
           </style>
         </head>
         <body>
+          <h2 style="font-size: 14px; margin: 0 0 8px; color: #334155;">Doc No. - INWJZ1-42026050500004</h2>
           <h1>${escapeHtml(title)}</h1>
           <p>${language === 'zh' ? '生成于' : 'Generated'} ${escapeHtml(generatedDate)} · ${filteredRows.length} ${language === 'zh' ? '条记录' : `record${filteredRows.length === 1 ? '' : 's'}`}</p>
           <table>
@@ -812,6 +813,7 @@ export default function Reports({ currentUser }) {
     <section className="reports-container">
       <div className="reports-heading">
         <div>
+          <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', marginBottom: '4px' }}>Doc No. - INWJZ1-42026050500004</div>
           <h1>{t('rep_title')}</h1>
           <p>{language === 'zh' ? '存储在系统后台的详细点检检验记录。' : 'Detailed records stored in the backend.'}</p>
         </div>

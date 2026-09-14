@@ -238,3 +238,218 @@ ValidationError: An invalid 'request.ip' (10.172.130.189:7876) was detected. Con
   code: 'ERR_ERL_INVALID_IP_ADDRESS',
   help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
 }
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.189:5094) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.36:5535) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.189:12944) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.189:1597) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.36:3479) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.189:13326) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.3 -> 7.8.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+ValidationError: An invalid 'request.ip' (10.172.130.189:11416) was detected. Consider passing a custom 'keyGenerator' function to the rate limiter. See https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/ for more information.
+    at Object.ip (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:346:13)
+    at wrappedValidations.<computed> [as ip] (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:704:22)
+    at Object.keyGenerator (d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:809:20)
+    at d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:893:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async d:\AOi_check_sheet\server\node_modules\express-rate-limit\dist\index.cjs:854:5 {
+  code: 'ERR_ERL_INVALID_IP_ADDRESS',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_INVALID_IP_ADDRESS/'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+npm notice
+npm notice New major version of npm available! 11.17.0 -> 12.0.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.1
+npm notice To update run: npm install -g npm@12.0.1
+npm notice
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.3 -> 7.9.1                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+npm notice
+npm notice New major version of npm available! 11.17.0 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.3 -> 7.9.1                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+Error fetching pending checkpoints: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiFunctionCheckpoint.findMany()` invocation:
+
+
+The column `aoi_function_checkpoint.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\FunctionCheckpoint.js:120:12)
+    at async getPendingCheckpoints (d:\AOi_check_sheet\server\controllers\FunctionCheckpointController.js:123:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiFunctionCheckpoint',
+    column: 'aoi_function_checkpoint.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checklists: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiTechnicianChecklist.findMany()` invocation:
+
+
+The column `aoi_technician_checklist.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\TechnicianChecklist.js:118:12)
+    at async getPendingChecklists (d:\AOi_check_sheet\server\controllers\TechnicianChecklistController.js:134:22) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiTechnicianChecklist',
+    column: 'aoi_technician_checklist.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+Error fetching pending checksheets: PrismaClientKnownRequestError: 
+Invalid `prisma.aoiChangeoverChecksheet.findMany()` invocation:
+
+
+The column `aoi_changeover_checksheet.dynamic_data` does not exist in the current database.
+    at ei.handleRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (d:\AOi_check_sheet\server\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async Object.getAllPending (d:\AOi_check_sheet\server\models\ChangeoverChecksheet.js:136:12)
+    at async getPendingChecksheets (d:\AOi_check_sheet\server\controllers\changeoverController.js:116:23) {
+  code: 'P2022',
+  meta: {
+    modelName: 'AoiChangeoverChecksheet',
+    column: 'aoi_changeover_checksheet.dynamic_data'
+  },
+  clientVersion: '6.19.3'
+}
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+npm notice
+npm notice New major version of npm available! 11.17.0 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+npm notice
+npm notice New major version of npm available! 11.17.0 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice

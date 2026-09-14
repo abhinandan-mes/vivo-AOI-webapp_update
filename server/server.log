@@ -3,19 +3,31 @@ Environment variables loaded from .env
 Prisma schema loaded from prisma\schema.prisma
 Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
 
-9 migrations found in prisma/migrations
+13 migrations found in prisma/migrations
 
 
 No pending migrations to apply.
 ✅ Prisma migrations applied successfully
 👤 Default admin user checked/created successfully
 🏭 Line status table seeded successfully
-🚀 Server running on http://localhost:5001
-[AUTH] Login attempt received for username: "abhinandan"
-[AUTH] Login successful: User "abhinandan" (Role: super_admin)
-[AUTH] Login attempt received for username: "abhinandan"
-[AUTH] Login successful: User "abhinandan" (Role: super_admin)
-[AUTH] Login attempt received for username: "abhinandan"
-[AUTH] Login successful: User "abhinandan" (Role: super_admin)
-[AUTH] Login attempt received for username: "abhinandan"
-[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+node:events:487
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::5001
+    at Server.setupListenHandle [as _listen2] (node:net:2167:16)
+    at listenInCluster (node:net:2224:12)
+    at Server.listen (node:net:2344:7)
+    at app.listen (D:\AOi_check_sheet\server\node_modules\express\lib\application.js:635:24)
+    at startServer (D:\AOi_check_sheet\server\server.js:73:7)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:2203:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 5001
+}
+
+Node.js v26.4.0

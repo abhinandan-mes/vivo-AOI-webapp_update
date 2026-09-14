@@ -56,3 +56,51 @@
 2026-07-17 15:44:56 - Finished aoi_digital_checksheet.exe
 2026-07-17 15:44:58 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2026-07-17 15:44:58 - Started 10296
+2026-08-07 18:47:04 - Stopping aoi_digital_checksheet.exe
+2026-08-07 18:47:04 - ProcessKill 10208
+2026-08-07 18:47:05 - Found child process: 7728 Name: conhost.exe
+2026-08-07 18:47:05 - Found child process: 6524 Name: node.exe
+2026-08-07 18:47:05 - Stopping process 7728
+2026-08-07 18:47:05 - Send SIGINT 7728
+2026-08-07 18:47:05 - SIGINT to 7728 failed - Killing as fallback
+2026-08-07 18:47:05 - Stopping process 6524
+2026-08-07 18:47:05 - Send SIGINT 6524
+2026-08-07 18:47:05 - SIGINT to 6524 failed - Killing as fallback
+2026-08-07 18:47:05 - Stopping process 10208
+2026-08-07 18:47:05 - Send SIGINT 10208
+2026-08-07 18:47:05 - SIGINT to 10208 failed - Killing as fallback
+2026-08-07 18:47:05 - Finished aoi_digital_checksheet.exe
+2026-08-07 18:47:10 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-08-07 18:47:10 - Started 4972
+2026-08-15 09:58:59 - Stopping aoi_digital_checksheet.exe
+2026-08-15 09:58:59 - ProcessKill 4972
+2026-08-15 09:58:59 - Shutdown exception
+Message:系统正在关机。
+
+Stacktrace:   在 System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   在 System.Management.ManagementScope.InitializeGuts(Object o)
+   在 System.Management.ManagementScope.Initialize()
+   在 System.Management.ManagementObjectSearcher.Initialize()
+   在 System.Management.ManagementObjectSearcher.Get()
+   在 winsw.WrapperService.GetChildPids(Int32 pid)
+   在 winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   在 winsw.WrapperService.StopIt()
+   在 winsw.WrapperService.OnShutdown()
+2026-08-16 00:02:16 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-08-16 00:02:16 - Started 7204
+2026-08-24 17:29:48 - Stopping aoi_digital_checksheet.exe
+2026-08-24 17:29:48 - ProcessKill 7204
+2026-08-24 17:29:48 - Found child process: 7268 Name: conhost.exe
+2026-08-24 17:29:48 - Found child process: 8080 Name: node.exe
+2026-08-24 17:29:48 - Stopping process 7268
+2026-08-24 17:29:48 - Send SIGINT 7268
+2026-08-24 17:29:48 - SIGINT to 7268 failed - Killing as fallback
+2026-08-24 17:29:48 - Stopping process 8080
+2026-08-24 17:29:48 - Send SIGINT 8080
+2026-08-24 17:29:48 - SIGINT to 8080 failed - Killing as fallback
+2026-08-24 17:29:48 - Stopping process 7204
+2026-08-24 17:29:48 - Send SIGINT 7204
+2026-08-24 17:29:48 - SIGINT to 7204 failed - Killing as fallback
+2026-08-24 17:29:48 - Finished aoi_digital_checksheet.exe
+2026-08-24 17:29:49 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\server\node_modules\node-windows\lib\wrapper.js --file d:\AOi_check_sheet\server\server.js --scriptoptions= --log "AOI_Digital_Checksheet wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-08-24 17:29:49 - Started 1624

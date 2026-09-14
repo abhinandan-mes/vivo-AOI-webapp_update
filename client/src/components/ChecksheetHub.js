@@ -30,6 +30,7 @@ export default function ChecksheetHub({ user }) {
   return (
     <div className="checksheet-hub-container">
       <div className="checksheet-header-section">
+        <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', marginBottom: '4px' }}>Doc No. - INWJZ1-42026050500004</div>
         <h1 className="checksheet-title">{language === 'zh' ? '提交表单' : 'Checksheets'}</h1>
         <p className="checksheet-subtitle">{language === 'zh' ? '提交及管理您的日常点检和保养表单。' : 'Submit and manage your daily checksheets and function checkpoints.'}</p>
       </div>
