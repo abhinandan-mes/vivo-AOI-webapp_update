@@ -1,15 +1,15 @@
-# 🧠 Project Memory: AOI CheckPoint - Daily Inspection System
+﻿# ðŸ§  Project Memory: AOI CheckPoint - Daily Inspection System
 
 This document serves as the project memory and system documentation for the **AOI CheckPoint (Daily Inspection System)**. It provides context about the application's architecture, data model, backend API, frontend components, and development guidelines for future agent/developer sessions.
 
 ---
 
-## 📌 Project Overview
+## ðŸ“Œ Project Overview
 **AOI CheckPoint** is a web application designed to digitize and manage Daily Function Checkpoints and Technician Daily Checklists for Automated Optical Inspection (AOI) equipment. It helps manufacturing engineers and technicians track the status and functionality of optical scanners and inspection tools across different lines and shifts.
 
 ---
 
-## 🛠 Tech Stack
+## ðŸ›  Tech Stack
 - **Frontend**: React 18, React Router DOM (v6), Axios for API communication, and Vanilla CSS3 (utilizing CSS Grid, Flexbox, transitions, and responsive styles).
 - **Backend**: Node.js & Express.js.
 - **Database**: PostgreSQL (pg driver).
@@ -17,54 +17,54 @@ This document serves as the project memory and system documentation for the **AO
 
 ---
 
-## 📁 Repository Structure
+## ðŸ“ Repository Structure
 ```
-├── server/                             # Backend Application
-│   ├── config/
-│   │   ├── db.js                       # PostgreSQL client connection pool
-│   │   └── schema.js                   # Database schema definitions & migrations
-│   ├── models/
-│   │   ├── FunctionCheckpoint.js       # Model operations for function checks
-│   │   └── TechnicianChecklist.js      # Model operations for technician checklists
-│   ├── controllers/
-│   │   ├── FunctionCheckpointController.js
-│   │   └── TechnicianChecklistController.js
-│   ├── middleware/
-│   │   └── auth.js                     # JWT authorization middleware
-│   ├── routes/
-│   │   ├── auth.js                     # User registration, authentication, management
-│   │   ├── functionCheckpoint.js       # Function checkpoint routes
-│   │   └── technicianChecklist.js      # Technician checklist routes
-│   ├── .env                            # Backend configuration (DB details, keys)
-│   ├── package.json
-│   └── server.js                       # Express application bootstrap
-├── client/                             # React Frontend
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── assets/                     # Icons, logos, and static graphics
-│   │   ├── components/
-│   │   │   ├── LoginPage.js / .css     # Authentication UI
-│   │   │   ├── FunctionCheckpoint.js / .css # Daily Function Checks form
-│   │   │   ├── TechnicianChecklist.js / .css # Technician Checklist form
-│   │   │   ├── ChangeoverChecksheet.js / .css # Changeover checksheet form
-│   │   │   ├── PendingModule.js / .css      # Review/Approval workspace
-│   │   │   ├── Reports.js / .css       # Data filtering & CSV download reports
-│   │   │   └── UserManagement.js / .css # Admin panel for user administration
-│   │   ├── services/
-│   │   │   └── api.js                  # Axios configuration, interceptors, API requests
-│   │   ├── App.js / .css               # Root component (tabs, session restoration)
-│   │   ├── index.js / .css             # Frontend entrypoint
-│   └── package.json
-├── setup.sh / setup.bat                # Setup scripts for backend & frontend packages
-├── README.md                           # Main user-facing readme
-└── QUICKSTART.md                       # Quick start developer instructions
+â”œâ”€â”€ server/                             # Backend Application
+â”‚   â”œâ”€â”€ config/
+â”‚   â”‚   â”œâ”€â”€ db.js                       # PostgreSQL client connection pool
+â”‚   â”‚   â””â”€â”€ schema.js                   # Database schema definitions & migrations
+â”‚   â”œâ”€â”€ models/
+â”‚   â”‚   â”œâ”€â”€ FunctionCheckpoint.js       # Model operations for function checks
+â”‚   â”‚   â””â”€â”€ TechnicianChecklist.js      # Model operations for technician checklists
+â”‚   â”œâ”€â”€ controllers/
+â”‚   â”‚   â”œâ”€â”€ FunctionCheckpointController.js
+â”‚   â”‚   â””â”€â”€ TechnicianChecklistController.js
+â”‚   â”œâ”€â”€ middleware/
+â”‚   â”‚   â””â”€â”€ auth.js                     # JWT authorization middleware
+â”‚   â”œâ”€â”€ routes/
+â”‚   â”‚   â”œâ”€â”€ auth.js                     # User registration, authentication, management
+â”‚   â”‚   â”œâ”€â”€ functionCheckpoint.js       # Function checkpoint routes
+â”‚   â”‚   â””â”€â”€ technicianChecklist.js      # Technician checklist routes
+â”‚   â”œâ”€â”€ .env                            # Backend configuration (DB details, keys)
+â”‚   â”œâ”€â”€ package.json
+â”‚   â””â”€â”€ server.js                       # Express application bootstrap
+â”œâ”€â”€ client/                             # React Frontend
+â”‚   â”œâ”€â”€ public/
+â”‚   â”‚   â””â”€â”€ index.html
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ assets/                     # Icons, logos, and static graphics
+â”‚   â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”‚   â”œâ”€â”€ LoginPage.js / .css     # Authentication UI
+â”‚   â”‚   â”‚   â”œâ”€â”€ FunctionCheckpoint.js / .css # Daily Function Checks form
+â”‚   â”‚   â”‚   â”œâ”€â”€ TechnicianChecklist.js / .css # Technician Checklist form
+â”‚   â”‚   â”‚   â”œâ”€â”€ ChangeoverChecksheet.js / .css # Changeover checksheet form
+â”‚   â”‚   â”‚   â”œâ”€â”€ PendingModule.js / .css      # Review/Approval workspace
+â”‚   â”‚   â”‚   â”œâ”€â”€ Reports.js / .css       # Data filtering & CSV download reports
+â”‚   â”‚   â”‚   â””â”€â”€ UserManagement.js / .css # Admin panel for user administration
+â”‚   â”‚   â”œâ”€â”€ services/
+â”‚   â”‚   â”‚   â””â”€â”€ api.js                  # Axios configuration, interceptors, API requests
+â”‚   â”‚   â”œâ”€â”€ App.js / .css               # Root component (tabs, session restoration)
+â”‚   â”‚   â”œâ”€â”€ index.js / .css             # Frontend entrypoint
+â”‚   â””â”€â”€ package.json
+â”œâ”€â”€ setup.sh / setup.bat                # Setup scripts for backend & frontend packages
+â”œâ”€â”€ README.md                           # Main user-facing readme
+â””â”€â”€ QUICKSTART.md                       # Quick start developer instructions
 ```
 
 ### Components Map
 
 - **`Login.js` / `LoginPage.js`**: Handle JWT authentication.
-- **`Dashboard.js`**: Provide an overview of today’s metrics (e.g. submitted checks, line stops).
+- **`Dashboard.js`**: Provide an overview of todayâ€™s metrics (e.g. submitted checks, line stops).
 - **`FunctionCheckpoint.js`**: Daily functional check form (Checkpoints).
 - **`TechnicianChecklist.js`**: Maintenance checklist form (Checklists).
 - **`ChangeoverChecksheet.js`**: Form for recording AOI machine changeovers. 
@@ -74,7 +74,7 @@ This document serves as the project memory and system documentation for the **AO
 
 ---
 
-## 📊 Database Schema & Migrations
+## ðŸ“Š Database Schema & Migrations
 
 The database schema is managed and mapped using **Prisma ORM**. The schema is defined in [schema.prisma](file:///Users/abhinandan/Documents/AOi_check_sheet/server/prisma/schema.prisma).
 
@@ -146,10 +146,27 @@ Stores checklist entries for daily technician inspections.
 - `aoi_scan_tools_workorder_traceability` (VARCHAR(255))
 - `confirmation` (VARCHAR(50))
 - `submitted_by` (VARCHAR(150))
+- `created_at` (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+
+### 5. `LaserChangeoverChecksheet`
+Stores submission records for Laser Changeover Checksheets, requiring a 3-step approval workflow.
+- `id` (SERIAL PRIMARY KEY)
+- `line` (VARCHAR(50))
+- `group_name` (VARCHAR(50))
+- `program_name` (VARCHAR(255))
+- `date` (DATE)
+- `shift` (VARCHAR(50))
+- `prog_name_check` to `laser_position_check` (BOOLEAN checks)
+- `grp_ldr_prog_name_check`, `grp_ldr_laser_position_check` (BOOLEAN group leader checks)
+- `status` (VARCHAR(50) DEFAULT "Production")
+- `approval_status` (VARCHAR(50) DEFAULT "ENG_PENDING")
+- `designated_engineer_id` (VARCHAR(100))
+- `submitted_by`, `engineer_reviewer`, `group_leader_reviewer` (VARCHAR)
+- `created_at` (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
 
 ---
 
-## 🔒 Authentication & Authorization Flow
+## ðŸ”’ Authentication & Authorization Flow
 
 1. **Tokens**: JWT is generated during login with an 8-hour expiry. It is saved in browser `localStorage` as `aoi_auth_token`.
 2. **Interceptors**: Frontend API client (`client/src/services/api.js`) appends the bearer token in headers and intercepts `401 Unauthorized` responses to dispatch a logout event (`aoi-auth-expired`).
@@ -160,7 +177,7 @@ Stores checklist entries for daily technician inspections.
 
 ---
 
-## 🧭 Routing & Navigation
+## ðŸ§­ Routing & Navigation
 
 The application uses **React Router (`react-router-dom`)** for handling page transitions, tab selection active indicators, and authorization guards:
 
@@ -176,7 +193,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ---
 
-## ⚠️ Known Issues & Technical Debt
+## âš ï¸ Known Issues & Technical Debt
 
 ### Recent Updates: UI Redesign & Pagination (July 2026)
 * **Activity Logs Overhaul**: Transitioned Activity Logs from client-side array filtering to robust server-side offset pagination (`skip`, `take`, `count`) in Prisma. The UI was modernized to include 4 specific metric cards (TOTAL EVENTS, LOGINS, LOGOUTS, FAILURES) tracking Authentication events, utilizing a numbered `1 2 3...` sliding-window pagination design.
@@ -238,7 +255,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
   * **Dedicated Filter Card**: Cleaned up the filters grid to focus purely on search variables (From/To dates, Line, Shift, Group) and the Clear button.
 
 ### Resolved: Navigation Tab Reordering & Structure (June 2026)
-* **Tab Order Swapped**: Placed the "Technician Checklist" navigation tab immediately after "Home" and before "Daily Function Check" (i.e. Home ➔ Technician Checklist ➔ Daily Function Check ➔ Reports ➔ User Management).
+* **Tab Order Swapped**: Placed the "Technician Checklist" navigation tab immediately after "Home" and before "Daily Function Check" (i.e. Home âž” Technician Checklist âž” Daily Function Check âž” Reports âž” User Management).
 * **Router Synced**: Updated layout routing order in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js).
 
 ### Resolved: User Role Simplification & Operator Removal (June 2026)
@@ -257,8 +274,8 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: UI/UX & Profile Security Optimization (June 2026)
 *   **Logout Button Relocation**: Relocated the logout button from the main header navigation menu into the user profile settings modal ([App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js) / [ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js)).
-*   **Password Form Control Activation**: The current, new, and confirmation password inputs inside [ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js) are disabled by default. Clicking the `🔑 Change Password` activation toggle button enables the inputs and dynamically displays the "Update Password" submission control in the footer.
-*   **Responsive Small Screen Header (<= 520px)**: Hides the text branding divider and logo title in [App.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.css) and displays the user profile tab button as a sleek circular avatar containing `👤` to prevent navbar overlaps on low-width viewports.
+*   **Password Form Control Activation**: The current, new, and confirmation password inputs inside [ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js) are disabled by default. Clicking the `ðŸ”‘ Change Password` activation toggle button enables the inputs and dynamically displays the "Update Password" submission control in the footer.
+*   **Responsive Small Screen Header (<= 520px)**: Hides the text branding divider and logo title in [App.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.css) and displays the user profile tab button as a sleek circular avatar containing `ðŸ‘¤` to prevent navbar overlaps on low-width viewports.
 *   **Inactivity Auto-Logout Tracking**: Implemented a 15-minute global idle and visibility monitor in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js). Idle timeouts prompt a warning modal with an animated 30-second countdown progress bar. User interactions reset the session timer, while expiry triggers a session logout call to the backend.
 *   **Query-Based Redirection Routing**: Utilizes React Router parameters to handle login redirection instead of inline component swapping. Unauthenticated routes redirect to `/login?redirect=...`, and successful login transitions back to the stored pathname, making the web application fully URL-driven.
 
@@ -267,26 +284,26 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 - **Details**: The duplicate route registrations for `GET /auth/users` and `PUT /auth/users/:id` at the bottom of `server/routes/auth.js` have been removed. The authentication endpoints are now clean, optimized, and execute correctly.
 
 ### Resolved: QA Agent Plan Implementation (June 2026)
-*   **FIX-1 – Footer Password Removed**: Replaced `"Designed & Maintained by Abhinandan Kumar (95003989)"` in the footer (the number was the super admin password) with `"AOI CheckPoint © 2026 Vivo"`.
-*   **FIX-2 – Logout Clears Token + Hard Redirect**: `handleLogout` and session-expiry handler in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js) now call `authStorage.clearToken()` and use `window.location.href` (hard redirect) instead of `navigate()` to guarantee full React state teardown.
-*   **FIX-3 – Success/Error Toast + Redirect**: Both form submission handlers in [TechnicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/TechnicianChecklist.js) and [FunctionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/FunctionCheckpoint.js) show a green success toast and redirect to `/reports` after 1.5s. Errors show a red message and do **not** reset the form.
-*   **FIX-5 – Disable Submit on Empty Required Fields**: Daily Function Check submit button is now `disabled={loading || !isFormValid}` where `isFormValid = line && group_name && shift && date`.
-*   **FIX-6 – Full Name Asterisk**: Added `*` to the Full Name label in [UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js) create form.
-*   **A11Y-1/2 – Form Label Accessibility**: All `<label>` elements in both form pages now have `htmlFor` attributes matching corresponding input `id` values. Checkbox inputs in Daily Function Check have `aria-label` attributes.
-*   **UX-1/UX-2 – Password Show/Hide Toggle**: Eye-icon toggle buttons added to: login form ([LoginPage.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/LoginPage.js)), user management create form ([UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js)), and all three password fields in profile modal ([ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js)).
-*   **UX-3 – Session Status Text**: Fixed `logged_out` → `Logged Out` display string in both session tables in [Home.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/Home.js).
-*   **UX-7 – Forgot Password Placeholder**: Added `"Forgot password? Contact your administrator."` text below sign-in button in [LoginPage.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/LoginPage.js) (EN + ZH translations in [translations.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/translations.js)).
-*   **UX-9 – UUID Truncation**: Session IDs in both session tables now display as first 8 characters + `…`, with full UUID on hover via `title` attribute.
-*   **UX-11 – Confirm Password Field**: Added Confirm Password input to User Management create form with client-side match validation before submitting.
-*   **UX-12 – Guard Last Super Admin Deletion**: Both frontend ([UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js)) and backend ([server/routes/auth.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/auth.js)) now block deleting the only remaining `super_admin` account.
+*   **FIX-1 â€“ Footer Password Removed**: Replaced `"Designed & Maintained by Abhinandan Kumar (95003989)"` in the footer (the number was the super admin password) with `"AOI CheckPoint Â© 2026 Vivo"`.
+*   **FIX-2 â€“ Logout Clears Token + Hard Redirect**: `handleLogout` and session-expiry handler in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js) now call `authStorage.clearToken()` and use `window.location.href` (hard redirect) instead of `navigate()` to guarantee full React state teardown.
+*   **FIX-3 â€“ Success/Error Toast + Redirect**: Both form submission handlers in [TechnicianChecklist.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/TechnicianChecklist.js) and [FunctionCheckpoint.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/FunctionCheckpoint.js) show a green success toast and redirect to `/reports` after 1.5s. Errors show a red message and do **not** reset the form.
+*   **FIX-5 â€“ Disable Submit on Empty Required Fields**: Daily Function Check submit button is now `disabled={loading || !isFormValid}` where `isFormValid = line && group_name && shift && date`.
+*   **FIX-6 â€“ Full Name Asterisk**: Added `*` to the Full Name label in [UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js) create form.
+*   **A11Y-1/2 â€“ Form Label Accessibility**: All `<label>` elements in both form pages now have `htmlFor` attributes matching corresponding input `id` values. Checkbox inputs in Daily Function Check have `aria-label` attributes.
+*   **UX-1/UX-2 â€“ Password Show/Hide Toggle**: Eye-icon toggle buttons added to: login form ([LoginPage.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/LoginPage.js)), user management create form ([UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js)), and all three password fields in profile modal ([ProfileModal.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/ProfileModal.js)).
+*   **UX-3 â€“ Session Status Text**: Fixed `logged_out` â†’ `Logged Out` display string in both session tables in [Home.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/Home.js).
+*   **UX-7 â€“ Forgot Password Placeholder**: Added `"Forgot password? Contact your administrator."` text below sign-in button in [LoginPage.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/LoginPage.js) (EN + ZH translations in [translations.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/translations.js)).
+*   **UX-9 â€“ UUID Truncation**: Session IDs in both session tables now display as first 8 characters + `â€¦`, with full UUID on hover via `title` attribute.
+*   **UX-11 â€“ Confirm Password Field**: Added Confirm Password input to User Management create form with client-side match validation before submitting.
+*   **UX-12 â€“ Guard Last Super Admin Deletion**: Both frontend ([UserManagement.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/components/UserManagement.js)) and backend ([server/routes/auth.js](file:///Users/abhinandan/Documents/AOi_check_sheet/server/routes/auth.js)) now block deleting the only remaining `super_admin` account.
 
 ### Resolved: Footer Branding Update (June 2026)
-*   **Brand Name**: Footer now reads **`AOI Digital Checksheet © 2026 Vivo`** (previously "AOI CheckPoint © 2026 Vivo") in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js).
-*   **Designer Credit**: Added a second footer line — *"Designed, Developed & Maintained by Abhinandan Kumar"* — styled via the `.footer-credit` class in [App.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.css) (font-size `0.75rem`, muted slate-grey `#94a3b8`).
+*   **Brand Name**: Footer now reads **`AOI Digital Checksheet Â© 2026 Vivo`** (previously "AOI CheckPoint Â© 2026 Vivo") in [App.js](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.js).
+*   **Designer Credit**: Added a second footer line â€” *"Designed, Developed & Maintained by Abhinandan Kumar"* â€” styled via the `.footer-credit` class in [App.css](file:///Users/abhinandan/Documents/AOi_check_sheet/client/src/App.css) (font-size `0.75rem`, muted slate-grey `#94a3b8`).
 
 ### Resolved: Login Page UX, Internationalization & Auth Handlers (June 2026)
 *   **Language Switcher Re-alignment**: Relocated the language switcher to the top of the form panel to ensure visibility against a white background. Restructured `LanguageContext.js` with `useCallback` and `useMemo` to ensure translation reactivity on language change.
-*   **Rebranding Logo & Metadata**: Replaced all remaining occurrences of 'AOI CheckPoint' with 'AOI Digital Checksheet' (including Chinese localization: 'AOI 数字化检查表') in headers, loading components, and the login brand row.
+*   **Rebranding Logo & Metadata**: Replaced all remaining occurrences of 'AOI CheckPoint' with 'AOI Digital Checksheet' (including Chinese localization: 'AOI æ•°å­—åŒ–æ£€æŸ¥è¡¨') in headers, loading components, and the login brand row.
 *   **Contextual Redirect Logout**: Split logout into `handleLogout` (manual logout to a clean `/login`) and `handleIdleLogout` (idle timeout/expiry redirect preserving the current URL checkpoint).
 *   **API-Status-Driven Error Messages**: Replaced raw server errors on the login page with status-specific translated messages (Credentials error, Rate Limit, Network, and Server error). Bypassed interceptor auto-redirection on failed login attempts.
 *   **Dev Mode Rate Limit Skip**: Configured the express login rate limiter to skip restriction in development modes (`process.env.NODE_ENV !== 'production'`).
@@ -310,7 +327,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Database Extension**: Mapped the `status` (`VARCHAR(50)`) field defaulting to `"Production"` to both `AoiFunctionCheckpoint` and `AoiTechnicianChecklist` database models.
 *   **Backend Validation Bypass**: Updated `validation.js` middleware to bypass form questionnaire details and confirmation checks if `status === 'Line Stop'`.
 *   **Frontend Segmented Controls**: Added status radios in checksheets rendering immediately after line selection. Selecting `Line Stop` collapses all questionnaire checks, prompting a visual alert card allowing immediate submission.
-*   **Reports List Display**: Added the status column to the report tables, displaying green/red indicator badges. Bypasses other grid values and lists stopped line cells as `—`.
+*   **Reports List Display**: Added the status column to the report tables, displaying green/red indicator badges. Bypasses other grid values and lists stopped line cells as `â€”`.
 
 ### Resolved: Submission Confirmation Modal Redesign (July 2026)
 *   **Overlay Modals**: Replaced native browser `window.confirm` blockers in Technician Checklists and Daily Function Checks with a fixed, centered, overlay viewport dialog (`global-modal-overlay` with a frosted blur backdrop-filter).
@@ -360,7 +377,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 *   **Database Log Model**: Created the `AppActivityLog` model inside `schema.prisma` mapping to the `app_activity_logs` database table. Executed dev migrations to add the table in PostgreSQL and regenerated the Prisma client.
 *   **Real-time Operations Logging**: Integrated a centralized `logActivity` logger. Records successful logins, failed logins (capturing attempted usernames and specific failure reasons like invalid password/user), regular logouts, session revocations, and daily checklist/checkpoint submissions with line/group metadata. Strips the `::ffff:` IPv6 prefix to display clean IPv4 addresses.
 *   **Row-Level Access Security**: Implemented role-based filters on the `/api/activity-logs` endpoint. `super_admin` and `admin` roles can query all activity logs, while normal roles (technicians, inspectors) can only retrieve their own activity history.
-*   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `系统日志` / EN: `Activity Logs`) in React, globally accessible to all roles. Hides the username search input for non-admin accounts. Includes paginated table views, dropdown filters by activity type, and colored status pill badges (incorporating a new gray badge for logout actions).
+*   **Frontend Dashboard Page**: Created the `ActivityLog` tab and route (CN: `ç³»ç»Ÿæ—¥å¿—` / EN: `Activity Logs`) in React, globally accessible to all roles. Hides the username search input for non-admin accounts. Includes paginated table views, dropdown filters by activity type, and colored status pill badges (incorporating a new gray badge for logout actions).
 
 ### Resolved: IIS Production Hosting & Windows Service Backend (July 2026)
 *   **Static React Build**: Compiled frontend production files under `client/build` pointing directly to the backend API (`http://localhost:5001/api`).
@@ -370,7 +387,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 ### Resolved: Reports Page Export & Filtering Enhancements (July 2026)
 *   **Custom Export Confirmation Modal**: Swapped out the default browser `window.confirm` popup with a styled React modal window (`submit-confirm-modal`), incorporating an animated transition, status headers, action buttons, and a grid summary of export targets (report type, file format, total records, and active filter parameters).
 *   **Export Dropdown Interaction Fix**: Repositioned the absolute dropdown container flush with the trigger button (`top: 100%` in `Reports.css`) to eliminate the 6px empty gap. This resolves the bug where moving the cursor over options triggered `onMouseLeave` and closed the menu prematurely.
-*   **Default Date Filtering**: Programmed the `filters` initial state in `Reports.js` to default the `from` and `to` values to today's date (`YYYY-MM-DD`). Allows users to search other dates, and click "✕ Clear" to view all historical data.
+*   **Default Date Filtering**: Programmed the `filters` initial state in `Reports.js` to default the `from` and `to` values to today's date (`YYYY-MM-DD`). Allows users to search other dates, and click "âœ• Clear" to view all historical data.
 
 ### Resolved: User Management Redesign & Schema Expansion (July 2026)
 *   **Database Schema Migration**: Added optional `email` (VarChar(150)) and `phone` (VarChar(50)) fields to the `AppUser` model in `schema.prisma`. Generated and ran database migrations, updating the PostgreSQL tables and generating the Prisma Client.
@@ -382,7 +399,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ### Resolved: Homepage Metrics Redesign & Today's Submissions (July 2026)
 *   **Dashboard Stats Endpoint**: Built `/api/auth/dashboard-stats` (GET) endpoint that queries the `AoiFunctionCheckpoint` and `AoiTechnicianChecklist` tables in PostgreSQL, filtering for the current local date (midnight). Returns counts grouped by shift (Day/Night) and unique active groups (Group A, B, C, etc.).
-*   **Welcome greeting redesign**: Restructured header greeting to match mockup: WELCOME BACK subtitle (prefixed with an elegant vector gold star `✦` bullet rather than sparkles emoji), user fullname with greeting wave icon perfectly aligned to the text baseline, current local date badge, and user security role badge.
+*   **Welcome greeting redesign**: Restructured header greeting to match mockup: WELCOME BACK subtitle (prefixed with an elegant vector gold star `âœ¦` bullet rather than sparkles emoji), user fullname with greeting wave icon perfectly aligned to the text baseline, current local date badge, and user security role badge.
 *   **Mockup Gradient Cards**: Implemented 4 modern stats cards on the homepage with custom tuned vibrant gradients (luxury indigo, ocean sky blue, modern rose-coral pink, and sunset orange gold) matching modern visual aesthetics:
     - **Today's Checklists** (Purple): count of Technician Checklists submitted today, with shift details.
     - **Today's Checksheets** (Blue): count of Daily Function Checks submitted today, with shift details.
@@ -418,17 +435,17 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 ### Resolved: One-Submission-Per-Shift Restriction & Super Admin Deletion (July 2026)
 *   **Duplicate Submission Enforcement**: Integrated a duplicate check (`checkDuplicate`) inside the `TechnicianChecklistController.js` and `FunctionCheckpointController.js` creation routes. When a user attempts to submit a checklist or checksheet, the backend queries the database for any matching combination of date, line, and shift. If found, a `400 Bad Request` duplicate error is returned and displayed on the client.
 *   **Super Admin Deletion Endpoints**: Registered secure backend DELETE routes `/api/checklist/:id` and `/api/checkpoint/:id` mapped to the controllers' `deleteChecklist` and `deleteCheckpoint` methods. These endpoints are strictly protected to authorize only `super_admin` users.
-*   **Frontend Action Column**: Refactored the `CheckpointReport` and `ChecklistReport` tables in `Reports.js` to render an "Actions" column containing a trash icon button (`🗑️`) when logged in as a `super_admin`. Prompts a modal-style confirm warning before executing the deletion call and refreshing the report dashboard list.
+*   **Frontend Action Column**: Refactored the `CheckpointReport` and `ChecklistReport` tables in `Reports.js` to render an "Actions" column containing a trash icon button (`ðŸ—‘ï¸`) when logged in as a `super_admin`. Prompts a modal-style confirm warning before executing the deletion call and refreshing the report dashboard list.
 
 ### Bug Fix: Reports Page currentUser Prop (July 2026)
-*   **Root Cause**: `Reports.js` was attempting to read the logged-in user from `localStorage.getItem('user')`. However, the app **never writes the user object to localStorage** — it only stores the JWT token under the key `'aoi_auth_token'`. The user object lives exclusively in React state inside `App.js`. This caused `isSuperAdmin` to always evaluate to `false`, permanently hiding the Actions column.
+*   **Root Cause**: `Reports.js` was attempting to read the logged-in user from `localStorage.getItem('user')`. However, the app **never writes the user object to localStorage** â€” it only stores the JWT token under the key `'aoi_auth_token'`. The user object lives exclusively in React state inside `App.js`. This caused `isSuperAdmin` to always evaluate to `false`, permanently hiding the Actions column.
 *   **Fix Applied**:
-    *   `App.js` → Updated the `<Reports />` route to pass `currentUser={user}` as a prop.
-    *   `Reports.js` → Changed function signature from `Reports()` to `Reports({ currentUser })` and removed the broken `useState`/`useEffect`/`localStorage` block entirely. The `isSuperAdmin` flag is now derived directly from the received prop: `currentUser?.role === 'super_admin'`.
-*   **Key Rule**: Always pass the logged-in user via props from `App.js`. Never attempt to read it from `localStorage` in a child component — it will not be there.
+    *   `App.js` â†’ Updated the `<Reports />` route to pass `currentUser={user}` as a prop.
+    *   `Reports.js` â†’ Changed function signature from `Reports()` to `Reports({ currentUser })` and removed the broken `useState`/`useEffect`/`localStorage` block entirely. The `isSuperAdmin` flag is now derived directly from the received prop: `currentUser?.role === 'super_admin'`.
+*   **Key Rule**: Always pass the logged-in user via props from `App.js`. Never attempt to read it from `localStorage` in a child component â€” it will not be there.
 
 ### Resolved: User Management Action Icons & IIS Reverse Proxy Fix (July 2026)
-*   **User Action Buttons Redesign**: Replaced the solid background buttons and emojis (`✏️`, `🛡️`, `❌`) in the User Management list table with clean outline buttons:
+*   **User Action Buttons Redesign**: Replaced the solid background buttons and emojis (`âœï¸`, `ðŸ›¡ï¸`, `âŒ`) in the User Management list table with clean outline buttons:
     *   **Edit**: Pencil SVG with an orange border (`#fed7aa`) and orange text (`#ea580c`).
     *   **Reset Password**: Shield/Keyhole SVG with a blue border (`#bfdbfe`) and blue text (`#2563eb`).
     *   **Delete**: Cross SVG with a red border (`#fecaca`) and red text (`#dc2626`).
@@ -476,21 +493,21 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 * **Modification Audit Trail**: When an engineer edits checksheet parameters during review, the backend automatically compares the values against the original submission and stores a detailed modification audit trail.
 * **Compact High-Density Reports UX**:
   * Consolidated 20+ columns into a clean 6-column layout on the Reports page. Sticky left column displays Line, Date, Group, and Shift badge.
-  * Barcode verifications display green checks (`✓ LASER`, `✓ SPI`, `✓ PRE-AOI`) or red crosses (`✗ LASER`, `✗ SPI`, `✗ PRE-AOI`) instead of raw text.
+  * Barcode verifications display green checks (`âœ“ LASER`, `âœ“ SPI`, `âœ“ PRE-AOI`) or red crosses (`âœ— LASER`, `âœ— SPI`, `âœ— PRE-AOI`) instead of raw text.
   * Pre-existing checklist/checkpoint submissions (where `designated_engineer_id` is blank) fallback to show as approved by `"System (Automatic)"`.
 * **Exclusion of Uninstalled Lines**: Reports logic omits generating missing shifts dummy rows for inactive, uninstalled lines.
 * **Dynamic Line Stop Hiding**: During engineer review of line stop checksheets, detailed input fields are collapsed by default. A status toggle allows promoting the checksheet to `"Production"`, which dynamically expands the edit panels.
 * **Technician Submission Modals**: Standard form submissions now trigger an interactive confirmation modal, and successful database writes display a success modal requiring user close acknowledgement before resetting the form.
 * **Modification Diffs Styling & Indicators**:
   * Renamed barcode labels from `Barcode Read A/B Layer` to `Barcode Read A/B Laser` in the engineer review forms.
-  * Added visual pencil indicators (`✏️ Edited` badges) on individual table cells (Line Status, Program & Tooling, Barcode Verifications, Workorders & Traceability, Function Checks, etc.) when the engineer has modified any technician-submitted values.
+  * Added visual pencil indicators (`âœï¸ Edited` badges) on individual table cells (Line Status, Program & Tooling, Barcode Verifications, Workorders & Traceability, Function Checks, etc.) when the engineer has modified any technician-submitted values.
   * Overhauled the Change History drawer card design, mapping database raw keys to localized human-readable labels (e.g. `pre_aoi_program_full_name` -> `Pre-AOI Program Name`) and displaying modifications as stylized clean gray items with colored strike-throughs and status tags.
 * **Line Status & Doc Status Column Separation**:
   * Split the unified reports status pill into two separate columns: **Line Status** and **Doc Status**.
-  * **Line Status** displays only `Stop` in red (`#fff5f5` background, `#e53e3e` text, `#fed7d7` border) or `Production` in green (`#f0fdf4` background, `#166534` text, `#bbf7d0` border) for active/filled submissions, and `—` for empty rows.
+  * **Line Status** displays only `Stop` in red (`#fff5f5` background, `#e53e3e` text, `#fed7d7` border) or `Production` in green (`#f0fdf4` background, `#166534` text, `#bbf7d0` border) for active/filled submissions, and `â€”` for empty rows.
   * **Doc Status** renders the document approval state: `Not Filled` (crimson), `Review` (warning yellow/amber), `Disapproved` (crimson), and `Approved` (green).
 * **Navigation & Authorization Refinements (July 2026)**:
-  * **Tab Order Redesign**: Swapped header nav order so that **User Management** is placed immediately *after* **Line Management** and *before* **Activity Logs** (Home ➔ Pending Tasks ➔ Technician Checklist ➔ Daily Function Check ➔ Reports ➔ Line Management ➔ User Management ➔ Activity Logs).
+  * **Tab Order Redesign**: Swapped header nav order so that **User Management** is placed immediately *after* **Line Management** and *before* **Activity Logs** (Home âž” Pending Tasks âž” Technician Checklist âž” Daily Function Check âž” Reports âž” Line Management âž” User Management âž” Activity Logs).
   * **Engineer User Management Capabilities**:
     * Enabled the `engineer` role to view, create, edit, and delete users on the User Management page (both frontend routes and backend endpoint guards).
     * Restricted role assignability for engineers to only `inspector` and `technician` roles. They cannot create/edit administrators or engineers.
@@ -574,7 +591,7 @@ The application uses **React Router (`react-router-dom`)** for handling page tra
 
 ----
 
-## 🚀 Getting Started & Configuration
+## ðŸš€ Getting Started & Configuration
 
 ### Prerequisites
 - Node.js (v14+)
@@ -612,7 +629,7 @@ chmod +x setup.sh
 - **Backend**: Navigate to `server` and run `npm run dev` (starts on port `5001`).
 - **Frontend**: Navigate to `client` and run `npm start` (starts on port `3000` and proxies `/api` requests to `5001`).
 
-### Production Server Startup (Windows — `vivoadmin` machine)
+### Production Server Startup (Windows â€” `vivoadmin` machine)
 The production server on the `vivoadmin` machine is configured to start automatically and permanently as a native Windows Service named **`AOI_Digital_Checksheet`**.
 
 * **Windows Service**: `AOI_Digital_Checksheet`
@@ -634,3 +651,10 @@ The production server on the `vivoadmin` machine is configured to start automati
   Get-NetTCPConnection -LocalPort 5001 -ErrorAction SilentlyContinue
   ```
   If it returns a row with `State = Listen`, the server is up.
+
+
+
+### Resolved: Laser Changeover Checksheet Module (September 2026)
+* **Backend & Database**: Added full Laser Changeover Module with multi-role approval workflow. Added production_group_leader role which specifically reviews items #1 and #7 on Laser checksheets.
+* **Prisma**: Updated schema.prisma and configured Prisma to output to a secondary directory (client2) to bypass Windows file locking during live updates.
+* **Frontend UI**: Replicated ChangeoverChecksheet.js UI identically for the new Laser module, including matching line/group/date selectors and integrated detailed requirements mapping.
