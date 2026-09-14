@@ -650,7 +650,8 @@ export default function Reports({ currentUser }) {
               <p>${language === 'zh' ? 'ç”ŸæˆäºŽ' : 'Generated'} ${escapeHtml(generatedDate)} Â· ${filteredRows.length} ${language === 'zh' ? 'æ¡è®°å½•' : `record${filteredRows.length === 1 ? '' : 's'}`}</p>
             </div>
             <div style="font-size: 10px; font-weight: bold; color: #334155;">
-              Doc No. - INWJZ1-42026050500004
+              <div>AOI & SPI Doc no. - INWJZ1-42026050500004</div>
+          <div>Laser Doc no. WJZD00-2021020100003</div>
             </div>
           </div>
           <table>
@@ -847,7 +848,8 @@ export default function Reports({ currentUser }) {
           <p>{language === 'zh' ? 'å­˜å‚¨åœ¨ç³»ç»ŸåŽå°çš„è¯¦ç»†ç‚¹æ£€æ£€éªŒè®°å½•ã€‚' : 'Detailed records stored in the backend.'}</p>
         </div>
         <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', textAlign: 'right', marginTop: '6px' }}>
-          Doc No. - INWJZ1-42026050500004
+          <div>AOI & SPI Doc no. - INWJZ1-42026050500004</div>
+          <div>Laser Doc no. WJZD00-2021020100003</div>
         </div>
       </div>
 
