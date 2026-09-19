@@ -183,6 +183,7 @@
 .unified-stat-card.accent-violet::before  { background: #8b5cf6; }
 .unified-stat-card.accent-teal::before    { background: #14b8a6; }
 .unified-stat-card.accent-orange::before  { background: #f97316; }
+.unified-stat-card.accent-fuchsia::before { background: #d946ef; }
 
 /* Unified Icon Block */
 .unified-icon-block {

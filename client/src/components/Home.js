@@ -46,7 +46,8 @@ export default function Home({ currentUser }) {
   const [dashboardStats, setDashboardStats] = useState({
     checkpoint: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
     checklist: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
-    changeover: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
+    changeover: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
+      laserChangeover: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
   });
 
   const [sessionToRevoke, setSessionToRevoke] = useState(null);
@@ -143,14 +144,42 @@ export default function Home({ currentUser }) {
     setError('');
     try {
       // 1. Fetch daily submission stats for the selected date
-      const statsResponse = await apiService.getDashboardStats(date);
-      if (statsResponse.data.success) {
-        setDashboardStats({
-          checkpoint: statsResponse.data.checkpoint,
-          checklist: statsResponse.data.checklist,
-          changeover: statsResponse.data.changeover || { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
-        });
-      }
+      
+        const statsResponse = await apiService.getDashboardStats(date);
+        let updatedStats = {
+          checkpoint: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
+          checklist: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
+          changeover: { total: 0, shifts: { day: 0, night: 0 }, groups: {} },
+          laserChangeover: { total: 0, shifts: { day: 0, night: 0 }, groups: {} }
+        };
+
+        if (statsResponse.data && statsResponse.data.success) {
+          updatedStats = {
+            ...updatedStats,
+            checkpoint: statsResponse.data.checkpoint,
+            checklist: statsResponse.data.checklist,
+            changeover: statsResponse.data.changeover || updatedStats.changeover
+          };
+        }
+
+        try {
+          const laserRes = await apiService.getLaserChangeoverReports({ fromDate: date, toDate: date });
+          if (laserRes.data && laserRes.data.data) {
+             const lasers = laserRes.data.data;
+             const laserDayShift = lasers.filter(c => c.shift === 'Day').length;
+             const laserNightShift = lasers.filter(c => c.shift === 'Night').length;
+             updatedStats.laserChangeover = {
+               total: lasers.length,
+               shifts: { day: laserDayShift, night: laserNightShift },
+               groups: {}
+             };
+          }
+        } catch(err) {
+          console.error("Failed to fetch laser changeovers for dashboard", err);
+        }
+
+        setDashboardStats(updatedStats);
+
 
       // Fetch recent submissions for the new widget
       const recentResponse = await apiService.getRecentSubmissions(date);
@@ -235,7 +264,8 @@ export default function Home({ currentUser }) {
   const checklistTotal = stats.checklist?.total || 0;
   const checkpointTotal = stats.checkpoint?.total || 0;
   const changeoverTotal = stats.changeover?.total || 0;
-  const combinedTotal = checklistTotal + checkpointTotal + changeoverTotal;
+  const laserTotal = stats.laserChangeover?.total || 0;
+  const combinedTotal = checklistTotal + checkpointTotal + changeoverTotal + laserTotal;
 
   // Extract unique active groups from both submissions
   const activeGroups = useMemo(() => {
@@ -261,8 +291,8 @@ export default function Home({ currentUser }) {
     return entries.map(([g, count]) => `${g}: ${count}`).join(' | ');
   }, [activeGroups, stats, language]);
 
-  const totalDay = (stats.checklist?.shifts?.day || 0) + (stats.checkpoint?.shifts?.day || 0) + (stats.changeover?.shifts?.day || 0);
-  const totalNight = (stats.checklist?.shifts?.night || 0) + (stats.checkpoint?.shifts?.night || 0) + (stats.changeover?.shifts?.night || 0);
+  const totalDay = (stats.checklist?.shifts?.day || 0) + (stats.checkpoint?.shifts?.day || 0) + (stats.changeover?.shifts?.day || 0) + (stats.laserChangeover?.shifts?.day || 0);
+  const totalNight = (stats.checklist?.shifts?.night || 0) + (stats.checkpoint?.shifts?.night || 0) + (stats.changeover?.shifts?.night || 0) + (stats.laserChangeover?.shifts?.night || 0);
 
   const recentTotalPages = Math.ceil(recentSubmissions.length / 10) || 1;
   const paginatedRecent = recentSubmissions.slice((recentPage - 1) * 10, recentPage * 10);
@@ -346,15 +376,15 @@ export default function Home({ currentUser }) {
           </div>
         </div>
 
-        {/* Card 3 (Amber): Active Groups */}
-        <div className="unified-stat-card accent-amber">
-          <div className="unified-icon-block icon-amber">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        {/* Card 3 (Amber/Fuchsia): Laser Changeovers */}
+        <div className="unified-stat-card accent-fuchsia">
+          <div className="unified-icon-block" style={{ background: '#fdf4ff', color: '#d946ef' }}>
+             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9v8l10-12h-9z"/></svg>
           </div>
           <div className="unified-stat-content">
-            <span className="unified-stat-label">{language === 'zh' ? '活跃班组' : 'Active Groups'}</span>
-            <span className="unified-stat-value">{activeGroupsCount}</span>
-            <span className="unified-stat-sub" title={groupBreakdownStr} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>{groupBreakdownStr}</span>
+            <span className="unified-stat-label">{language === 'zh' ? '激光换型' : 'Laser Changeovers'}</span>
+            <span className="unified-stat-value">{stats.laserChangeover?.total || 0}</span>
+            <span className="unified-stat-sub">{language === 'zh' ? `白班: ${stats.laserChangeover?.shifts?.day || 0} | 夜班: ${stats.laserChangeover?.shifts?.night || 0}` : `Day: ${stats.laserChangeover?.shifts?.day || 0} | Night: ${stats.laserChangeover?.shifts?.night || 0}`}</span>
           </div>
         </div>
 

@@ -545,6 +545,10 @@ export default function Reports({ currentUser }) {
   const [techSummaryShift, setTechSummaryShift] = useState(() => getCurrentShift());
   const [funcSummaryDate, setFuncSummaryDate] = useState(() => dateKey(new Date()));
   const [funcSummaryShift, setFuncSummaryShift] = useState(() => getCurrentShift());
+  const [changeSummaryDate, setChangeSummaryDate] = useState(() => dateKey(new Date()));
+  const [changeSummaryShift, setChangeSummaryShift] = useState(() => getCurrentShift());
+  const [laserSummaryDate, setLaserSummaryDate] = useState(() => dateKey(new Date()));
+  const [laserSummaryShift, setLaserSummaryShift] = useState(() => getCurrentShift());
 
   // Technician Checklist Today / Selected Date
   const techTodaySubmissions = useMemo(() => {
@@ -595,6 +599,48 @@ export default function Reports({ currentUser }) {
   }, [funcTodaySubmissions, lineOptions]);
 
 
+
+
+  const changeTodaySubmissions = useMemo(() => {
+    return changeovers.filter(r => dateKey(r.date) === changeSummaryDate && r.shift === changeSummaryShift);
+  }, [changeovers, changeSummaryDate, changeSummaryShift]);
+
+  const changeTodayDoneLines = useMemo(() => {
+    return Array.from(new Set(changeTodaySubmissions.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [changeTodaySubmissions, lineOptions]);
+
+  const changeTodayPendingLines = useMemo(() => { return []; }, []);
+
+  const changePendingReviewLines = useMemo(() => {
+    const pending = changeTodaySubmissions.filter(r => r.approval_status === 'ENG_PENDING');
+    return Array.from(new Set(pending.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [changeTodaySubmissions, lineOptions]);
+
+  const changeApprovedLines = useMemo(() => {
+    const approved = changeTodaySubmissions.filter(r => r.approval_status === 'APPROVED');
+    return Array.from(new Set(approved.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [changeTodaySubmissions, lineOptions]);
+
+
+  const laserTodaySubmissions = useMemo(() => {
+    return laserChangeovers.filter(r => dateKey(r.date) === laserSummaryDate && r.shift === laserSummaryShift);
+  }, [laserChangeovers, laserSummaryDate, laserSummaryShift]);
+
+  const laserTodayDoneLines = useMemo(() => {
+    return Array.from(new Set(laserTodaySubmissions.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [laserTodaySubmissions, lineOptions]);
+
+  const laserTodayPendingLines = useMemo(() => { return []; }, []);
+
+  const laserPendingReviewLines = useMemo(() => {
+    const pending = laserTodaySubmissions.filter(r => r.approval_status === 'ENG_PENDING');
+    return Array.from(new Set(pending.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [laserTodaySubmissions, lineOptions]);
+
+  const laserApprovedLines = useMemo(() => {
+    const approved = laserTodaySubmissions.filter(r => r.approval_status === 'APPROVED');
+    return Array.from(new Set(approved.map(r => String(r.line)))).filter(l => lineOptions.includes(l));
+  }, [laserTodaySubmissions, lineOptions]);
 
   const updateFilter = event => {
     const { name, value } = event.target;
@@ -696,7 +742,7 @@ export default function Reports({ currentUser }) {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, submittedLines, pendingReviewLines, approvedLines, notFilledLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange) => {
+  const renderSummaryCard = (title, submittedLines, pendingReviewLines, approvedLines, notFilledLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange, hideNotFilled = false) => {
     const totalLines = lineOptions.length;
     const progressPercent = totalLines > 0 ? Math.round((submittedLines.length / totalLines) * 100) : 0;
     
@@ -740,20 +786,23 @@ export default function Reports({ currentUser }) {
           <div className="summary-metric-row" style={{ gap: '1rem' }}>
             <div className="summary-metric-item">
               <span className="metric-label submitted">{language === 'zh' ? '已提交' : 'Submitted'}</span>
-              <span className="metric-value submitted">{submittedLines.length} <small>/ {totalLines}</small></span>
+              <span className="metric-value submitted">{submittedLines.length} {!hideNotFilled && <small>/ {totalLines}</small>}</span>
             </div>
             <div className="summary-metric-item">
               <span className="metric-label pending-review">{language === 'zh' ? '待审核' : 'Pending Review'}</span>
-              <span className="metric-value pending-review">{pendingReviewLines.length} <small>/ {submittedLines.length}</small></span>
+              <span className="metric-value pending-review">{pendingReviewLines.length} {!hideNotFilled && <small>/ {submittedLines.length}</small>}</span>
             </div>
             <div className="summary-metric-item">
               <span className="metric-label approved">{language === 'zh' ? '已批准' : 'Approved'}</span>
-              <span className="metric-value approved">{approvedLines.length} <small>/ {submittedLines.length}</small></span>
+              <span className="metric-value approved">{approvedLines.length} {!hideNotFilled && <small>/ {submittedLines.length}</small>}</span>
             </div>
+{!hideNotFilled && (
             <div className="summary-metric-item">
               <span className="metric-label notfilled">{language === 'zh' ? '未提交' : 'Not Filled'}</span>
               <span className="metric-value notfilled">{notFilledLines.length} <small>/ {totalLines}</small></span>
             </div>
+)}
+{!hideNotFilled && (
             <div className="summary-progress-ring-container">
               <svg className="progress-ring" width="56" height="56">
                 <circle className="progress-ring-bg" stroke="#f1f5f9" strokeWidth="5" fill="transparent" r="22" cx="28" cy="28"/>
@@ -773,6 +822,7 @@ export default function Reports({ currentUser }) {
               </svg>
               <span className="progress-percent">{progressPercent}%</span>
             </div>
+)}
           </div>
           
           <div className="summary-line-breakdown">
@@ -836,7 +886,7 @@ export default function Reports({ currentUser }) {
               </div>
             </div>
  
-            {notInstLines && notInstLines.length > 0 && (
+            {!hideNotFilled && notInstLines && notInstLines.length > 0 && (
               <div className="line-breakdown-group">
                 <span className="breakdown-label not-installed-label">
                   {language === 'zh' ? '未安装:' : 'Not Installed:'}
@@ -870,10 +920,12 @@ export default function Reports({ currentUser }) {
       </div>
 
       {/* ── Summary Dashboard Panel ── */}
-      <div className="reports-summary-dashboard">
+      <div className="reports-summary-dashboard" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
         {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techPendingReviewLines, techApprovedLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
         {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcPendingReviewLines, funcApprovedLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
-      </div>
+        {renderSummaryCard(language === 'zh' ? '换型点检表状态' : 'Changeover Checksheet Status', changeTodayDoneLines, changePendingReviewLines, changeApprovedLines, changeTodayPendingLines, notInstalledLines, 'changeover-theme', changeSummaryDate, setChangeSummaryDate, changeSummaryShift, setChangeSummaryShift, true)}
+        {renderSummaryCard(language === 'zh' ? '激光换型状态' : 'Laser Changeover Status', laserTodayDoneLines, laserPendingReviewLines, laserApprovedLines, laserTodayPendingLines, notInstalledLines, 'laser-theme', laserSummaryDate, setLaserSummaryDate, laserSummaryShift, setLaserSummaryShift, true)}
+        </div>
 
       <div className="report-segmented-toggle">
         <button

@@ -29,18 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // Helper to clean IP address under reverse proxies that forward ports
-const getCleanIp = (req) => {
-  let ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
-  if (typeof ip === 'string') {
-    if (ip.startsWith('::ffff:')) {
-      ip = ip.replace('::ffff:', '');
-    }
-    if (ip.includes('.') && ip.includes(':')) {
-      ip = ip.split(':')[0];
-    }
-  }
-  return ip;
-};
+const { getCleanIp } = require('./utils/ipHelper');
 
 // Rate limiting for login attempts — only active in production
 const loginLimiter = rateLimit({

@@ -1,4 +1,4 @@
-﻿const Service = require('node-windows').Service;
+const Service = require('node-windows').Service;
 const path = require('path');
 
 // Create a new service object
@@ -6,10 +6,11 @@ const svc = new Service({
   name: 'AOI_Frontend_Service',
   description: 'AOI Digital Checksheet React Frontend (Port 3000)',
   script: path.join(__dirname, 'server.js'),
-  env: [{
-    name: "NODE_ENV",
-    value: "production"
-  }]
+  env: [
+    { name: "NODE_ENV", value: "production" },
+    { name: "PORT",     value: "3000" },
+    { name: "BACKEND_URL", value: "http://localhost:5001" }
+  ]
 });
 
 // Listen for the "install" event, which indicates the process is available as a service.

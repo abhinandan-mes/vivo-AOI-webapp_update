@@ -6,6 +6,7 @@ const prisma = require('../config/db');
 const { authenticateToken, requireRoles, JWT_SECRET } = require('../middleware/auth');
 const { validateCreateUser, validateUpdateUser } = require('../middleware/validation');
 const { logActivity } = require('../utils/activityLogger');
+const { getCleanIp } = require('../utils/ipHelper');
 
 const router = express.Router();
 
@@ -51,18 +52,7 @@ router.post('/auth/login', async (req, res) => {
     }
 
     const sessionId = crypto.randomUUID();
-    let publicIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
-    if (publicIp) {
-      if (publicIp.startsWith('::ffff:')) {
-        publicIp = publicIp.substring(7);
-      }
-      if (publicIp.includes('.') && publicIp.includes(':')) {
-        publicIp = publicIp.split(':')[0];
-      }
-      if (publicIp.startsWith('[') && publicIp.includes(']')) {
-        publicIp = publicIp.substring(1, publicIp.indexOf(']'));
-      }
-    }
+    const publicIp = getCleanIp(req);
 
     await prisma.appSession.create({
       data: {

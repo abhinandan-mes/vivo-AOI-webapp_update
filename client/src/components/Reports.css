@@ -351,3 +351,4 @@ thead .sticky-date { z-index: 5; background: #f8fafc; }
   transform: scale(1.15);
 }
 
+.summary-card.changeover-theme { border-left: 4px solid #8b5cf6; } .summary-card.laser-theme { border-left: 4px solid #f43f5e; }
