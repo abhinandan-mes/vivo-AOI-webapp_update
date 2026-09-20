@@ -4546,3 +4546,94 @@ Environment variables loaded from .env
 │    npm i --save-dev prisma@latest                       │
 │    npm i @prisma/client@latest                          │
 └─────────────────────────────────────────────────────────┘
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (d:\AOi_check_sheet\server\node_modules\body-parser\lib\types\json.js:92:19)
+    at d:\AOi_check_sheet\server\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:226:14)
+    at invokeCallback (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:238:16)
+    at done (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:509:20)
+    at endReadableNT (node:internal/streams/readable:1746:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (d:\AOi_check_sheet\server\node_modules\body-parser\lib\types\json.js:92:19)
+    at d:\AOi_check_sheet\server\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:226:14)
+    at invokeCallback (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:238:16)
+    at done (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:509:20)
+    at endReadableNT (node:internal/streams/readable:1746:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (d:\AOi_check_sheet\server\node_modules\body-parser\lib\types\json.js:92:19)
+    at d:\AOi_check_sheet\server\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:226:14)
+    at invokeCallback (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:238:16)
+    at done (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:509:20)
+    at endReadableNT (node:internal/streams/readable:1746:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (d:\AOi_check_sheet\server\node_modules\body-parser\lib\types\json.js:92:19)
+    at d:\AOi_check_sheet\server\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:226:14)
+    at invokeCallback (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:238:16)
+    at done (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:509:20)
+    at endReadableNT (node:internal/streams/readable:1746:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (d:\AOi_check_sheet\server\node_modules\body-parser\lib\types\json.js:92:19)
+    at d:\AOi_check_sheet\server\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:226:14)
+    at invokeCallback (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:238:16)
+    at done (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (d:\AOi_check_sheet\server\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:509:20)
+    at endReadableNT (node:internal/streams/readable:1746:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.3 -> 8.0.0-rc.15                 │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+⚠️ SECURITY WARNING: JWT_SECRET is not set or using default fallback in production mode!
+Environment variables loaded from .env

@@ -541,6 +541,28 @@ export default function Reports({ currentUser }) {
     return (hours >= 9 && hours < 21) ? 'Day' : 'Night';
   };
 
+  
+  const [globalSummaryDate, setGlobalSummaryDate] = useState(() => dateKey(new Date()));
+  const [globalSummaryShift, setGlobalSummaryShift] = useState(() => getCurrentShift());
+
+  const handleGlobalDateChange = (date) => {
+    setGlobalSummaryDate(date);
+    setTechSummaryDate(date);
+    setFuncSummaryDate(date);
+    setChangeSummaryDate(date);
+    setLaserSummaryDate(date);
+    setFilters(prev => ({ ...prev, from: date, to: date }));
+  };
+
+  const handleGlobalShiftChange = (shift) => {
+    setGlobalSummaryShift(shift);
+    setTechSummaryShift(shift);
+    setFuncSummaryShift(shift);
+    setChangeSummaryShift(shift);
+    setLaserSummaryShift(shift);
+    setFilters(prev => ({ ...prev, shift: shift === 'Both' ? '' : shift }));
+  };
+
   const [techSummaryDate, setTechSummaryDate] = useState(() => dateKey(new Date()));
   const [techSummaryShift, setTechSummaryShift] = useState(() => getCurrentShift());
   const [funcSummaryDate, setFuncSummaryDate] = useState(() => dateKey(new Date()));
@@ -552,7 +574,7 @@ export default function Reports({ currentUser }) {
 
   // Technician Checklist Today / Selected Date
   const techTodaySubmissions = useMemo(() => {
-    return checklists.filter(r => dateKey(r.date) === techSummaryDate && r.shift === techSummaryShift);
+    return checklists.filter(r => dateKey(r.date) === techSummaryDate && (techSummaryShift === 'Both' || r.shift === techSummaryShift));
   }, [checklists, techSummaryDate, techSummaryShift]);
 
   const techTodayDoneLines = useMemo(() => {
@@ -577,7 +599,7 @@ export default function Reports({ currentUser }) {
 
   // Daily Function Check Today / Selected Date
   const funcTodaySubmissions = useMemo(() => {
-    return checkpoints.filter(r => dateKey(r.date) === funcSummaryDate && r.shift === funcSummaryShift);
+    return checkpoints.filter(r => dateKey(r.date) === funcSummaryDate && (funcSummaryShift === 'Both' || r.shift === funcSummaryShift));
   }, [checkpoints, funcSummaryDate, funcSummaryShift]);
 
   const funcTodayDoneLines = useMemo(() => {
@@ -602,7 +624,7 @@ export default function Reports({ currentUser }) {
 
 
   const changeTodaySubmissions = useMemo(() => {
-    return changeovers.filter(r => dateKey(r.date) === changeSummaryDate && r.shift === changeSummaryShift);
+    return changeovers.filter(r => dateKey(r.date) === changeSummaryDate && (changeSummaryShift === 'Both' || r.shift === changeSummaryShift));
   }, [changeovers, changeSummaryDate, changeSummaryShift]);
 
   const changeTodayDoneLines = useMemo(() => {
@@ -623,7 +645,7 @@ export default function Reports({ currentUser }) {
 
 
   const laserTodaySubmissions = useMemo(() => {
-    return laserChangeovers.filter(r => dateKey(r.date) === laserSummaryDate && r.shift === laserSummaryShift);
+    return laserChangeovers.filter(r => dateKey(r.date) === laserSummaryDate && (laserSummaryShift === 'Both' || r.shift === laserSummaryShift));
   }, [laserChangeovers, laserSummaryDate, laserSummaryShift]);
 
   const laserTodayDoneLines = useMemo(() => {
@@ -742,12 +764,12 @@ export default function Reports({ currentUser }) {
     if (format === 'pdf') exportPdf();
   };
 
-  const renderSummaryCard = (title, submittedLines, pendingReviewLines, approvedLines, notFilledLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange, hideNotFilled = false) => {
+  const renderSummaryCard = (title, submittedLines, pendingReviewLines, approvedLines, notFilledLines, notInstLines, colorThemeClass, dateValue, onDateChange, shiftValue, onShiftChange, hideNotFilled = false, typeKey = '') => {
     const totalLines = lineOptions.length;
     const progressPercent = totalLines > 0 ? Math.round((submittedLines.length / totalLines) * 100) : 0;
     
     return (
-      <div className={`summary-card ${colorThemeClass}`}>
+      <div className={`summary-card ${colorThemeClass}`} onClick={() => { if(typeKey) { setReportType(typeKey); document.querySelector('.report-segmented-toggle')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }} style={{ cursor: typeKey ? 'pointer' : 'default' }}>
         <div className="summary-card-header">
           <h3>{title}</h3>
           <div className="summary-controls" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -756,6 +778,7 @@ export default function Reports({ currentUser }) {
               className="summary-date-picker"
               value={dateValue}
               onChange={(e) => onDateChange(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
               max={dateKey(new Date())}
               aria-label={`${title} date`}
             />
@@ -763,6 +786,7 @@ export default function Reports({ currentUser }) {
               className="summary-shift-select"
               value={shiftValue}
               onChange={(e) => onShiftChange(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
               aria-label={`${title} shift`}
               style={{
                 padding: '0.4rem 0.6rem',
@@ -776,8 +800,9 @@ export default function Reports({ currentUser }) {
                 color: '#334155'
               }}
             >
-              <option value="Day">{t('day')}</option>
-              <option value="Night">{t('night')}</option>
+              <option value="Both">{language === 'zh' ? '全部' : 'Both'}</option>
+                <option value="Day">{t('day')}</option>
+                <option value="Night">{t('night')}</option>
             </select>
           </div>
         </div>
@@ -908,26 +933,57 @@ export default function Reports({ currentUser }) {
 
   return (
     <section className="reports-container">
+      
       <div className="reports-heading" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <h1>{t('rep_title')}</h1>
-          <p>{language === 'zh' ? '存储在系统后台的详细点检检验记录。' : 'Detailed records stored in the backend.'}</p>
+          <p>{language === 'zh' ? '详细记录储存在后台' : 'Detailed records stored in the backend.'}</p>
         </div>
-        <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', textAlign: 'right', marginTop: '6px' }}>
-          <div>AOI & SPI Doc No. - INWJZ1-42026050500004</div>
-          <div>Laser Doc No. - WJZD00-2021020100003</div>
+        
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          {/* Global Summary Controls */}
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', padding: '0.4rem 1rem', background: '#fff', borderRadius: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', fontSize: '0.9rem', color: '#1e293b' }}>
+              📊 {language === 'zh' ? '全局日期: ' : 'Global Stats Day: '}
+              <input
+                type="date"
+                style={{ border: 'none', background: 'transparent', marginLeft: '0.5rem', outline: 'none', color: '#334155', fontWeight: 'bold' }}
+                value={globalSummaryDate}
+                onChange={(e) => handleGlobalDateChange(e.target.value)}
+                max={dateKey(new Date())}
+              />
+            </div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', padding: '0.4rem 1rem', background: '#fff', borderRadius: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', fontSize: '0.9rem', color: '#1e293b' }}>
+              ⏱️ {language === 'zh' ? '全局班次: ' : 'Global Shift: '}
+              <select
+                style={{ border: 'none', background: 'transparent', marginLeft: '0.5rem', outline: 'none', color: '#334155', fontWeight: 'bold', cursor: 'pointer' }}
+                value={globalSummaryShift}
+                onChange={(e) => handleGlobalShiftChange(e.target.value)}
+              >
+                <option value="Both">{language === 'zh' ? '全部' : 'Both'}</option>
+                <option value="Day">{language === 'zh' ? '白班' : 'Day'}</option>
+                <option value="Night">{language === 'zh' ? '夜班' : 'Night'}</option>
+              </select>
+            </div>
+          </div>
+
+          <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#64748b', textAlign: 'right', marginTop: '6px' }}>
+            <div>AOI & SPI Doc No. - INWJZ1-42026050500004</div>
+            <div>Laser Doc No. - WJZD00-2021020100003</div>
+          </div>
         </div>
       </div>
 
       {/* ── Summary Dashboard Panel ── */}
       <div className="reports-summary-dashboard" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-        {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techPendingReviewLines, techApprovedLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift)}
-        {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcPendingReviewLines, funcApprovedLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift)}
-        {renderSummaryCard(language === 'zh' ? '换型点检表状态' : 'Changeover Checksheet Status', changeTodayDoneLines, changePendingReviewLines, changeApprovedLines, changeTodayPendingLines, notInstalledLines, 'changeover-theme', changeSummaryDate, setChangeSummaryDate, changeSummaryShift, setChangeSummaryShift, true)}
-        {renderSummaryCard(language === 'zh' ? '激光换型状态' : 'Laser Changeover Status', laserTodayDoneLines, laserPendingReviewLines, laserApprovedLines, laserTodayPendingLines, notInstalledLines, 'laser-theme', laserSummaryDate, setLaserSummaryDate, laserSummaryShift, setLaserSummaryShift, true)}
+        {renderSummaryCard(t('rep_summary_checklist'), techTodayDoneLines, techPendingReviewLines, techApprovedLines, techTodayPendingLines, notInstalledLines, 'tech-theme', techSummaryDate, setTechSummaryDate, techSummaryShift, setTechSummaryShift, false, 'checklist')}
+        {renderSummaryCard(t('rep_summary_checkpoint'), funcTodayDoneLines, funcPendingReviewLines, funcApprovedLines, funcTodayPendingLines, notInstalledLines, 'func-theme', funcSummaryDate, setFuncSummaryDate, funcSummaryShift, setFuncSummaryShift, false, 'checkpoint')}
+        {renderSummaryCard(language === 'zh' ? '换型点检表状态' : 'Changeover Checksheet Status', changeTodayDoneLines, changePendingReviewLines, changeApprovedLines, changeTodayPendingLines, notInstalledLines, 'changeover-theme', changeSummaryDate, setChangeSummaryDate, changeSummaryShift, setChangeSummaryShift, true, 'changeover')}
+        {renderSummaryCard(language === 'zh' ? '激光换型状态' : 'Laser Changeover Status', laserTodayDoneLines, laserPendingReviewLines, laserApprovedLines, laserTodayPendingLines, notInstalledLines, 'laser-theme', laserSummaryDate, setLaserSummaryDate, laserSummaryShift, setLaserSummaryShift, true, 'laser_changeover')}
         </div>
 
-      <div className="report-segmented-toggle">
+      <div className="report-sticky-header">
+        <div className="report-segmented-toggle" style={{ borderBottom: 'none', padding: '0.5rem 0' }}>
         <button
           type="button"
           className={`toggle-btn ${reportType === 'checklist' ? 'active' : ''}`}
@@ -958,7 +1014,7 @@ export default function Reports({ currentUser }) {
         </button>
       </div>
 
-      <div className="report-filters">
+      <div className="report-filters" style={{ padding: '0.5rem 0 1rem 0', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
         <label>{t('rep_filter_from')}<input type="date" name="from" value={filters.from} max={filters.to || undefined} onChange={updateFilter} /></label>
         <label>{t('rep_filter_to')}<input type="date" name="to" value={filters.to} min={filters.from || undefined} onChange={updateFilter} /></label>
         <label>{t('rep_filter_line')}<select name="line" value={filters.line} onChange={updateFilter}><option value="">{language === 'zh' ? '全部线别' : 'All lines'}</option>{allLineOptions.map(line => <option key={line} value={line}>{line}</option>)}</select></label>
@@ -988,8 +1044,9 @@ export default function Reports({ currentUser }) {
           </button>
         )}
       </div>
+        </div>
 
-      {!loading && !error && (
+        {!loading && !error && (
         <div className="report-meta-bar">
           <span className="result-count-badge">
             {language === 'zh' 

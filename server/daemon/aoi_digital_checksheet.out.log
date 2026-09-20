@@ -2118,3 +2118,539 @@ No pending migrations to apply.
 🚀 Server running on http://localhost:5001
 [AUTH] Login attempt received for username: "abhinandan"
 [AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95003969"
+[AUTH] Login failed: Username "95003969" not found
+[AUTH] Login attempt received for username: "95003969"
+[AUTH] Login failed: Username "95003969" not found
+[AUTH] Login attempt received for username: "95003689"
+[AUTH] Login failed: Username "95003689" not found
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login failed: Username "95004124" not found
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login failed: Username "95004124" not found
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login failed: Username "95004124" not found
+[AUTH] Login attempt received for username: "Amit Kumar Bhati"
+[AUTH] Login failed: Username "Amit Kumar Bhati" not found
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login successful: User "95004124" (Role: production_group_leader)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003939"
+[AUTH] Login failed: Incorrect password for user "95003939"
+[AUTH] Login attempt received for username: "95003939"
+[AUTH] Login failed: Incorrect password for user "95003939"
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login successful: User "95004124" (Role: production_group_leader)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login successful: User "95004124" (Role: production_group_leader)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login failed: Incorrect password for user "abhinandan"
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "wrong"
+[AUTH] Login failed: Username "wrong" not found
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login successful: User "95004124" (Role: production_group_leader)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "Amit Kumar Bhati"
+[AUTH] Login failed: Username "Amit Kumar Bhati" not found
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login successful: User "95004124" (Role: production_group_leader)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003939"
+[AUTH] Login successful: User "95003939" (Role: engineer)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login failed: Incorrect password for user "95004124"
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login failed: Incorrect password for user "95004124"
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login failed: Incorrect password for user "95004124"
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95004561"
+[AUTH] Login failed: Incorrect password for user "95004561"
+[AUTH] Login attempt received for username: "95004561"
+[AUTH] Login successful: User "95004561" (Role: technician)
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login successful: User "95003456" (Role: technician)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95005077"
+[AUTH] Login successful: User "95005077" (Role: technician)
+[AUTH] Login attempt received for username: "95004181"
+[AUTH] Login successful: User "95004181" (Role: technician)
+[AUTH] Login attempt received for username: "95001033"
+[AUTH] Login failed: Incorrect password for user "95001033"
+[AUTH] Login attempt received for username: "95001033"
+[AUTH] Login successful: User "95001033" (Role: admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95004154"
+[AUTH] Login successful: User "95004154" (Role: technician)
+[AUTH] Login attempt received for username: "95005080"
+[AUTH] Login successful: User "95005080" (Role: engineer)
+[AUTH] Login attempt received for username: "95004143"
+[AUTH] Login successful: User "95004143" (Role: technician)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95004182"
+[AUTH] Login successful: User "95004182" (Role: engineer)
+[AUTH] Login attempt received for username: "95004182"
+[AUTH] Login successful: User "95004182" (Role: engineer)
+[AUTH] Login attempt received for username: "95005077"
+[AUTH] Login successful: User "95005077" (Role: technician)
+[AUTH] Login attempt received for username: "95004154"
+[AUTH] Login successful: User "95004154" (Role: technician)
+[AUTH] Login attempt received for username: "95004181"
+[AUTH] Login successful: User "95004181" (Role: technician)
+[AUTH] Login attempt received for username: "95005077"
+[AUTH] Login failed: Incorrect password for user "95005077"
+[AUTH] Login attempt received for username: "95005077"
+[AUTH] Login successful: User "95005077" (Role: technician)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95004143"
+[AUTH] Login successful: User "95004143" (Role: technician)
+[AUTH] Login attempt received for username: "95005080"
+[AUTH] Login successful: User "95005080" (Role: engineer)
+[AUTH] Login attempt received for username: "95004182"
+[AUTH] Login successful: User "95004182" (Role: engineer)
+[AUTH] Login attempt received for username: "95003873"
+[AUTH] Login successful: User "95003873" (Role: technician)
+[AUTH] Login attempt received for username: "95004143"
+[AUTH] Login successful: User "95004143" (Role: technician)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95003853"
+[AUTH] Login failed: Username "95003853" not found
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "sahani"
+[AUTH] Login failed: Incorrect password for user "sahani"
+[AUTH] Login attempt received for username: "sahani"
+[AUTH] Login failed: Incorrect password for user "sahani"
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login failed: Incorrect password for user "95003869"
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login successful: User "95003456" (Role: technician)
+[AUTH] Login attempt received for username: "95004561"
+[AUTH] Login successful: User "95004561" (Role: technician)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95001033"
+[AUTH] Login successful: User "95001033" (Role: admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95004582"
+[AUTH] Login successful: User "95004582" (Role: technician)
+[AUTH] Login attempt received for username: "95004182"
+[AUTH] Login successful: User "95004182" (Role: engineer)
+[AUTH] Login attempt received for username: "95003873"
+[AUTH] Login successful: User "95003873" (Role: technician)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95001033"
+[AUTH] Login successful: User "95001033" (Role: admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login successful: User "95003456" (Role: technician)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95004561"
+[AUTH] Login successful: User "95004561" (Role: technician)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login failed: Incorrect password for user "95003456"
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login failed: Incorrect password for user "95003456"
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login failed: Incorrect password for user "95003456"
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login successful: User "95003456" (Role: technician)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95003873"
+[AUTH] Login successful: User "95003873" (Role: technician)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login failed: Incorrect password for user "95005413"
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95004143"
+[AUTH] Login failed: Incorrect password for user "95004143"
+[AUTH] Login attempt received for username: "95004143"
+[AUTH] Login successful: User "95004143" (Role: technician)
+[AUTH] Login attempt received for username: "95004182"
+[AUTH] Login successful: User "95004182" (Role: engineer)
+[AUTH] Login attempt received for username: "95004182"
+[AUTH] Login failed: Incorrect password for user "95004182"
+[AUTH] Login attempt received for username: "95004182"
+[AUTH] Login successful: User "95004182" (Role: engineer)
+[AUTH] Login attempt received for username: "95005080"
+[AUTH] Login successful: User "95005080" (Role: engineer)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login failed: Incorrect password for user "95005413"
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95004143"
+[AUTH] Login successful: User "95004143" (Role: technician)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login failed: Incorrect password for user "95003162"
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login successful: User "95003162" (Role: inspector)
+[AUTH] Login attempt received for username: "95004582"
+[AUTH] Login successful: User "95004582" (Role: technician)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95004561"
+[AUTH] Login successful: User "95004561" (Role: technician)
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login successful: User "95003456" (Role: technician)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login successful: User "95003456" (Role: technician)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003162"
+[AUTH] Login successful: User "95003162" (Role: inspector)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+🔄 Running Prisma migrations...
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "aoi_checklist", schema "public" at "localhost:5432"
+
+13 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+✅ Prisma migrations applied successfully
+👤 Default admin user checked/created successfully
+🏭 Line status table seeded successfully
+🚀 Server running on http://localhost:5001
+[AUTH] Login attempt received for username: "95004124"
+[AUTH] Login successful: User "95004124" (Role: production_group_leader)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95004181"
+[AUTH] Login successful: User "95004181" (Role: technician)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95004554"
+[AUTH] Login failed: Username "95004554" not found
+[AUTH] Login attempt received for username: "95004154"
+[AUTH] Login successful: User "95004154" (Role: technician)
+[AUTH] Login attempt received for username: "95005077"
+[AUTH] Login failed: Incorrect password for user "95005077"
+[AUTH] Login attempt received for username: "95005077"
+[AUTH] Login successful: User "95005077" (Role: technician)
+[AUTH] Login attempt received for username: "95005080"
+[AUTH] Login successful: User "95005080" (Role: engineer)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95005080"
+[AUTH] Login successful: User "95005080" (Role: engineer)
+[AUTH] Login attempt received for username: "95005077"
+[AUTH] Login successful: User "95005077" (Role: technician)
+[AUTH] Login attempt received for username: "95005413"
+[AUTH] Login successful: User "95005413" (Role: engineer)
+[AUTH] Login attempt received for username: "95003869"
+[AUTH] Login successful: User "95003869" (Role: engineer)
+[AUTH] Login attempt received for username: "95004561"
+[AUTH] Login successful: User "95004561" (Role: technician)
+[AUTH] Login attempt received for username: "95003456"
+[AUTH] Login successful: User "95003456" (Role: technician)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login failed: Incorrect password for user "95002872"
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "SAHANI"
+[AUTH] Login failed: Username "SAHANI" not found
+[AUTH] Login attempt received for username: "SAHANI"
+[AUTH] Login failed: Username "SAHANI" not found
+[AUTH] Login attempt received for username: "SAHANI"
+[AUTH] Login failed: Username "SAHANI" not found
+[AUTH] Login attempt received for username: "SAHANI"
+[AUTH] Login failed: Username "SAHANI" not found
+[AUTH] Login attempt received for username: "SAHANI"
+[AUTH] Login failed: Username "SAHANI" not found
+[AUTH] Login attempt received for username: "SAHANI"
+[AUTH] Login failed: Username "SAHANI" not found
+[AUTH] Login attempt received for username: "SAHANI"
+[AUTH] Login failed: Username "SAHANI" not found
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "sahani"
+[AUTH] Login successful: User "sahani" (Role: super_admin)
+[AUTH] Login attempt received for username: "95002872"
+[AUTH] Login successful: User "95002872" (Role: engineer)
+[AUTH] Login attempt received for username: "abhinandan"
+[AUTH] Login successful: User "abhinandan" (Role: super_admin)

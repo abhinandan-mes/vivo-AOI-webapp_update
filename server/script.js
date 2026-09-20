@@ -1,0 +1,1 @@
+const { PrismaClient } = require('@prisma/client'); const prisma = new PrismaClient(); async function main() { const users = await prisma.appUser.findMany({ include: { sessions: true } }); console.log(JSON.stringify(users.map(u => ({ username: u.username, sessions: u.sessions.map(s => s.public_ip) })), null, 2)); } main().finally(() => prisma.$disconnect());

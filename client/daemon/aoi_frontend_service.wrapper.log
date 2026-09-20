@@ -1,0 +1,136 @@
+2026-09-14 19:52:04 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 19:52:04 - Started 12040
+2026-09-14 20:08:14 - Stopping aoi_frontend_service.exe
+2026-09-14 20:08:14 - ProcessKill 12040
+2026-09-14 20:08:14 - Found child process: 5940 Name: conhost.exe
+2026-09-14 20:08:14 - Found child process: 5012 Name: node.exe
+2026-09-14 20:08:14 - Stopping process 5940
+2026-09-14 20:08:14 - Send SIGINT 5940
+2026-09-14 20:08:14 - SIGINT to 5940 failed - Killing as fallback
+2026-09-14 20:08:14 - Stopping process 5012
+2026-09-14 20:08:14 - Send SIGINT 5012
+2026-09-14 20:08:14 - SIGINT to 5012 failed - Killing as fallback
+2026-09-14 20:08:14 - Stopping process 12040
+2026-09-14 20:08:14 - Send SIGINT 12040
+2026-09-14 20:08:14 - SIGINT to 12040 failed - Killing as fallback
+2026-09-14 20:08:14 - Finished aoi_frontend_service.exe
+2026-09-14 20:08:22 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 20:08:22 - Started 10400
+2026-09-14 20:18:33 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 20:18:33 - Started 6820
+2026-09-14 20:18:55 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 20:18:55 - Started 9256
+2026-09-14 20:21:31 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 20:21:31 - Started 7360
+2026-09-14 20:26:47 - Stopping aoi_frontend_service.exe
+2026-09-14 20:26:47 - ProcessKill 7360
+2026-09-14 20:26:47 - Found child process: 9964 Name: conhost.exe
+2026-09-14 20:26:47 - Found child process: 6312 Name: node.exe
+2026-09-14 20:26:47 - Stopping process 9964
+2026-09-14 20:26:47 - Send SIGINT 9964
+2026-09-14 20:26:47 - SIGINT to 9964 failed - Killing as fallback
+2026-09-14 20:26:47 - Stopping process 6312
+2026-09-14 20:26:47 - Send SIGINT 6312
+2026-09-14 20:26:47 - SIGINT to 6312 failed - Killing as fallback
+2026-09-14 20:26:47 - Stopping process 7360
+2026-09-14 20:26:47 - Send SIGINT 7360
+2026-09-14 20:26:47 - SIGINT to 7360 failed - Killing as fallback
+2026-09-14 20:26:47 - Finished aoi_frontend_service.exe
+2026-09-14 20:26:48 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 20:26:48 - Started 6516
+2026-09-14 21:03:52 - Stopping aoi_frontend_service.exe
+2026-09-14 21:03:52 - ProcessKill 6516
+2026-09-14 21:03:52 - Found child process: 11476 Name: conhost.exe
+2026-09-14 21:03:52 - Found child process: 2436 Name: node.exe
+2026-09-14 21:03:52 - Stopping process 11476
+2026-09-14 21:03:52 - Send SIGINT 11476
+2026-09-14 21:03:52 - SIGINT to 11476 failed - Killing as fallback
+2026-09-14 21:03:53 - Stopping process 2436
+2026-09-14 21:03:53 - Send SIGINT 2436
+2026-09-14 21:03:53 - SIGINT to 2436 failed - Killing as fallback
+2026-09-14 21:03:53 - Stopping process 6516
+2026-09-14 21:03:53 - Send SIGINT 6516
+2026-09-14 21:03:53 - SIGINT to 6516 failed - Killing as fallback
+2026-09-14 21:03:53 - Finished aoi_frontend_service.exe
+2026-09-14 21:03:54 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-14 21:03:54 - Started 12868
+2026-09-19 14:42:15 - Stopping aoi_frontend_service.exe
+2026-09-19 14:42:15 - ProcessKill 12868
+2026-09-19 14:42:15 - Found child process: 13204 Name: conhost.exe
+2026-09-19 14:42:15 - Found child process: 12184 Name: node.exe
+2026-09-19 14:42:15 - Stopping process 13204
+2026-09-19 14:42:15 - Send SIGINT 13204
+2026-09-19 14:42:15 - SIGINT to 13204 failed - Killing as fallback
+2026-09-19 14:42:15 - Stopping process 12184
+2026-09-19 14:42:15 - Send SIGINT 12184
+2026-09-19 14:42:15 - SIGINT to 12184 failed - Killing as fallback
+2026-09-19 14:42:15 - Stopping process 12868
+2026-09-19 14:42:15 - Send SIGINT 12868
+2026-09-19 14:42:15 - SIGINT to 12868 failed - Killing as fallback
+2026-09-19 14:42:15 - Finished aoi_frontend_service.exe
+2026-09-19 14:42:17 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-19 14:42:17 - Started 5980
+2026-09-19 14:49:49 - Stopping aoi_frontend_service.exe
+2026-09-19 14:49:49 - ProcessKill 5980
+2026-09-19 14:49:50 - Found child process: 12368 Name: conhost.exe
+2026-09-19 14:49:50 - Found child process: 10912 Name: node.exe
+2026-09-19 14:49:50 - Stopping process 12368
+2026-09-19 14:49:50 - Send SIGINT 12368
+2026-09-19 14:49:50 - SIGINT to 12368 failed - Killing as fallback
+2026-09-19 14:49:50 - Stopping process 10912
+2026-09-19 14:49:50 - Send SIGINT 10912
+2026-09-19 14:49:50 - SIGINT to 10912 failed - Killing as fallback
+2026-09-19 14:49:50 - Stopping process 5980
+2026-09-19 14:49:50 - Send SIGINT 5980
+2026-09-19 14:49:50 - SIGINT to 5980 failed - Killing as fallback
+2026-09-19 14:49:50 - Finished aoi_frontend_service.exe
+2026-09-19 14:49:51 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-19 14:49:51 - Started 2108
+2026-09-19 15:13:55 - Stopping aoi_frontend_service.exe
+2026-09-19 15:13:55 - ProcessKill 2108
+2026-09-19 15:13:55 - Found child process: 7816 Name: conhost.exe
+2026-09-19 15:13:55 - Found child process: 8416 Name: node.exe
+2026-09-19 15:13:55 - Stopping process 7816
+2026-09-19 15:13:55 - Send SIGINT 7816
+2026-09-19 15:13:55 - SIGINT to 7816 failed - Killing as fallback
+2026-09-19 15:13:55 - Stopping process 8416
+2026-09-19 15:13:55 - Send SIGINT 8416
+2026-09-19 15:13:55 - SIGINT to 8416 failed - Killing as fallback
+2026-09-19 15:13:55 - Stopping process 2108
+2026-09-19 15:13:55 - Send SIGINT 2108
+2026-09-19 15:13:55 - SIGINT to 2108 failed - Killing as fallback
+2026-09-19 15:13:55 - Finished aoi_frontend_service.exe
+2026-09-19 15:13:57 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-19 15:13:57 - Started 4140
+2026-09-19 16:03:23 - Stopping aoi_frontend_service.exe
+2026-09-19 16:03:23 - ProcessKill 4140
+2026-09-19 16:03:23 - Found child process: 8752 Name: conhost.exe
+2026-09-19 16:03:23 - Found child process: 12160 Name: node.exe
+2026-09-19 16:03:23 - Stopping process 8752
+2026-09-19 16:03:23 - Send SIGINT 8752
+2026-09-19 16:03:23 - SIGINT to 8752 failed - Killing as fallback
+2026-09-19 16:03:23 - Stopping process 12160
+2026-09-19 16:03:23 - Send SIGINT 12160
+2026-09-19 16:03:23 - SIGINT to 12160 failed - Killing as fallback
+2026-09-19 16:03:23 - Stopping process 4140
+2026-09-19 16:03:23 - Send SIGINT 4140
+2026-09-19 16:03:23 - SIGINT to 4140 failed - Killing as fallback
+2026-09-19 16:03:23 - Finished aoi_frontend_service.exe
+2026-09-19 16:03:24 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-19 16:03:24 - Started 7204
+2026-09-19 16:15:34 - Stopping aoi_frontend_service.exe
+2026-09-19 16:15:34 - ProcessKill 7204
+2026-09-19 16:15:34 - Found child process: 9076 Name: conhost.exe
+2026-09-19 16:15:34 - Found child process: 6888 Name: node.exe
+2026-09-19 16:15:34 - Stopping process 9076
+2026-09-19 16:15:34 - Send SIGINT 9076
+2026-09-19 16:15:34 - SIGINT to 9076 failed - Killing as fallback
+2026-09-19 16:15:34 - Stopping process 6888
+2026-09-19 16:15:34 - Send SIGINT 6888
+2026-09-19 16:15:34 - SIGINT to 6888 failed - Killing as fallback
+2026-09-19 16:15:34 - Stopping process 7204
+2026-09-19 16:15:34 - Send SIGINT 7204
+2026-09-19 16:15:34 - SIGINT to 7204 failed - Killing as fallback
+2026-09-19 16:15:34 - Finished aoi_frontend_service.exe
+2026-09-19 16:15:36 - Starting C:\Program Files\nodejs\node.exe  --harmony D:\AOi_check_sheet\client\node_modules\node-windows\lib\wrapper.js --file D:\AOi_check_sheet\client\server.js --scriptoptions= --log "AOI_Frontend_Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-09-19 16:15:36 - Started 11296

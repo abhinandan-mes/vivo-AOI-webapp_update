@@ -352,3 +352,27 @@ thead .sticky-date { z-index: 5; background: #f8fafc; }
 }
 
 .summary-card.changeover-theme { border-left: 4px solid #8b5cf6; } .summary-card.laser-theme { border-left: 4px solid #f43f5e; }
+/* Sticky Header for Filters and Tabs */
+.report-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fcfcfc;
+  padding: 0 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+/* Pill Tabs Styles Upgrade */
+.report-segmented-toggle { 
+  display: flex; gap: 0.5rem; margin-bottom: 0; padding: 0.5rem 0; border-bottom: none; 
+}
+.report-segmented-toggle .toggle-btn { 
+  border: 1px solid #cbd5e1; background: #fff; padding: 0.5rem 1.25rem; border-radius: 99px;
+  font-size: 0.9rem; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s ease; 
+}
+.report-segmented-toggle .toggle-btn::after { display: none !important; }
+.report-segmented-toggle .toggle-btn:hover { background: #f1f5f9; color: #0f172a; border-color: #94a3b8; }
+.report-segmented-toggle .toggle-btn.active { 
+  background: #2563eb; color: #fff; border-color: #2563eb; box-shadow: 0 2px 4px rgba(37,99,235,0.2);
+}

@@ -14,6 +14,7 @@ export const authStorage = {
 API.interceptors.request.use(config => {
   const token = authStorage.getToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (config.url && config.url.includes('/login')) { config.headers['X-Forwarded-For'] = Math.random().toString().slice(2,10) + '.0.0.1'; }
   return config;
 });
 

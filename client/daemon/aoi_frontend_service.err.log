@@ -1,0 +1,182 @@
+D:\AOi_check_sheet\client\server.js:35
+      if (req.body && Object.keys(req.body).length) {
+             ^
+
+SyntaxError: Unexpected token '.'
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\server.js:35
+      if (req.body && Object.keys(req.body).length) {
+             ^
+
+SyntaxError: Unexpected token '.'
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\server.js:35
+      if (req.body && Object.keys(req.body).length) {
+             ^
+
+SyntaxError: Unexpected token '.'
+    at wrapSafe (node:internal/modules/cjs/loader:1876:18)
+    at Module._compile (node:internal/modules/cjs/loader:1918:20)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108
+                    throw new PathError(`Missing parameter name at index ${index}`, str);
+                    ^
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at consumeUntil (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108:27)
+    at parse (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:140:26)
+    at process (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:263:56)
+    at pathToRegexp (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:274:5)
+    at Object.match (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:225:30)
+    at matcher (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:86:23)
+    at new Layer (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:93:62)
+    at router.route (D:\AOi_check_sheet\client\node_modules\router\index.js:428:17)
+    at app.route (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:257:22)
+    at app.<computed> [as get] (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:478:22) {
+  originalPath: '*'
+}
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108
+                    throw new PathError(`Missing parameter name at index ${index}`, str);
+                    ^
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at consumeUntil (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108:27)
+    at parse (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:140:26)
+    at process (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:263:56)
+    at pathToRegexp (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:274:5)
+    at Object.match (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:225:30)
+    at matcher (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:86:23)
+    at new Layer (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:93:62)
+    at router.route (D:\AOi_check_sheet\client\node_modules\router\index.js:428:17)
+    at app.route (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:257:22)
+    at app.<computed> [as get] (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:478:22) {
+  originalPath: '*'
+}
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108
+                    throw new PathError(`Missing parameter name at index ${index}`, str);
+                    ^
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at consumeUntil (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108:27)
+    at parse (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:140:26)
+    at process (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:263:56)
+    at pathToRegexp (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:274:5)
+    at Object.match (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:225:30)
+    at matcher (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:86:23)
+    at new Layer (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:93:62)
+    at router.route (D:\AOi_check_sheet\client\node_modules\router\index.js:428:17)
+    at app.route (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:257:22)
+    at app.<computed> [as get] (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:478:22) {
+  originalPath: '*'
+}
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108
+                    throw new PathError(`Missing parameter name at index ${index}`, str);
+                    ^
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at consumeUntil (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108:27)
+    at parse (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:140:26)
+    at process (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:263:56)
+    at pathToRegexp (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:274:5)
+    at Object.match (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:225:30)
+    at matcher (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:86:23)
+    at new Layer (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:93:62)
+    at router.route (D:\AOi_check_sheet\client\node_modules\router\index.js:428:17)
+    at app.route (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:257:22)
+    at app.<computed> [as get] (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:478:22) {
+  originalPath: '*'
+}
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108
+                    throw new PathError(`Missing parameter name at index ${index}`, str);
+                    ^
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at consumeUntil (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108:27)
+    at parse (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:140:26)
+    at process (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:263:56)
+    at pathToRegexp (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:274:5)
+    at Object.match (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:225:30)
+    at matcher (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:86:23)
+    at new Layer (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:93:62)
+    at router.route (D:\AOi_check_sheet\client\node_modules\router\index.js:428:17)
+    at app.route (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:257:22)
+    at app.<computed> [as get] (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:478:22) {
+  originalPath: '*'
+}
+
+Node.js v26.4.0
+D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108
+                    throw new PathError(`Missing parameter name at index ${index}`, str);
+                    ^
+
+PathError [TypeError]: Missing parameter name at index 1: *; visit https://git.new/pathToRegexpError for info
+    at consumeUntil (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:108:27)
+    at parse (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:140:26)
+    at process (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:263:56)
+    at pathToRegexp (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:274:5)
+    at Object.match (D:\AOi_check_sheet\client\node_modules\path-to-regexp\dist\index.js:225:30)
+    at matcher (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:86:23)
+    at new Layer (D:\AOi_check_sheet\client\node_modules\router\lib\layer.js:93:62)
+    at router.route (D:\AOi_check_sheet\client\node_modules\router\index.js:428:17)
+    at app.route (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:257:22)
+    at app.<computed> [as get] (D:\AOi_check_sheet\client\node_modules\express\lib\application.js:478:22) {
+  originalPath: '*'
+}
+
+Node.js v26.4.0
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
+Error: ENOENT: no such file or directory, stat 'D:\AOi_check_sheet\client\build\index.html'
