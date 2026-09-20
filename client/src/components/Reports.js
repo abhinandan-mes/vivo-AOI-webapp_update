@@ -166,8 +166,7 @@ export default function Reports({ currentUser }) {
     [t('group'), 'group_name'],
     [t('shift'), 'shift'],
     [t('rep_th_status'), 'status'],
-    [t('rep_th_submitted_at'), 'created_at'],
-    [t('rep_th_submitted_by'), 'submitted_by'],
+    [language === 'zh' ? '审核时间线' : 'Audit Timeline', 'audit_timeline'],
     [t('rep_th_program'), 'pre_aoi_program_full_name'],
     [t('rep_th_stencil_b'), 'stencil_serial_no_b_side'],
     [t('rep_th_stencil_a'), 'stencil_serial_no_a_side'],
@@ -250,8 +249,7 @@ export default function Reports({ currentUser }) {
     [language === 'zh' ? '机种名称' : 'Model Name', 'model_name'],
     [language === 'zh' ? '机种代码' : 'Model Code', 'model_code'],
     [t('rep_designated_engineer'), 'designated_engineer_id'],
-    [t('rep_th_submitted_at'), 'created_at'],
-    [t('rep_th_submitted_by'), 'submitted_by']
+    [language === 'zh' ? '审核时间线' : 'Audit Timeline', 'audit_timeline']
   ], [language, t]);
 
   const laserChangeoverColumns = useMemo(() => [
@@ -262,8 +260,7 @@ export default function Reports({ currentUser }) {
     [language === 'zh' ? '文档状态' : 'Doc Status', 'approval_status'],
     [language === 'zh' ? '程序名称' : 'Program Name', 'program_name'],
     [t('rep_designated_engineer'), 'designated_engineer_id'],
-    [t('rep_th_submitted_at'), 'created_at'],
-    [t('rep_th_submitted_by'), 'submitted_by']
+    [language === 'zh' ? '审核时间线' : 'Audit Timeline', 'audit_timeline']
   ], [language, t]);
 
   const reportTitle = reportType => 
@@ -293,13 +290,13 @@ export default function Reports({ currentUser }) {
       ];
     } else if (reportType === 'laser_changeover') {
       const detailColumns = [
-        [language === 'zh' ? '1. 程序名称' : '1. Program Name Confirmation', 'prog_name_check'],
-        [language === 'zh' ? '2. 镭雕参数' : '2. Laser Parameter Confirmation', 'laser_param_check'],
-        [language === 'zh' ? '3. 重码功能' : '3. Laser Machine Duplicate Code Function', 'duplicate_code_check'],
-        [language === 'zh' ? '4. PCB防反' : '4. PCB Anti-Reverse Confirmation', 'pcb_anti_reverse_check'],
-        [language === 'zh' ? '5. AB面条码' : '5. A/B Side Barcode Consistency', 'ab_barcode_check'],
-        [language === 'zh' ? '6. 镭雕顺序' : '6. Laser Carving Sequence Confirmation', 'laser_sequence_check'],
-        [language === 'zh' ? '7. 镭雕位置' : '7. Laser Carving Position Confirmation', 'laser_position_check']
+        [language === 'zh' ? '1. 程序名称确认' : '1. Program Name Confirmation', 'prog_name_check'],
+                          [language === 'zh' ? '2. 镭雕参数确认' : '2. Laser Parameter Confirmation', 'laser_param_check'],
+                          [language === 'zh' ? '3. 镭雕机防重码功能确认' : '3. Laser Machine Duplicate Code Function', 'duplicate_code_check'],
+                          [language === 'zh' ? '4. PCB防反确认' : '4. PCB Anti-Reverse Confirmation', 'pcb_anti_reverse_check'],
+                          [language === 'zh' ? '5. AB面条码大小一致确认' : '5. A/B Side Barcode Consistency', 'ab_barcode_check'],
+                          [language === 'zh' ? '6. 镭雕顺序确认' : '6. Laser Carving Sequence Confirmation', 'laser_sequence_check'],
+                          [language === 'zh' ? '7. 镭雕位置确认' : '7. Laser Carving Position Confirmation', 'laser_position_check']
       ];
       return [
         [language === 'zh' ? '线体号' : 'Line', 'line'],
@@ -1309,9 +1306,77 @@ function ChangeoverReport({ rows, changeoverColumns, t, language, formatDate, fo
               {/* Dynamic rendering of the rest of the columns based on changeoverColumns definition */}
               {changeoverColumns.slice(8).map(([label, key]) => {
                 // Handle designated engineer
-                if (key === 'designated_engineer_id') {
-                  return <td key={key}>{getEngineerDisplay(row[key])}</td>;
-                }
+                                                    if (key === 'designated_engineer_id') {
+                    return <td key={key}>{getEngineerDisplay(row[key])}</td>;
+                  }
+                  if (key === 'audit_timeline') {
+                    return (
+                      <td key={key}>
+                        {row.status === 'Not Filled' ? '-' : (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
+                            {row.submitted_by && (
+                              <span style={{ color: '#334155' }}>
+                                👤 <strong>{language === 'zh' ? '提交' : 'Sub'}:</strong> {row.submitted_by} 
+                                <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                                  ({formatDateTime(row.created_at)})
+                                </span>
+                              </span>
+                            )}
+                            {row.approval_status === 'APPROVED' && (
+                              <span style={{ color: '#166534', fontWeight: 500 }}>
+                                ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                                <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                                  ({formatDateTime(row.updated_at)})
+                                </span>
+                              </span>
+                            )}
+                            {(row.approval_status === 'DISAPPROVED' || row.approval_status === 'REJECTED') ? (
+                              <span style={{ color: '#b91c1c', fontWeight: 500 }}>
+                                ✕ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                                <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                                  ({formatDateTime(row.updated_at)})
+                                </span>
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
+                      </td>
+                    );
+                  }
+                  if (key === 'audit_timeline') {
+                    return (
+                      <td key={key}>
+                        {row.status === 'Not Filled' ? '-' : (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
+                            {row.submitted_by && (
+                              <span style={{ color: '#334155' }}>
+                                👤 <strong>{language === 'zh' ? '提交' : 'Sub'}:</strong> {row.submitted_by} 
+                                <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                                  ({formatDateTime(row.created_at)})
+                                </span>
+                              </span>
+                            )}
+                            {row.approval_status === 'APPROVED' && (
+                              <span style={{ color: '#166534', fontWeight: 500 }}>
+                                ✓ <strong>{language === 'zh' ? '审批' : 'App'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                                <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                                  ({formatDateTime(row.updated_at)})
+                                </span>
+                              </span>
+                            )}
+                            {(row.approval_status === 'DISAPPROVED' || row.approval_status === 'REJECTED') ? (
+                              <span style={{ color: '#b91c1c', fontWeight: 500 }}>
+                                ✕ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {getEngineerDisplay(row.designated_engineer_id)} 
+                                <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                                  ({formatDateTime(row.updated_at)})
+                                </span>
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
+                      </td>
+                    );
+                  }
                 
                 return (
                   <td key={key}>
@@ -2306,10 +2371,48 @@ function LaserChangeoverReport({ rows, laserChangeoverColumns, t, language, form
                     </span>;
                   })()}
                 </td>
-                <td>{row.program_name || '—'}</td>
-                <td>{getEngineerDisplay(row.designated_engineer_id)}</td>
-                <td>{formatDateTime(row.created_at)}</td>
-                <td>{row.submitted_by || '—'}</td>
+                <td>{row.program_name || '-'}</td>
+                  <td>{getEngineerDisplay(row.designated_engineer_id)}</td>
+                  <td>
+                    {row.status === 'Not Filled' ? '-' : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.8rem' }}>
+                        {row.submitted_by && (
+                          <span style={{ color: '#334155' }}>
+                            👤 <strong>{language === 'zh' ? '提交' : 'Sub'}:</strong> {row.submitted_by} 
+                            <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                              ({formatDateTime(row.created_at)})
+                            </span>
+                          </span>
+                        )}
+                        {(row.approval_status === 'GRP_LDR_PENDING' || row.approval_status === 'APPROVED') && (
+                          <span style={{ color: '#0284c7', fontWeight: 500 }}>
+                            ⚙️ <strong>{language === 'zh' ? '工程师' : 'Eng'}:</strong> {getEngineerDisplay(row.designated_engineer_id) || row.engineer_signature} 
+                            {row.approval_status === 'GRP_LDR_PENDING' && (
+                              <span style={{ color: '#0284c7', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                                ({formatDateTime(row.updated_at)})
+                              </span>
+                            )}
+                          </span>
+                        )}
+                        {row.approval_status === 'APPROVED' && (
+                          <span style={{ color: '#166534', fontWeight: 500 }}>
+                            ✓ <strong>{language === 'zh' ? '组长' : 'GL'}:</strong> {getEngineerDisplay(row.designated_group_leader_id) || row.group_leader_signature} 
+                            <span style={{ color: '#166534', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                              ({formatDateTime(row.updated_at)})
+                            </span>
+                          </span>
+                        )}
+                        {(row.approval_status === 'DISAPPROVED' || row.approval_status === 'REJECTED') ? (
+                          <span style={{ color: '#b91c1c', fontWeight: 500 }}>
+                            ✕ <strong>{language === 'zh' ? '驳回' : 'Rej'}:</strong> {row.designated_group_leader_id ? getEngineerDisplay(row.designated_group_leader_id) : getEngineerDisplay(row.designated_engineer_id)} 
+                            <span style={{ color: '#b91c1c', opacity: 0.8, fontSize: '0.75rem', marginLeft: '0.3rem' }}>
+                              ({formatDateTime(row.updated_at)})
+                            </span>
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+                  </td>
                 
                 {isSuperAdmin && (
                   <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
@@ -2362,13 +2465,13 @@ function LaserChangeoverReport({ rows, laserChangeoverColumns, t, language, form
                       
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
                         {[
-                          [language === 'zh' ? '1. 程序名称' : '1. Prog Name', 'prog_name_check'],
-                          [language === 'zh' ? '2. 镭雕参数' : '2. Laser Param', 'laser_param_check'],
-                          [language === 'zh' ? '3. 重码功能' : '3. Dup Code', 'duplicate_code_check'],
-                          [language === 'zh' ? '4. PCB防反' : '4. Anti-Reverse', 'pcb_anti_reverse_check'],
-                          [language === 'zh' ? '5. AB条码一致' : '5. A/B Barcode', 'ab_barcode_check'],
-                          [language === 'zh' ? '6. 镭雕顺序' : '6. Sequence', 'laser_sequence_check'],
-                          [language === 'zh' ? '7. 镭雕位置' : '7. Position', 'laser_position_check']
+                          [language === 'zh' ? '1. 程序名称确认' : '1. Program Name Confirmation', 'prog_name_check'],
+                          [language === 'zh' ? '2. 镭雕参数确认' : '2. Laser Parameter Confirmation', 'laser_param_check'],
+                          [language === 'zh' ? '3. 镭雕机防重码功能确认' : '3. Laser Machine Duplicate Code Function', 'duplicate_code_check'],
+                          [language === 'zh' ? '4. PCB防反确认' : '4. PCB Anti-Reverse Confirmation', 'pcb_anti_reverse_check'],
+                          [language === 'zh' ? '5. AB面条码大小一致确认' : '5. A/B Side Barcode Consistency', 'ab_barcode_check'],
+                          [language === 'zh' ? '6. 镭雕顺序确认' : '6. Laser Carving Sequence Confirmation', 'laser_sequence_check'],
+                          [language === 'zh' ? '7. 镭雕位置确认' : '7. Laser Carving Position Confirmation', 'laser_position_check']
                         ].map(([label, key]) => (
                           <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                             <span style={{ color: '#475569', fontSize: '0.85rem', fontWeight: 500 }}>{label}</span>
