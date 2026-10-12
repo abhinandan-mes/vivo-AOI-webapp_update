@@ -99,6 +99,36 @@ const escapeHtml = value => String(value ?? '')
   .replace(/'/g, '&#039;');
 
 const shiftOptions = ['Day', 'Night'];
+const getShiftAndDate = (now = new Date()) => {
+  const hours = now.getHours();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const day = now.getDate();
+  
+  const pad = num => String(num).padStart(2, '0');
+  
+  if (hours >= 9 && hours < 21) {
+    // Day Shift: 9 AM to 8:59 PM
+    return {
+      shift: 'Day',
+      date: `${year}-${pad(month + 1)}-${pad(day)}`
+    };
+  } else if (hours >= 21) {
+    // Night Shift: 9 PM to 11:59 PM
+    return {
+      shift: 'Night',
+      date: `${year}-${pad(month + 1)}-${pad(day)}`
+    };
+  } else {
+    // Night Shift: 12 AM to 8:59 AM (belongs to previous calendar day)
+    const prevDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    return {
+      shift: 'Night',
+      date: `${prevDate.getFullYear()}-${pad(prevDate.getMonth() + 1)}-${pad(prevDate.getDate())}`
+    };
+  }
+};
+
 const hasShiftStarted = (dateStr, shift) => {
   const now = new Date();
   const todayStr = dateKey(now);
@@ -126,8 +156,8 @@ export default function Reports({ currentUser }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState(() => {
-    const todayStr = dateKey(new Date());
-    return { from: todayStr, to: todayStr, line: '', shift: '', group: '', status: '', sort: 'latest' };
+    const initialDate = getShiftAndDate().date;
+    return { from: initialDate, to: initialDate, line: '', shift: '', group: '', status: '', sort: 'latest' };
   });
   const [showExport, setShowExport] = useState(false);
   const [exportConfirm, setExportConfirm] = useState({ show: false, format: '' });
@@ -450,7 +480,7 @@ export default function Reports({ currentUser }) {
       // Find all unique dates in the dataset
       const uniqueDates = Array.from(new Set(data.map(d => dateKey(d.date))));
       if (uniqueDates.length === 0) {
-        uniqueDates.push(dateKey(new Date()));
+        uniqueDates.push(getShiftAndDate().date);
       }
       
       uniqueDates.forEach(dateStr => {
@@ -534,13 +564,12 @@ export default function Reports({ currentUser }) {
 
   // Summary metrics date & shift selection states
   const getCurrentShift = (now = new Date()) => {
-    const hours = now.getHours();
-    return (hours >= 9 && hours < 21) ? 'Day' : 'Night';
+    return getShiftAndDate(now).shift;
   };
 
   
-  const [globalSummaryDate, setGlobalSummaryDate] = useState(() => dateKey(new Date()));
-  const [globalSummaryShift, setGlobalSummaryShift] = useState(() => getCurrentShift());
+  const [globalSummaryDate, setGlobalSummaryDate] = useState(() => getShiftAndDate().date);
+  const [globalSummaryShift, setGlobalSummaryShift] = useState(() => getShiftAndDate().shift);
 
   const handleGlobalDateChange = (date) => {
     setGlobalSummaryDate(date);
@@ -560,14 +589,14 @@ export default function Reports({ currentUser }) {
     setFilters(prev => ({ ...prev, shift: shift === 'Both' ? '' : shift }));
   };
 
-  const [techSummaryDate, setTechSummaryDate] = useState(() => dateKey(new Date()));
-  const [techSummaryShift, setTechSummaryShift] = useState(() => getCurrentShift());
-  const [funcSummaryDate, setFuncSummaryDate] = useState(() => dateKey(new Date()));
-  const [funcSummaryShift, setFuncSummaryShift] = useState(() => getCurrentShift());
-  const [changeSummaryDate, setChangeSummaryDate] = useState(() => dateKey(new Date()));
-  const [changeSummaryShift, setChangeSummaryShift] = useState(() => getCurrentShift());
-  const [laserSummaryDate, setLaserSummaryDate] = useState(() => dateKey(new Date()));
-  const [laserSummaryShift, setLaserSummaryShift] = useState(() => getCurrentShift());
+  const [techSummaryDate, setTechSummaryDate] = useState(() => getShiftAndDate().date);
+  const [techSummaryShift, setTechSummaryShift] = useState(() => getShiftAndDate().shift);
+  const [funcSummaryDate, setFuncSummaryDate] = useState(() => getShiftAndDate().date);
+  const [funcSummaryShift, setFuncSummaryShift] = useState(() => getShiftAndDate().shift);
+  const [changeSummaryDate, setChangeSummaryDate] = useState(() => getShiftAndDate().date);
+  const [changeSummaryShift, setChangeSummaryShift] = useState(() => getShiftAndDate().shift);
+  const [laserSummaryDate, setLaserSummaryDate] = useState(() => getShiftAndDate().date);
+  const [laserSummaryShift, setLaserSummaryShift] = useState(() => getShiftAndDate().shift);
 
   // Technician Checklist Today / Selected Date
   const techTodaySubmissions = useMemo(() => {

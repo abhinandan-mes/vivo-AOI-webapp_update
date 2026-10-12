@@ -92,6 +92,28 @@ export default function ChangeoverChecksheet({ currentUser }) {
   const [installedLines, setInstalledLines] = useState(ALL_LINE_OPTIONS);
   const [linesLoading, setLinesLoading] = useState(true);
   const [engineers, setEngineers] = useState([]);
+  const [equipmentModelSelection, setEquipmentModelSelection] = useState('');
+  const [equipmentModelOtherText, setEquipmentModelOtherText] = useState('');
+
+  const handleEquipmentModelSelect = (e) => {
+    const val = e.target.value;
+    setEquipmentModelSelection(val);
+    if (val === 'Others') {
+      const finalVal = equipmentModelOtherText.trim() ? `Others: ${equipmentModelOtherText.trim().toUpperCase()}` : '';
+      setFormData(prev => ({ ...prev, post_aoi_equipment_model: finalVal }));
+    } else {
+      setEquipmentModelOtherText('');
+      setFormData(prev => ({ ...prev, post_aoi_equipment_model: val }));
+    }
+  };
+
+  const handleEquipmentModelOtherChange = (e) => {
+    const upper = e.target.value.toUpperCase();
+    setEquipmentModelOtherText(upper);
+    const finalVal = upper.trim() ? `Others: ${upper.trim()}` : '';
+    setFormData(prev => ({ ...prev, post_aoi_equipment_model: finalVal }));
+  };
+
 
   // Fetch installed lines & active engineers from backend
   useEffect(() => {
@@ -192,6 +214,8 @@ export default function ChangeoverChecksheet({ currentUser }) {
       // Create new apiService method inline call (assuming apiService has this configured, we'll need to add it to api.js)
       await apiService.createChangeoverChecksheet(payload);
       setShowSuccessModal(true);
+      setEquipmentModelSelection('');
+      setEquipmentModelOtherText('');
       const currentShiftAndDate = getShiftAndDate();
       setFormData({
         line: '',
@@ -395,8 +419,49 @@ export default function ChangeoverChecksheet({ currentUser }) {
                       <div className="item-label" style={{ flex: 1, paddingRight: '20px', color: '#334155', lineHeight: '1.5' }}>
                         {item.label}
                       </div>
-                      <div className="item-input" style={{ width: '150px' }}>
-                        {item.type === 'text' ? (
+                      <div className="item-input" style={{ minWidth: '150px', width: item.name === 'post_aoi_equipment_model' ? '220px' : '150px' }}>
+                        {item.name === 'post_aoi_equipment_model' ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                            <select
+                              value={equipmentModelSelection}
+                              onChange={handleEquipmentModelSelect}
+                              style={{
+                                width: '100%',
+                                padding: '0.5rem',
+                                borderRadius: '6px',
+                                border: `1px solid ${!equipmentModelSelection ? '#ef4444' : '#cbd5e1'}`,
+                                background: '#fff',
+                                color: '#334155',
+                                cursor: 'pointer'
+                              }}
+                              required
+                            >
+                              <option value="" disabled>{language === 'zh' ? '请选择设备型号' : 'Select AOI Model...'}</option>
+                              <option value="Parmi AOI">Parmi AOI</option>
+                              <option value="Vitrox AOI">Vitrox AOI</option>
+                              <option value="Jutze AOI">Jutze AOI</option>
+                              <option value="Others">{language === 'zh' ? '其他 (Others)' : 'Others'}</option>
+                            </select>
+                            {equipmentModelSelection === 'Others' && (
+                              <input
+                                type="text"
+                                value={equipmentModelOtherText}
+                                onChange={handleEquipmentModelOtherChange}
+                                placeholder={language === 'zh' ? '请输入设备型号 (大写)' : 'ENTER MODEL (CAPS)'}
+                                style={{
+                                  width: '100%',
+                                  padding: '0.45rem 0.6rem',
+                                  borderRadius: '6px',
+                                  border: `1px solid ${!equipmentModelOtherText.trim() ? '#ef4444' : '#cbd5e1'}`,
+                                  textTransform: 'uppercase',
+                                  fontWeight: '600',
+                                  fontSize: '0.85rem'
+                                }}
+                                required
+                              />
+                            )}
+                          </div>
+                        ) : item.type === 'text' ? (
                           <input 
                             type="text" 
                             name={item.name} 

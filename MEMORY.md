@@ -1,4 +1,4 @@
-﻿# ðŸ§  Project Memory: AOI CheckPoint - Daily Inspection System
+# ðŸ§  Project Memory: AOI CheckPoint - Daily Inspection System
 
 This document serves as the project memory and system documentation for the **AOI CheckPoint (Daily Inspection System)**. It provides context about the application's architecture, data model, backend API, frontend components, and development guidelines for future agent/developer sessions.
 
@@ -685,3 +685,18 @@ The production server on the `vivoadmin` machine is configured to start automati
 - **Audit Timeline Unification (2026-09-20)**: Replaced separate "Submitted At" and "Submitted By" columns in \ChangeoverReport\ and \LaserChangeoverReport\ with a unified, vertically stacked "Audit Timeline" layout matching \ChecklistReport\.
 - **Laser Changeover Group Leader Approval Integration**: Expanded the new Laser Changeover Audit Timeline to accurately render the Group Leader (GL) approval step, displaying Submitter -> Engineer -> Group Leader.
 - **Laser Changeover Detailed Labels Expansion**: Replaced shorthand label abbreviations (e.g., "1. Prog Name") with full formal names (e.g., "1. Program Name Confirmation") in both the detailed expansion view and the CSV Export logic inside \Reports.js\.
+
+### Resolved: Reports Shift Date Rule Synchronization & Changeover Item 14 Dropdown (October 2026)
+* **Factory Shift Date Synchronization**:
+  - Identified root cause of mismatch between Home and Reports pages during Night shift: between 12:00 AM and 8:59 AM, checksheets are recorded under the previous calendar date's production date (Stats Day) with `shift: 'Night'`.
+  - Reports had been blindly using `dateKey(new Date())` (today's calendar date), resulting in 0 submissions and 18 "Not Filled" status lines during post-midnight night shifts.
+  - Added centralized `getShiftAndDate()` helper across both `Reports.js` and `Home.js`, synchronizing Global Stats Day, Global Shift, and all 4 summary cards (`Technician Checklist Status`, `Daily Function Check Status`, `Changeover Checksheet Status`, `Laser Changeover Status`), as well as the main table filters, ensuring consistent alignment with Home page metrics.
+* **Changeover Checksheet Item 14 Dropdown & Mandatory Custom Input**:
+  - Replaced the free-text input for Item 14 ("Whether confirm the types of post AOI inspection equipment or not") on `ChangeoverChecksheet.js` with a standardized dropdown menu:
+    1. Parmi AOI
+    2. Vitrox AOI
+    3. Jutze AOI
+    4. Others
+  - When option 4 ("Others") is selected, a mandatory text input appears, strictly enforcing uppercase (`text-transform: uppercase` and `.toUpperCase()`), saving as `Others: <MODEL>` (e.g. `Others: KOH YOUNG`).
+  - Synchronized the reviewer/approval form in `PendingModule.js` to provide the identical dropdown and uppercase input controls when reviewing or editing changeover checksheets.
+  - Rebuilt production frontend bundle (`npm run build`).

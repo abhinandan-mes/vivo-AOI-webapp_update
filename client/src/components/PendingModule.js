@@ -925,7 +925,66 @@ export default function PendingModule({ currentUser }) {
                                 {item.label}
                               </div>
                               <div className="changeover-item-input">
-                                {item.type === 'text' ? (
+                                {item.name === 'post_aoi_equipment_model' ? (
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '180px' }}>
+                                    <select
+                                      value={
+                                        ['Parmi AOI', 'Vitrox AOI', 'Jutze AOI'].includes(reviewData[item.name])
+                                          ? reviewData[item.name]
+                                          : (reviewData[item.name] ? 'Others' : '')
+                                      }
+                                      onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val === 'Others') {
+                                          setReviewData(prev => ({ ...prev, [item.name]: 'Others: ' }));
+                                        } else {
+                                          setReviewData(prev => ({ ...prev, [item.name]: val }));
+                                        }
+                                      }}
+                                      style={{
+                                        width: '100%',
+                                        padding: '0.45rem',
+                                        borderRadius: '6px',
+                                        border: '1px solid #cbd5e1',
+                                        background: '#fff',
+                                        color: '#334155',
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      <option value="" disabled>{language === 'zh' ? '请选择设备型号' : 'Select AOI Model...'}</option>
+                                      <option value="Parmi AOI">Parmi AOI</option>
+                                      <option value="Vitrox AOI">Vitrox AOI</option>
+                                      <option value="Jutze AOI">Jutze AOI</option>
+                                      <option value="Others">{language === 'zh' ? '其他 (Others)' : 'Others'}</option>
+                                    </select>
+                                    {(!['Parmi AOI', 'Vitrox AOI', 'Jutze AOI'].includes(reviewData[item.name]) && reviewData[item.name] !== '') && (
+                                      <input
+                                        type="text"
+                                        value={
+                                          (reviewData[item.name] || '').startsWith('Others: ')
+                                            ? (reviewData[item.name] || '').slice(8)
+                                            : (reviewData[item.name] || '').startsWith('Others - ')
+                                            ? (reviewData[item.name] || '').slice(9)
+                                            : (reviewData[item.name] || '') === 'Others' ? '' : (reviewData[item.name] || '')
+                                        }
+                                        onChange={(e) => {
+                                          const upper = e.target.value.toUpperCase();
+                                          setReviewData(prev => ({ ...prev, [item.name]: upper ? `Others: ${upper}` : 'Others' }));
+                                        }}
+                                        placeholder={language === 'zh' ? '请输入设备型号 (大写)' : 'ENTER MODEL (CAPS)'}
+                                        style={{
+                                          width: '100%',
+                                          padding: '0.45rem',
+                                          borderRadius: '6px',
+                                          border: '1px solid #cbd5e1',
+                                          textTransform: 'uppercase',
+                                          fontWeight: '600'
+                                        }}
+                                        required
+                                      />
+                                    )}
+                                  </div>
+                                ) : item.type === 'text' ? (
                                   <input 
                                     type="text" 
                                     name={item.name} 

@@ -38,6 +38,36 @@ export default function Home({ currentUser }) {
       .catch(() => setLineStatuses([]));
   }, []);
 
+  const getShiftAndDate = (now = new Date()) => {
+  const hours = now.getHours();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const day = now.getDate();
+  
+  const pad = num => String(num).padStart(2, '0');
+  
+  if (hours >= 9 && hours < 21) {
+    // Day Shift: 9 AM to 8:59 PM
+    return {
+      shift: 'Day',
+      date: `${year}-${pad(month + 1)}-${pad(day)}`
+    };
+  } else if (hours >= 21) {
+    // Night Shift: 9 PM to 11:59 PM
+    return {
+      shift: 'Night',
+      date: `${year}-${pad(month + 1)}-${pad(day)}`
+    };
+  } else {
+    // Night Shift: 12 AM to 8:59 AM (belongs to previous calendar day)
+    const prevDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    return {
+      shift: 'Night',
+      date: `${prevDate.getFullYear()}-${pad(prevDate.getMonth() + 1)}-${pad(prevDate.getDate())}`
+    };
+  }
+};
+
   const activeLines = useMemo(() => {
     return lineStatuses.filter(l => l.is_installed).map(l => l.line);
   }, [lineStatuses]);
@@ -53,8 +83,8 @@ export default function Home({ currentUser }) {
   const [sessionToRevoke, setSessionToRevoke] = useState(null);
 
   // Stats Day picker — defaults to today
-  const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  const [selectedDate, setSelectedDate] = useState(todayStr);
+  // Stats Day picker — defaults to production shift date
+  const [selectedDate, setSelectedDate] = useState(() => getShiftAndDate().date);
 
   const isSuperAdmin = currentUser?.role === 'super_admin';
   const isAdminOrSuper = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
